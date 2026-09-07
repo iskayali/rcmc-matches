@@ -1105,68 +1105,50 @@ function showLogin() {
      SELECT RISK
   ========================================================= */
 
-  function selectRisk(
-    matchId,
-    risk
-  ) {
-
-    if (!predictions[matchId]) {
-
-      predictions[matchId] = {
-        outcome: null,
-        risk_points: 0
-      };
-
-    }
-
-
-    /*
-      نحسب مجموع المخاطر الجديد
-      قبل السماح بالتغيير.
-    */
-
-    let totalRisk = 0;
-
-
-    Object.keys(predictions).forEach(id => {
-
-      if (Number(id) !== Number(matchId)) {
-
-        totalRisk += Number(
-          predictions[id].risk_points || 0
-        );
-
-      }
-
-    });
-
-
-    totalRisk += risk;
-
-
-    const maximumRisk =
-      Number(currentStage?.risk_start ?? 10);
-
-
-    if (totalRisk > maximumRisk) {
-
-      showMessage(
-        `لا يمكنك استخدام أكثر من ${maximumRisk} نقاط مخاطرة في هذه المرحلة.`,
-        "error"
-      );
-
-      return;
-    }
-
-
-    predictions[matchId].risk_points =
-      risk;
-
-
-    updateRiskFromPredictions();
-
-    renderMatches();
+function selectRisk(matchId, risk) {
+  if (!predictions[matchId]) {
+    predictions[matchId] = {
+      outcome: null,
+      risk_points: 0
+    };
   }
+
+  const selectedRisk = Number(risk);
+
+  if (selectedRisk < 0 || selectedRisk > 3) {
+    return;
+  }
+
+  // نتحقق من الرصيد المتاح الحقيقي،
+  // مع إعادة المخاطرة القديمة لهذه المباراة مؤقتًا.
+  const oldRisk = Number(
+    predictions[matchId].risk_points || 0
+  );
+
+  const availableBalance =
+    Number(riskBalance || 0) + oldRisk;
+
+  if (selectedRisk > availableBalance) {
+    showMessage(
+      "رصيد المخاطرة غير كافٍ لهذا التوقع.",
+      "error"
+    );
+    return;
+  }
+
+  // تغيير الاختيار فقط.
+  // الرصيد لا يتغير إلا بعد الضغط على "حفظ التوقع".
+  predictions[matchId].risk_points = selectedRisk;
+
+  renderMatches();
+}
+
+
+function updateRiskFromPredictions() {
+  // هذه الدالة لم تعد تحسب الرصيد من التوقعات.
+  // الرصيد الحقيقي يأتي من قاعدة البيانات.
+  updateRiskDisplay();
+}
 
 
   /* =========================================================
