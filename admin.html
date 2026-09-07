@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>RCMC MATCHES - الإدارة</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Tahoma, sans-serif;
+      background: #071426;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: min(100% - 30px, 900px);
+      margin: 0 auto;
+      padding: 35px 0 60px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 75px;
+      height: 75px;
+      border: 3px solid #e3b94f;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      color: #e3b94f;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: #e3b94f;
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #9db0c8;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: #102742;
+      border: 1px solid #1e3b5c;
+      border-radius: 15px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: #e3b94f;
+      font-size: 20px;
+    }
+
+    .match {
+      background: #0b1d33;
+      border: 1px solid #294665;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 15px;
+    }
+
+    .teams {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .vs {
+      color: #e3b94f;
+    }
+
+    .info {
+      color: #9db0c8;
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .score-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    input {
+      width: 90px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #365675;
+      background: #071426;
+      color: white;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 9px;
+      padding: 13px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .finish {
+      background: #e3b94f;
+      color: #071426;
+    }
+
+    .score {
+      background: #173b5d;
+      color: white;
+      border: 1px solid #315879;
+    }
+
+    .message {
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success {
+      display: block;
+      background: #123d2a;
+      color: #8ff0b8;
+    }
+
+    .error {
+      display: block;
+      background: #4a1d24;
+      color: #ff9da8;
+    }
+
+    .status {
+      text-align: center;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .scheduled {
+      color: #e3b94f;
+    }
+
+    .finished {
+      color: #78e0a0;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">RCMC</div>
+    <h1>RCMC MATCHES</h1>
+    <div class="subtitle">لوحة الإدارة</div>
+  </div>
+
+  <div id="message" class="message"></div>
+
+  <div class="card">
+    <h2>⚽ إدارة المباريات</h2>
+    <div id="matches">جاري تحميل المباريات...</div>
+  </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+  "https://ehgmkhbzkzgayixfcomk.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_2J5ASCvZeYAY7su3LrnJjQ_jkTZ4Od_";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+function showMessage(text, type = "success") {
+
+  const box = document.getElementById("message");
+
+  box.textContent = text;
+  box.className = "message " + type;
+
+  setTimeout(() => {
+    box.className = "message";
+  }, 4000);
+}
+
+
+async function loadMatches() {
+
+  const { data, error } = await supabaseClient
+    .from("matches")
+    .select("*")
+    .order("kickoff", { ascending: true });
+
+  if (error) {
+    document.getElementById("matches").innerHTML =
+      "حدث خطأ أثناء تحميل المباريات.";
+
+    console.error(error);
+    return;
+  }
+
+  renderMatches(data || []);
+}
+
+
+function renderMatches(matches) {
+
+  const container = document.getElementById("matches");
+
+  if (!matches.length) {
+    container.innerHTML = "لا توجد مباريات.";
+    return;
+  }
+
+  container.innerHTML = matches.map(match => {
+
+    const finished = match.status === "finished";
+
+    return `
+      <div class="match">
+
+        <div class="teams">
+          <span>${escapeHtml(match.home_team)}</span>
+          <span class="vs">VS</span>
+          <span>${escapeHtml(match.away_team)}</span>
+        </div>
+
+        <div class="info">
+          موعد المباراة:
+          ${formatDate(match.kickoff)}
+        </div>
+
+        <div class="status ${finished ? "finished" : "scheduled"}">
+          الحالة:
+          ${finished ? "انتهت" : "مجدولة"}
+        </div>
+
+        <div class="score-row">
+
+          <input
+            id="home-${match.id}"
+            type="number"
+            min="0"
+            placeholder="${match.home_score ?? "-"}"
+            value="${match.home_score ?? ""}"
+          >
+
+          <span style="padding-top:12px;">-</span>
+
+          <input
+            id="away-${match.id}"
+            type="number"
+            min="0"
+            placeholder="${match.away_score ?? "-"}"
+            value="${match.away_score ?? ""}"
+          >
+
+        </div>
+
+        <button
+          class="finish"
+          onclick="finishMatch(${match.id})">
+          ${finished ? "تعديل النتيجة" : "إنهاء المباراة وإدخال النتيجة"}
+        </button>
+
+        ${
+          finished
+          ? `
+            <button
+              class="score"
+              onclick="scoreMatch(${match.id})">
+              🏆 احتساب النقاط
+            </button>
+          `
+          : ""
+        }
+
+      </div>
+    `;
+
+  }).join("");
+}
+
+
+async function finishMatch(matchId) {
+
+  const homeInput =
+    document.getElementById(`home-${matchId}`);
+
+  const awayInput =
+    document.getElementById(`away-${matchId}`);
+
+  const homeScore = Number(homeInput.value);
+  const awayScore = Number(awayInput.value);
+
+  if (
+    homeInput.value === "" ||
+    awayInput.value === "" ||
+    homeScore < 0 ||
+    awayScore < 0
+  ) {
+
+    showMessage(
+      "أدخل نتيجة صحيحة للمباراة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const { error } = await supabaseClient
+    .from("matches")
+    .update({
+      home_score: homeScore,
+      away_score: awayScore,
+      status: "finished"
+    })
+    .eq("id", matchId);
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "حدث خطأ أثناء حفظ النتيجة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "تم حفظ نتيجة المباراة بنجاح ✓"
+  );
+
+  loadMatches();
+}
+
+
+async function scoreMatch(matchId) {
+
+  if (
+    !confirm(
+      "هل أنت متأكد من احتساب نقاط هذه المباراة؟"
+    )
+  ) {
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient.rpc(
+      "score_match",
+      {
+        p_match_id: matchId
+      }
+    );
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "تم احتساب النقاط لجميع المشاركين ✓"
+  );
+
+  loadMatches();
+}
+
+
+function formatDate(dateString) {
+
+  const date = new Date(dateString);
+
+  return date.toLocaleString(
+    "ar-AE",
+    {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
+}
+
+
+function escapeHtml(text) {
+
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+loadMatches();
+
+</script>
+
+</body>
+</html>
