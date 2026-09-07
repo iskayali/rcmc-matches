@@ -1414,9 +1414,69 @@ function updateRiskFromPredictions() {
      INITIAL LOAD
   ========================================================= */
 
-  console.log(
-    "RCMC MATCHES connected to Supabase."
-  );
+  async function restoreSession() {
+  const sessionToken =
+    localStorage.getItem("rcmc_session_token");
+
+  if (!sessionToken) {
+    return;
+  }
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "get_player_session",
+      {
+        p_session_token: sessionToken
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      localStorage.removeItem("rcmc_session_token");
+      currentPlayer = null;
+
+      document.getElementById("competitionSection")
+        .classList.add("hidden");
+
+      document.getElementById("loginSection")
+        .classList.remove("hidden");
+
+      return;
+    }
+
+    currentPlayer = {
+      id: data.player_id,
+      name: data.name,
+      total_points: Number(data.total_points ?? 0),
+      risk_balance: Number(data.risk_balance ?? 10)
+    };
+
+    riskBalance = currentPlayer.risk_balance;
+
+    document.getElementById("playerDisplay").textContent =
+      currentPlayer.name;
+
+    document.getElementById("loginSection")
+      .classList.add("hidden");
+
+    document.getElementById("competitionSection")
+      .classList.remove("hidden");
+
+    updateRiskDisplay();
+    await loadCompetition();
+
+  } catch (error) {
+    console.error("Session restoration failed:", error);
+
+    showMessage(
+      "تعذر استعادة جلسة الدخول. يرجى تحديث الصفحة والمحاولة مجددًا.",
+      "error"
+    );
+  }
+}
+
+restoreSession();
 
 </script>
 
