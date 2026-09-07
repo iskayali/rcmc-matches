@@ -864,12 +864,51 @@ function showLogin() {
       }
 
 
-      matches = matchData || [];
+matches = matchData || [];
 
+// تحميل توقعات اللاعب المحفوظة من قاعدة البيانات
+const sessionToken =
+  localStorage.getItem("rcmc_session_token");
 
-      renderMatches();
+if (!sessionToken) {
+  throw new Error("انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.");
+}
 
-      await loadLeaderboard();
+const {
+  data: savedPredictions,
+  error: predictionsError
+} = await supabaseClient.rpc(
+  "get_my_predictions",
+  {
+    p_session_token: sessionToken
+  }
+);
+
+if (predictionsError) {
+  throw predictionsError;
+}
+
+if (!savedPredictions || !savedPredictions.success) {
+  throw new Error(
+    savedPredictions?.message || "تعذر تحميل التوقعات المحفوظة."
+  );
+}
+
+// إعادة بناء التوقعات من البيانات المحفوظة فقط
+predictions = {};
+
+(savedPredictions.predictions || []).forEach(item => {
+  predictions[item.match_id] = {
+    outcome: item.outcome,
+    risk_points: Number(item.risk_points || 0),
+    points_awarded: Number(item.points_awarded || 0),
+    scored: item.scored === true
+  };
+});
+
+renderMatches();
+
+await loadLeaderboard();  
 
     } catch (error) {
 
