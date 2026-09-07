@@ -1155,28 +1155,7 @@ function updateRiskFromPredictions() {
      CALCULATE RISK
   ========================================================= */
 
-  function updateRiskFromPredictions() {
 
-    let used = 0;
-
-
-    Object.values(predictions)
-      .forEach(prediction => {
-
-        used += Number(
-          prediction.risk_points || 0
-        );
-
-      });
-
-
-    riskBalance =
-      Number(currentStage?.risk_start ?? 10)
-      - used;
-
-
-    updateRiskDisplay();
-  }
 
 
  function updateRiskDisplay() {
