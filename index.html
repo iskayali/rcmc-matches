@@ -408,41 +408,133 @@
   <div id="message" class="message"></div>
 
   <!-- LOGIN -->
-  <section id="loginSection">
+<!-- LOGIN / REGISTER -->
+<section id="loginSection">
 
-    <div class="card welcome">
-      <h2>🏆 أهلاً بك في RCMC MATCHES</h2>
+  <div class="card welcome">
+    <h2>🏆 أهلاً بك في RCMC MATCHES</h2>
+    <p>
+      شارك في مسابقة توقعات دوري أبطال أوروبا،
+      توقع النتائج، اجمع النقاط، واستخدم المخاطرة بذكاء.
+    </p>
+  </div>
 
-      <p>
-        شارك في مسابقة توقعات دوري أبطال أوروبا،
-        توقع نتائج المباريات، اجمع النقاط،
-        واستخدم نقاط المخاطرة بذكاء لتتصدر الترتيب.
-      </p>
-    </div>
+  <!-- LOGIN -->
+  <div id="loginBox" class="card">
 
-    <div class="card">
+    <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">
+      🔐 تسجيل الدخول
+    </h2>
 
-      <label for="playerName">اسمك</label>
+    <label for="loginUsername">اسم المستخدم</label>
 
-      <input
-        id="playerName"
-        type="text"
-        maxlength="40"
-        placeholder="اكتب اسمك هنا"
-        autocomplete="off"
-      >
+    <input
+      id="loginUsername"
+      type="text"
+      maxlength="30"
+      placeholder="مثلاً: islam"
+      autocomplete="username"
+    >
 
-      <button
-        id="loginBtn"
-        class="btn btn-primary"
-        onclick="enterCompetition()"
-      >
-        دخول المسابقة
-      </button>
+    <label for="loginPassword" style="margin-top:14px;">
+      كلمة المرور
+    </label>
 
-    </div>
+    <input
+      id="loginPassword"
+      type="password"
+      maxlength="50"
+      placeholder="أدخل كلمة المرور"
+      autocomplete="current-password"
+    >
 
-  </section>
+    <button
+      id="loginBtn"
+      class="btn btn-primary"
+      onclick="loginPlayer()"
+    >
+      دخول
+    </button>
+
+    <button
+      class="btn btn-secondary"
+      onclick="showRegister()"
+    >
+      إنشاء حساب جديد
+    </button>
+
+  </div>
+
+
+  <!-- REGISTER -->
+  <div id="registerBox" class="card hidden">
+
+    <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">
+      📝 إنشاء حساب
+    </h2>
+
+    <label for="registerUsername">اسم المستخدم</label>
+
+    <input
+      id="registerUsername"
+      type="text"
+      maxlength="30"
+      placeholder="مثلاً: islam2026"
+      autocomplete="username"
+    >
+
+    <label for="registerPassword" style="margin-top:14px;">
+      كلمة المرور
+    </label>
+
+    <input
+      id="registerPassword"
+      type="password"
+      maxlength="50"
+      placeholder="اختر كلمة مرور"
+      autocomplete="new-password"
+    >
+
+    <label for="registerName" style="margin-top:14px;">
+      الاسم الذي سيظهر في المسابقة
+    </label>
+
+    <input
+      id="registerName"
+      type="text"
+      maxlength="40"
+      placeholder="مثلاً: إسلام"
+      autocomplete="off"
+    >
+
+    <button
+      id="registerBtn"
+      class="btn btn-primary"
+      onclick="registerPlayer()"
+    >
+      إنشاء الحساب
+    </button>
+
+    <button
+      class="btn btn-secondary"
+      onclick="showLogin()"
+    >
+      لدي حساب بالفعل
+    </button>
+
+    <p style="
+      margin-top:12px;
+      text-align:center;
+      color:#8e9aaa;
+      font-size:12px;
+      line-height:1.7;
+    ">
+      لا نطلب بريدًا إلكترونيًا ولا رقم هاتف.
+    </p>
+
+  </div>
+
+</section>
 
 
   <!-- COMPETITION -->
