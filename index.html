@@ -1248,29 +1248,7 @@ function updateRiskFromPredictions() {
     return;
   }
 
-  /*
-    نتأكد أن مجموع المخاطرة المحلي
-    لا يتجاوز الحد المسموح.
-  */
-  let totalRisk = 0;
-
-  Object.values(predictions)
-    .forEach(item => {
-      totalRisk += Number(
-        item.risk_points || 0
-      );
-    });
-
-  const maximumRisk =
-    Number(currentStage?.risk_start ?? 10);
-
-  if (totalRisk > maximumRisk) {
-    showMessage(
-      "مجموع نقاط المخاطرة يتجاوز الحد المسموح.",
-      "error"
-    );
-    return;
-  }
+  
 
   const sessionToken =
     localStorage.getItem("rcmc_session_token");
