@@ -663,146 +663,139 @@
      ENTER COMPETITION
   ========================================================= */
 
-  async function enterCompetition() {
+ async function registerPlayer() {
+  const username = document.getElementById("registerUsername").value.trim();
+  const password = document.getElementById("registerPassword").value;
+  const name = document.getElementById("registerName").value.trim();
 
-    const input =
-      document.getElementById("playerName");
-
-    const name =
-      input.value.trim();
-
-    if (!name) {
-
-      showMessage(
-        "اكتب اسمك أولاً",
-        "error"
-      );
-
-      return;
-    }
-
-    if (name.length < 2) {
-
-      showMessage(
-        "الاسم يجب أن يحتوي على حرفين على الأقل",
-        "error"
-      );
-
-      return;
-    }
-
-
-    const button =
-      document.getElementById("loginBtn");
-
-    button.disabled = true;
-    button.textContent = "جاري الدخول...";
-
-
-    try {
-
-      /*
-       إنشاء لاعب جديد.
-       إذا كان المتصفح قد دخل سابقاً،
-       نستخدم player_id المحفوظ محلياً.
-      */
-
-      const savedPlayerId =
-        localStorage.getItem("rcmc_player_id");
-
-
-      if (savedPlayerId) {
-
-        const { data, error } =
-          await supabaseClient
-            .from("players")
-            .select("*")
-            .eq("id", savedPlayerId)
-            .maybeSingle();
-
-
-        if (!error && data) {
-
-          currentPlayer = data;
-
-        } else {
-
-          localStorage.removeItem(
-            "rcmc_player_id"
-          );
-
-        }
-
-      }
-
-
-      if (!currentPlayer) {
-
-        const { data, error } =
-          await supabaseClient
-            .from("players")
-            .insert({
-              name: name
-            })
-            .select()
-            .single();
-
-
-        if (error) {
-          throw error;
-        }
-
-        currentPlayer = data;
-
-        localStorage.setItem(
-          "rcmc_player_id",
-          data.id
-        );
-      }
-
-
-      document.getElementById(
-        "playerDisplay"
-      ).textContent = currentPlayer.name;
-
-
-      riskBalance =
-        Number(currentPlayer.risk_balance ?? 10);
-
-
-      updateRiskDisplay();
-
-
-      document.getElementById(
-        "loginSection"
-      ).classList.add("hidden");
-
-
-      document.getElementById(
-        "competitionSection"
-      ).classList.remove("hidden");
-
-
-      await loadCompetition();
-
-
-    } catch (error) {
-
-      console.error(error);
-
-      showMessage(
-        "حدث خطأ أثناء الدخول: " +
-        (error.message || "خطأ غير معروف"),
-        "error"
-      );
-
-    } finally {
-
-      button.disabled = false;
-      button.textContent = "دخول المسابقة";
-
-    }
+  if (!username || !password || !name) {
+    showMessage("يرجى تعبئة جميع الحقول.", "error");
+    return;
   }
+
+  if (username.length < 3) {
+    showMessage("اسم المستخدم يجب أن يحتوي على 3 أحرف على الأقل.", "error");
+    return;
+  }
+
+  if (password.length < 6) {
+    showMessage("كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل.", "error");
+    return;
+  }
+
+  const button = document.getElementById("registerBtn");
+  button.disabled = true;
+  button.textContent = "جاري إنشاء الحساب...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "register_player",
+      {
+        p_username: username,
+        p_password: password,
+        p_name: name
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر إنشاء الحساب");
+    }
+
+    showMessage(
+      "تم إنشاء الحساب بنجاح ✓ يمكنك الآن تسجيل الدخول.",
+      "success"
+    );
+
+    document.getElementById("registerUsername").value = "";
+    document.getElementById("registerPassword").value = "";
+    document.getElementById("registerName").value = "";
+
+    showLogin();
+
+  } catch (error) {
+    showMessage(
+      error.message || "حدث خطأ أثناء إنشاء الحساب.",
+      "error"
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "إنشاء الحساب";
+  }
+}
+
+
+async function loginPlayer() {
+  const username = document.getElementById("loginUsername").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  if (!username || !password) {
+    showMessage("يرجى إدخال اسم المستخدم وكلمة المرور.", "error");
+    return;
+  }
+
+  const button = document.getElementById("loginBtn");
+  button.disabled = true;
+  button.textContent = "جاري الدخول...";
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      "login_player",
+      {
+        p_username: username,
+        p_password: password
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.message || "اسم المستخدم أو كلمة المرور غير صحيحة");
+    }
+
+    localStorage.setItem(
+      "rcmc_session_token",
+      data.session_token
+    );
+
+    currentPlayer = {
+      id: data.player_id,
+      name: data.name,
+      total_points: Number(data.total_points || 0),
+      risk_balance: Number(data.risk_balance || 10)
+    };
+
+    riskBalance = currentPlayer.risk_balance;
+
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("competitionSection").classList.remove("hidden");
+
+    updateRiskDisplay();
+    await loadCompetition();
+
+  } catch (error) {
+    showMessage(
+      error.message || "حدث خطأ أثناء تسجيل الدخول.",
+      "error"
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "دخول";
+  }
+}
+
+
+function showRegister() {
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("registerBox").classList.remove("hidden");
+}
+
+
+function showLogin() {
+  document.getElementById("registerBox").classList.add("hidden");
+  document.getElementById("loginBox").classList.remove("hidden");
+}
 
 
   /* =========================================================
