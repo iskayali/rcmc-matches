@@ -982,7 +982,10 @@ await loadLeaderboard();
 
       const existing =
         predictions[match.id] || {};
-
+const isLocked =
+  Date.now() >= kickoff.getTime() ||
+  match.status !== "scheduled" ||
+  existing.scored === true;
 
       card.innerHTML = `
 
@@ -1006,8 +1009,14 @@ await loadLeaderboard();
           </div>
 
           <div class="vs">
-            VS
-          </div>
+  ${
+    match.status === "finished" &&
+    match.home_score !== null &&
+    match.away_score !== null
+      ? `${match.home_score} - ${match.away_score}`
+      : "VS"
+  }
+</div>
 
           <div class="team">
             ${escapeHtml(match.away_team)}
@@ -1030,6 +1039,7 @@ await loadLeaderboard();
                 : ""
             }"
             onclick="selectPrediction(${match.id}, 'home')"
+            ${isLocked ? "disabled" : ""}
           >
             فوز ${escapeHtml(match.home_team)}
           </button>
@@ -1042,6 +1052,7 @@ await loadLeaderboard();
                 : ""
             }"
             onclick="selectPrediction(${match.id}, 'draw')"
+            ${isLocked ? "disabled" : ""}
           >
             تعادل
           </button>
@@ -1054,6 +1065,7 @@ await loadLeaderboard();
                 : ""
             }"
             onclick="selectPrediction(${match.id}, 'away')"
+            ${isLocked ? "disabled" : ""}
           >
             فوز ${escapeHtml(match.away_team)}
           </button>
@@ -1077,6 +1089,7 @@ await loadLeaderboard();
                   : ""
               }"
               onclick="selectRisk(${match.id}, ${value})"
+              ${isLocked ? "disabled" : ""}
             >
               ${value}
             </button>
@@ -1088,18 +1101,27 @@ await loadLeaderboard();
 
         <div class="match-status">
 
-          ${
-            existing.outcome
-              ? "✓ تم اختيار التوقع"
-              : "لم يتم اختيار توقع بعد"
-          }
+  ${
+    isLocked
+      ? (
+          match.status === "finished"
+            ? "🏁 انتهت المباراة — التوقع مقفل"
+            : "🔒 بدأت المباراة — التوقع مقفل"
+        )
+      : (
+          existing.outcome
+            ? "✓ تم اختيار توقع"
+            : "لم يتم اختيار توقع بعد"
+        )
+  }
 
-        </div>
+</div>
 
 
         <button
           class="btn btn-primary"
           onclick="savePrediction(${match.id})"
+          ${isLocked ? "disabled" : ""}
         >
           حفظ التوقع
         </button>
