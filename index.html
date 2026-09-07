@@ -1112,12 +1112,18 @@
   }
 
 
-  function updateRiskDisplay() {
+ function updateRiskDisplay() {
 
-    document.getElementById(
-      "riskBalance"
-    ).textContent = riskBalance;
-  }
+  document.getElementById(
+    "riskBalance"
+  ).textContent = riskBalance;
+
+  document.getElementById(
+    "playerPoints"
+  ).textContent =
+    Number(currentPlayer?.total_points || 0);
+
+}
 
 
   /* =========================================================
