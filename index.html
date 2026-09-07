@@ -1217,151 +1217,136 @@ function showLogin() {
 
   async function savePrediction(matchId) {
 
-    const match =
-      matches.find(
-        item => Number(item.id) === Number(matchId)
+  const match =
+    matches.find(
+      item => Number(item.id) === Number(matchId)
+    );
+
+  if (!match) {
+    return;
+  }
+
+  const prediction =
+    predictions[matchId];
+
+  if (!prediction || !prediction.outcome) {
+    showMessage(
+      "اختر نتيجة المباراة أولاً.",
+      "error"
+    );
+    return;
+  }
+
+  const kickoff =
+    new Date(match.kickoff);
+
+  if (new Date() >= kickoff) {
+    showMessage(
+      "انتهى وقت التوقع لهذه المباراة لأنها بدأت بالفعل.",
+      "error"
+    );
+    return;
+  }
+
+  /*
+    نتأكد أن مجموع المخاطرة المحلي
+    لا يتجاوز الحد المسموح.
+  */
+  let totalRisk = 0;
+
+  Object.values(predictions)
+    .forEach(item => {
+      totalRisk += Number(
+        item.risk_points || 0
       );
+    });
 
+  const maximumRisk =
+    Number(currentStage?.risk_start ?? 10);
 
-    if (!match) {
-      return;
+  if (totalRisk > maximumRisk) {
+    showMessage(
+      "مجموع نقاط المخاطرة يتجاوز الحد المسموح.",
+      "error"
+    );
+    return;
+  }
+
+  const sessionToken =
+    localStorage.getItem("rcmc_session_token");
+
+  if (!sessionToken) {
+    showMessage(
+      "انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.",
+      "error"
+    );
+
+    document.getElementById("competitionSection")
+      .classList.add("hidden");
+
+    document.getElementById("loginSection")
+      .classList.remove("hidden");
+
+    return;
+  }
+
+  try {
+
+    const {
+      data,
+      error
+    } = await supabaseClient.rpc(
+      "save_prediction",
+      {
+        p_session_token: sessionToken,
+        p_match_id: Number(matchId),
+        p_outcome: prediction.outcome,
+        p_risk_points:
+          Number(prediction.risk_points || 0)
+      }
+    );
+
+    if (error) {
+      throw error;
     }
 
-
-    const prediction =
-      predictions[matchId];
-
-
-    if (!prediction || !prediction.outcome) {
-
-      showMessage(
-        "اختر نتيجة المباراة أولاً.",
-        "error"
+    if (!data || !data.success) {
+      throw new Error(
+        data?.message || "تعذر حفظ التوقع."
       );
-
-      return;
     }
-
-
-    const kickoff =
-      new Date(match.kickoff);
-
-
-    if (new Date() >= kickoff) {
-
-      showMessage(
-        "انتهى وقت التوقع لهذه المباراة لأنها بدأت بالفعل.",
-        "error"
-      );
-
-      return;
-    }
-
 
     /*
-      نتأكد أن مجموع المخاطرة لا يتجاوز 10.
+      السيرفر هو المصدر الحقيقي
+      لرصيد المخاطرة.
     */
+    const serverRiskBalance =
+      Number(data.risk_balance);
 
-    let totalRisk = 0;
+    currentPlayer.risk_balance =
+      serverRiskBalance;
 
+    riskBalance =
+      serverRiskBalance;
 
-    Object.values(predictions)
-      .forEach(item => {
+    updateRiskDisplay();
 
-        totalRisk += Number(
-          item.risk_points || 0
-        );
+    showMessage(
+      "تم حفظ توقعك بنجاح ✓",
+      "success"
+    );
 
-      });
+  } catch (error) {
 
+    console.error(error);
 
-    const maximumRisk =
-      Number(currentStage?.risk_start ?? 10);
-
-
-    if (totalRisk > maximumRisk) {
-
-      showMessage(
-        "مجموع نقاط المخاطرة يتجاوز الحد المسموح.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    try {
-
-      const {
-        error
-      } = await supabaseClient
-        .from("predictions")
-        .upsert(
-          {
-            player_id: currentPlayer.id,
-            match_id: matchId,
-            outcome: prediction.outcome,
-            risk_points:
-              Number(prediction.risk_points || 0),
-            updated_at:
-              new Date().toISOString()
-          },
-          {
-            onConflict:
-              "player_id,match_id"
-          }
-        );
-
-
-      if (error) {
-        throw error;
-      }
-
-
-      showMessage(
-        "تم حفظ توقعك بنجاح ✓",
-        "success"
-      );
-
-
-      /*
-        تحديث رصيد المخاطرة في جدول اللاعب.
-      */
-
-      const newBalance =
-        Number(currentStage?.risk_start ?? 10)
-        - totalRisk;
-
-
-      await supabaseClient
-        .from("players")
-        .update({
-          risk_balance: newBalance
-        })
-        .eq("id", currentPlayer.id);
-
-
-      currentPlayer.risk_balance =
-        newBalance;
-
-
-      riskBalance =
-        newBalance;
-
-
-      updateRiskDisplay();
-
-    } catch (error) {
-
-      console.error(error);
-
-      showMessage(
-        "تعذر حفظ التوقع: " +
-        error.message,
-        "error"
-      );
-    }
+    showMessage(
+      "تعذر حفظ التوقع: " +
+      error.message,
+      "error"
+    );
   }
+}
 
 
   /* =========================================================
