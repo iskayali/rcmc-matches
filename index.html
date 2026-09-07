@@ -1,556 +1,1396 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>RCMC MATCHES</title>
+  <title>RCMC MATCHES</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        body {
-            font-family: Arial, Tahoma, sans-serif;
-            background: #071426;
-            color: white;
-            min-height: 100vh;
-        }
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .container {
-            width: 92%;
-            max-width: 600px;
-            margin: auto;
-        }
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: #071426;
+      color: #fff;
+      min-height: 100vh;
+    }
 
-        /* Header */
-        header {
-            text-align: center;
-            padding: 35px 15px 25px;
-        }
+    .container {
+      width: 92%;
+      max-width: 650px;
+      margin: auto;
+      padding: 25px 0 50px;
+    }
 
-        .logo {
-            font-size: 38px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: #d4a936;
-        }
+    /* HEADER */
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
-        .subtitle {
-            margin-top: 8px;
-            color: #d9dce2;
-            font-size: 15px;
-        }
+    .logo-circle {
+      width: 90px;
+      height: 90px;
+      border: 3px solid #d9b65c;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b1d34;
+      box-shadow: 0 0 25px rgba(217, 182, 92, 0.15);
+    }
 
-        .gold-line {
-            width: 80px;
-            height: 3px;
-            background: #d4a936;
-            margin: 18px auto;
-            border-radius: 10px;
-        }
+    .logo-text {
+      color: #d9b65c;
+      font-size: 20px;
+      font-weight: 900;
+    }
 
-        /* Welcome */
-        .welcome {
-            background: #0d2038;
-            border: 1px solid #1d3855;
-            border-radius: 18px;
-            padding: 25px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .brand {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #d9b65c;
+    }
 
-        .welcome h2 {
-            margin-bottom: 10px;
-        }
+    .subtitle {
+      margin-top: 7px;
+      color: #b9c2ce;
+      font-size: 14px;
+    }
 
-        .welcome p {
-            color: #b9c2ce;
-            font-size: 14px;
-        }
+    /* CARDS */
+    .card {
+      background: #0d2139;
+      border: 1px solid #1d3653;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+    }
 
-        input {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 10px;
-            border: 1px solid #36516e;
-            background: #08182b;
-            color: white;
-            font-size: 16px;
-            text-align: right;
-        }
+    .welcome {
+      text-align: center;
+    }
 
-        button {
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
+    .welcome h2 {
+      color: #d9b65c;
+      margin-bottom: 10px;
+      font-size: 21px;
+    }
 
-        .main-button {
-            width: 100%;
-            margin-top: 12px;
-            padding: 15px;
-            border-radius: 10px;
-            background: #d4a936;
-            color: #071426;
-        }
+    .welcome p {
+      color: #c5ced9;
+      line-height: 1.8;
+      font-size: 14px;
+    }
 
-        .main-button:hover {
-            background: #e5bd55;
-        }
+    /* INPUT */
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #d9b65c;
+      font-weight: bold;
+    }
 
-        /* Player info */
-        .player {
-            display: none;
-            background: #0d2038;
-            border-radius: 15px;
-            padding: 18px;
-            margin-bottom: 20px;
-            border: 1px solid #1d3855;
-        }
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #38516c;
+      background: #08182a;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+    }
 
-        .player-name {
-            font-size: 20px;
-            font-weight: bold;
-        }
+    input:focus {
+      border-color: #d9b65c;
+    }
 
-        .stats {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+    /* BUTTON */
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-        .stat {
-            flex: 1;
-            background: #08182b;
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-        }
+    .btn-primary {
+      background: #d9b65c;
+      color: #071426;
+    }
 
-        .stat-number {
-            display: block;
-            color: #d4a936;
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
 
-        .stat-label {
-            color: #aeb8c5;
-            font-size: 12px;
-        }
+    .btn-secondary {
+      background: #17314f;
+      color: #fff;
+      border: 1px solid #31506f;
+    }
 
-        /* Matches */
-        .matches {
-            display: none;
-        }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+    /* PLAYER BAR */
+    .player-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-        .section-title h2 {
-            font-size: 21px;
-        }
+    .player-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
 
-        .round {
-            color: #d4a936;
-            font-size: 13px;
-        }
+    .risk-box {
+      background: #08182a;
+      border: 1px solid #d9b65c;
+      border-radius: 12px;
+      padding: 10px 14px;
+      text-align: center;
+    }
 
-        .match {
-            background: #0d2038;
-            border: 1px solid #1d3855;
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 15px;
-        }
+    .risk-label {
+      font-size: 11px;
+      color: #aeb8c4;
+    }
 
-        .match-time {
-            text-align: center;
-            color: #8f9baa;
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
+    .risk-value {
+      color: #d9b65c;
+      font-size: 22px;
+      font-weight: bold;
+    }
 
-        .teams {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-        }
+    /* STAGE */
+    .stage-title {
+      text-align: center;
+      margin-bottom: 18px;
+    }
 
-        .team {
-            width: 35%;
-            font-weight: bold;
-        }
+    .stage-title h2 {
+      color: #d9b65c;
+      font-size: 23px;
+    }
 
-        .vs {
-            color: #d4a936;
-            font-weight: bold;
-            font-size: 13px;
-        }
+    .stage-title p {
+      color: #aeb8c4;
+      font-size: 13px;
+      margin-top: 5px;
+    }
 
-        .prediction-title {
-            text-align: center;
-            color: #aeb8c5;
-            font-size: 12px;
-            margin: 18px 0 10px;
-        }
+    /* MATCH */
+    .match-card {
+      background: #091a2e;
+      border: 1px solid #223c58;
+      border-radius: 16px;
+      padding: 17px;
+      margin-bottom: 15px;
+    }
 
-        .prediction-buttons {
-            display: flex;
-            gap: 7px;
-        }
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      color: #9faebe;
+      font-size: 12px;
+    }
 
-        .prediction-buttons button {
-            flex: 1;
-            padding: 11px 5px;
-            border-radius: 8px;
-            background: #091a2d;
-            border: 1px solid #36516e;
-            color: white;
-            font-size: 13px;
-        }
+    .teams {
+      display: grid;
+      grid-template-columns: 1fr 55px 1fr;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+    }
 
-        .prediction-buttons button.selected {
-            background: #d4a936;
-            color: #071426;
-            border-color: #d4a936;
-        }
+    .team {
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 1.4;
+    }
 
-        .risk {
-            margin-top: 15px;
-            text-align: center;
-        }
+    .vs {
+      color: #d9b65c;
+      font-weight: bold;
+    }
 
-        .risk-title {
-            color: #aeb8c5;
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
+    /* PREDICTION */
+    .section-label {
+      color: #c8d0da;
+      font-size: 13px;
+      margin: 18px 0 9px;
+      font-weight: bold;
+    }
 
-        .risk-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 7px;
-        }
+    .prediction-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
 
-        .risk-buttons button {
-            width: 42px;
-            height: 38px;
-            border-radius: 8px;
-            background: #091a2d;
-            border: 1px solid #36516e;
-            color: white;
-        }
+    .prediction-btn {
+      border: 1px solid #38516c;
+      background: #102843;
+      color: #fff;
+      border-radius: 10px;
+      padding: 11px 5px;
+      cursor: pointer;
+      font-size: 13px;
+    }
 
-        .risk-buttons button.selected {
-            background: #d4a936;
-            color: #071426;
-        }
+    .prediction-btn.selected {
+      background: #d9b65c;
+      color: #071426;
+      border-color: #d9b65c;
+      font-weight: bold;
+    }
 
-        .submit {
-            display: none;
-            width: 100%;
-            margin: 20px 0 40px;
-            padding: 16px;
-            border-radius: 12px;
-            background: #d4a936;
-            color: #071426;
-        }
+    /* RISK */
+    .risk-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
 
-        footer {
-            text-align: center;
-            padding: 25px;
-            color: #667789;
-            font-size: 12px;
-        }
+    .risk-btn {
+      border: 1px solid #38516c;
+      background: #102843;
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
 
-        @media (max-width: 400px) {
-            .logo {
-                font-size: 31px;
-            }
+    .risk-btn.selected {
+      background: #d9b65c;
+      color: #071426;
+      border-color: #d9b65c;
+      font-weight: bold;
+    }
 
-            .team {
-                font-size: 14px;
-            }
-        }
-    </style>
+    .match-status {
+      text-align: center;
+      margin-top: 13px;
+      font-size: 12px;
+      color: #8e9aaa;
+    }
+
+    /* LEADERBOARD */
+    .leaderboard-row {
+      display: grid;
+      grid-template-columns: 45px 1fr 70px;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 5px;
+      border-bottom: 1px solid #1c344e;
+    }
+
+    .leaderboard-row:last-child {
+      border-bottom: none;
+    }
+
+    .rank {
+      color: #d9b65c;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .points {
+      text-align: left;
+      font-weight: bold;
+      color: #d9b65c;
+    }
+
+    /* MESSAGE */
+    .message {
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      text-align: center;
+      display: none;
+      font-size: 14px;
+    }
+
+    .message.success {
+      display: block;
+      background: #123c2a;
+      border: 1px solid #276d4b;
+      color: #8de0b5;
+    }
+
+    .message.error {
+      display: block;
+      background: #421c22;
+      border: 1px solid #81343f;
+      color: #ff9ba7;
+    }
+
+    .message.info {
+      display: block;
+      background: #152d46;
+      border: 1px solid #31516f;
+      color: #a9c9e7;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 25px;
+      color: #aeb8c4;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #68798c;
+      font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .brand {
+        font-size: 27px;
+      }
+
+      .team {
+        font-size: 14px;
+      }
+
+      .prediction-btn,
+      .risk-btn {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <header>
-        <div class="logo">RCMC MATCHES</div>
-        <div class="gold-line"></div>
-        <div class="subtitle">توقع • نافس • تصدّر</div>
-    </header>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-circle">
+      <div class="logo-text">RCMC</div>
+    </div>
 
-    <!-- Welcome -->
-    <div class="welcome" id="welcome">
+    <div class="brand">RCMC MATCHES</div>
+    <div class="subtitle">توقع • نافس • تصدّر</div>
+  </div>
 
-        <h2>🏆 أهلاً بك في RCMC MATCHES</h2>
+  <!-- MESSAGE -->
+  <div id="message" class="message"></div>
 
-        <p>
-            شارك بتوقعاتك ونافس أعضاء المجموعة
-        </p>
+  <!-- LOGIN -->
+  <section id="loginSection">
 
-        <input
-            type="text"
-            id="playerName"
-            placeholder="اكتب اسمك هنا"
-        >
+    <div class="card welcome">
+      <h2>🏆 أهلاً بك في RCMC MATCHES</h2>
 
-        <button class="main-button" onclick="startGame()">
-            دخول المسابقة
-        </button>
+      <p>
+        شارك في مسابقة توقعات دوري أبطال أوروبا،
+        توقع نتائج المباريات، اجمع النقاط،
+        واستخدم نقاط المخاطرة بذكاء لتتصدر الترتيب.
+      </p>
+    </div>
+
+    <div class="card">
+
+      <label for="playerName">اسمك</label>
+
+      <input
+        id="playerName"
+        type="text"
+        maxlength="40"
+        placeholder="اكتب اسمك هنا"
+        autocomplete="off"
+      >
+
+      <button
+        id="loginBtn"
+        class="btn btn-primary"
+        onclick="enterCompetition()"
+      >
+        دخول المسابقة
+      </button>
 
     </div>
 
-    <!-- Player -->
-    <div class="player" id="player">
+  </section>
 
-        <div class="player-name">
-            👋 أهلاً <span id="name"></span>
+
+  <!-- COMPETITION -->
+  <section id="competitionSection" class="hidden">
+
+    <!-- PLAYER -->
+    <div class="card">
+
+      <div class="player-bar">
+
+        <div>
+          <div style="font-size:11px;color:#8d9aaa;">المشارك</div>
+          <div id="playerDisplay" class="player-name">---</div>
         </div>
 
-        <div class="stats">
-
-            <div class="stat">
-                <span class="stat-number">0</span>
-                <span class="stat-label">النقاط</span>
-            </div>
-
-            <div class="stat">
-                <span class="stat-number" id="riskBalance">10</span>
-                <span class="stat-label">نقاط المخاطرة</span>
-            </div>
-
+        <div class="risk-box">
+          <div class="risk-label">نقاط المخاطرة</div>
+          <div id="riskBalance" class="risk-value">10</div>
         </div>
+
+      </div>
 
     </div>
 
-    <!-- Matches -->
-    <div class="matches" id="matches">
 
-        <div class="section-title">
+    <!-- STAGE -->
+    <div class="card">
 
-            <h2>⚽ مباريات الجولة</h2>
+      <div class="stage-title">
+        <h2 id="stageName">المرحلة</h2>
+        <p>التوقعات تُغلق عند بداية المباراة</p>
+      </div>
 
-            <span class="round">
-                مرحلة الدوري
-            </span>
-
-        </div>
-
-
-        <!-- Match 1 -->
-        <div class="match">
-
-            <div class="match-time">
-                الثلاثاء • 22:00
-            </div>
-
-            <div class="teams">
-
-                <div class="team">
-                    ريال مدريد
-                </div>
-
-                <div class="vs">
-                    VS
-                </div>
-
-                <div class="team">
-                    ليفربول
-                </div>
-
-            </div>
-
-            <div class="prediction-title">
-                توقع نتيجة المباراة
-            </div>
-
-            <div class="prediction-buttons">
-
-                <button onclick="selectPrediction(this)">
-                    فوز ريال مدريد
-                </button>
-
-                <button onclick="selectPrediction(this)">
-                    تعادل
-                </button>
-
-                <button onclick="selectPrediction(this)">
-                    فوز ليفربول
-                </button>
-
-            </div>
-
-            <div class="risk">
-
-                <div class="risk-title">
-                    🎲 نقاط المخاطرة
-                </div>
-
-                <div class="risk-buttons">
-
-                    <button onclick="selectRisk(this)">0</button>
-                    <button onclick="selectRisk(this)">1</button>
-                    <button onclick="selectRisk(this)">2</button>
-                    <button onclick="selectRisk(this)">3</button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Match 2 -->
-        <div class="match">
-
-            <div class="match-time">
-                الأربعاء • 22:00
-            </div>
-
-            <div class="teams">
-
-                <div class="team">
-                    برشلونة
-                </div>
-
-                <div class="vs">
-                    VS
-                </div>
-
-                <div class="team">
-                    بايرن ميونخ
-                </div>
-
-            </div>
-
-            <div class="prediction-title">
-                توقع نتيجة المباراة
-            </div>
-
-            <div class="prediction-buttons">
-
-                <button onclick="selectPrediction(this)">
-                    فوز برشلونة
-                </button>
-
-                <button onclick="selectPrediction(this)">
-                    تعادل
-                </button>
-
-                <button onclick="selectPrediction(this)">
-                    فوز بايرن
-                </button>
-
-            </div>
-
-            <div class="risk">
-
-                <div class="risk-title">
-                    🎲 نقاط المخاطرة
-                </div>
-
-                <div class="risk-buttons">
-
-                    <button onclick="selectRisk(this)">0</button>
-                    <button onclick="selectRisk(this)">1</button>
-                    <button onclick="selectRisk(this)">2</button>
-                    <button onclick="selectRisk(this)">3</button>
-
-                </div>
-
-            </div>
-
-        </div>
+      <div id="matchesContainer">
+        <div class="loading">جاري تحميل المباريات...</div>
+      </div>
 
     </div>
 
-    <button class="submit" id="submit" onclick="submitPredictions()">
-        🔒 تأكيد جميع التوقعات
-    </button>
 
-    <footer>
-        RCMC MATCHES © 2026
-    </footer>
+    <!-- LEADERBOARD -->
+    <div class="card">
+
+      <div class="stage-title">
+        <h2>🏆 الترتيب</h2>
+        <p>ترتيب المشاركين الحالي</p>
+      </div>
+
+      <div id="leaderboard">
+        <div class="loading">جاري تحميل الترتيب...</div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <div class="footer">
+    RCMC MATCHES © 2026
+  </div>
 
 </div>
 
 
 <script>
 
-    function startGame() {
+  /* =========================================================
+     SUPABASE
+  ========================================================= */
 
-        const name = document.getElementById("playerName").value.trim();
+  const SUPABASE_URL =
+    "https://ehgmkhbzkzgayixfcomk.supabase.co";
 
-        if (name === "") {
-            alert("يرجى كتابة اسمك أولاً");
-            return;
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_2J5ASCvZeYAY7su3LrnJjQ_jkTZ4Od_";
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+  /* =========================================================
+     GLOBAL VARIABLES
+  ========================================================= */
+
+  let currentPlayer = null;
+  let currentStage = null;
+  let matches = [];
+
+  let predictions = {};
+
+  let riskBalance = 10;
+
+
+  /* =========================================================
+     MESSAGE
+  ========================================================= */
+
+  function showMessage(text, type = "info") {
+
+    const box = document.getElementById("message");
+
+    box.textContent = text;
+
+    box.className = "message " + type;
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+    setTimeout(() => {
+      box.className = "message";
+    }, 5000);
+  }
+
+
+  /* =========================================================
+     ENTER COMPETITION
+  ========================================================= */
+
+  async function enterCompetition() {
+
+    const input =
+      document.getElementById("playerName");
+
+    const name =
+      input.value.trim();
+
+    if (!name) {
+
+      showMessage(
+        "اكتب اسمك أولاً",
+        "error"
+      );
+
+      return;
+    }
+
+    if (name.length < 2) {
+
+      showMessage(
+        "الاسم يجب أن يحتوي على حرفين على الأقل",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const button =
+      document.getElementById("loginBtn");
+
+    button.disabled = true;
+    button.textContent = "جاري الدخول...";
+
+
+    try {
+
+      /*
+       إنشاء لاعب جديد.
+       إذا كان المتصفح قد دخل سابقاً،
+       نستخدم player_id المحفوظ محلياً.
+      */
+
+      const savedPlayerId =
+        localStorage.getItem("rcmc_player_id");
+
+
+      if (savedPlayerId) {
+
+        const { data, error } =
+          await supabaseClient
+            .from("players")
+            .select("*")
+            .eq("id", savedPlayerId)
+            .maybeSingle();
+
+
+        if (!error && data) {
+
+          currentPlayer = data;
+
+        } else {
+
+          localStorage.removeItem(
+            "rcmc_player_id"
+          );
+
         }
 
-        document.getElementById("name").textContent = name;
+      }
 
-        document.getElementById("welcome").style.display = "none";
 
-        document.getElementById("player").style.display = "block";
+      if (!currentPlayer) {
 
-        document.getElementById("matches").style.display = "block";
+        const { data, error } =
+          await supabaseClient
+            .from("players")
+            .insert({
+              name: name
+            })
+            .select()
+            .single();
 
-        document.getElementById("submit").style.display = "block";
+
+        if (error) {
+          throw error;
+        }
+
+        currentPlayer = data;
+
+        localStorage.setItem(
+          "rcmc_player_id",
+          data.id
+        );
+      }
+
+
+      document.getElementById(
+        "playerDisplay"
+      ).textContent = currentPlayer.name;
+
+
+      riskBalance =
+        Number(currentPlayer.risk_balance ?? 10);
+
+
+      updateRiskDisplay();
+
+
+      document.getElementById(
+        "loginSection"
+      ).classList.add("hidden");
+
+
+      document.getElementById(
+        "competitionSection"
+      ).classList.remove("hidden");
+
+
+      await loadCompetition();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        "حدث خطأ أثناء الدخول: " +
+        (error.message || "خطأ غير معروف"),
+        "error"
+      );
+
+    } finally {
+
+      button.disabled = false;
+      button.textContent = "دخول المسابقة";
+
     }
+  }
 
 
-    function selectPrediction(button) {
+  /* =========================================================
+     LOAD COMPETITION
+  ========================================================= */
 
-        const buttons =
-            button.parentElement.querySelectorAll("button");
+  async function loadCompetition() {
 
-        buttons.forEach(function(btn) {
-            btn.classList.remove("selected");
+    try {
+
+      /* المرحلة النشطة */
+
+      const {
+        data: stages,
+        error: stageError
+      } = await supabaseClient
+        .from("stages")
+        .select("*")
+        .eq("active", true)
+        .order("stage_order", {
+          ascending: true
+        })
+        .limit(1);
+
+
+      if (stageError) {
+        throw stageError;
+      }
+
+
+      if (!stages || stages.length === 0) {
+
+        document.getElementById(
+          "matchesContainer"
+        ).innerHTML =
+          '<div class="loading">لا توجد مرحلة نشطة حالياً.</div>';
+
+        return;
+      }
+
+
+      currentStage = stages[0];
+
+
+      document.getElementById(
+        "stageName"
+      ).textContent = currentStage.name;
+
+
+      /* المباريات */
+
+      const {
+        data: matchData,
+        error: matchError
+      } = await supabaseClient
+        .from("matches")
+        .select("*")
+        .eq("stage_id", currentStage.id)
+        .order("kickoff", {
+          ascending: true
         });
 
-        button.classList.add("selected");
+
+      if (matchError) {
+        throw matchError;
+      }
+
+
+      matches = matchData || [];
+
+
+      renderMatches();
+
+      await loadLeaderboard();
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        "تعذر تحميل المسابقة: " +
+        error.message,
+        "error"
+      );
+    }
+  }
+
+
+  /* =========================================================
+     RENDER MATCHES
+  ========================================================= */
+
+  function renderMatches() {
+
+    const container =
+      document.getElementById(
+        "matchesContainer"
+      );
+
+
+    if (!matches.length) {
+
+      container.innerHTML =
+        '<div class="loading">لا توجد مباريات في هذه المرحلة.</div>';
+
+      return;
     }
 
 
-    function selectRisk(button) {
-
-        const buttons =
-            button.parentElement.querySelectorAll("button");
-
-        buttons.forEach(function(btn) {
-            btn.classList.remove("selected");
-        });
-
-        button.classList.add("selected");
-    }
+    container.innerHTML = "";
 
 
-    function submitPredictions() {
+    matches.forEach(match => {
 
-        alert(
-            "تم تسجيل توقعاتك بنجاح! 🔥\n\n" +
-            "في النسخة النهائية سيتم حفظ التوقعات تلقائياً في قاعدة البيانات."
+      const card =
+        document.createElement("div");
+
+      card.className = "match-card";
+
+
+      const kickoff =
+        new Date(match.kickoff);
+
+
+      const dateText =
+        kickoff.toLocaleDateString(
+          "ar-AE",
+          {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+          }
         );
 
+
+      const timeText =
+        kickoff.toLocaleTimeString(
+          "ar-AE",
+          {
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        );
+
+
+      const existing =
+        predictions[match.id] || {};
+
+
+      card.innerHTML = `
+
+        <div class="match-header">
+
+          <span>
+            ${dateText}
+          </span>
+
+          <span>
+            ${timeText}
+          </span>
+
+        </div>
+
+
+        <div class="teams">
+
+          <div class="team">
+            ${escapeHtml(match.home_team)}
+          </div>
+
+          <div class="vs">
+            VS
+          </div>
+
+          <div class="team">
+            ${escapeHtml(match.away_team)}
+          </div>
+
+        </div>
+
+
+        <div class="section-label">
+          اختر توقعك
+        </div>
+
+
+        <div class="prediction-buttons">
+
+          <button
+            class="prediction-btn ${
+              existing.outcome === "home"
+                ? "selected"
+                : ""
+            }"
+            onclick="selectPrediction(${match.id}, 'home')"
+          >
+            فوز ${escapeHtml(match.home_team)}
+          </button>
+
+
+          <button
+            class="prediction-btn ${
+              existing.outcome === "draw"
+                ? "selected"
+                : ""
+            }"
+            onclick="selectPrediction(${match.id}, 'draw')"
+          >
+            تعادل
+          </button>
+
+
+          <button
+            class="prediction-btn ${
+              existing.outcome === "away"
+                ? "selected"
+                : ""
+            }"
+            onclick="selectPrediction(${match.id}, 'away')"
+          >
+            فوز ${escapeHtml(match.away_team)}
+          </button>
+
+        </div>
+
+
+        <div class="section-label">
+          نقاط المخاطرة
+        </div>
+
+
+        <div class="risk-buttons">
+
+          ${[0,1,2,3].map(value => `
+
+            <button
+              class="risk-btn ${
+                Number(existing.risk_points || 0) === value
+                  ? "selected"
+                  : ""
+              }"
+              onclick="selectRisk(${match.id}, ${value})"
+            >
+              ${value}
+            </button>
+
+          `).join("")}
+
+        </div>
+
+
+        <div class="match-status">
+
+          ${
+            existing.outcome
+              ? "✓ تم اختيار التوقع"
+              : "لم يتم اختيار توقع بعد"
+          }
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="savePrediction(${match.id})"
+        >
+          حفظ التوقع
+        </button>
+
+      `;
+
+
+      container.appendChild(card);
+
+    });
+  }
+
+
+  /* =========================================================
+     SELECT PREDICTION
+  ========================================================= */
+
+  function selectPrediction(
+    matchId,
+    outcome
+  ) {
+
+    if (!predictions[matchId]) {
+
+      predictions[matchId] = {
+        outcome: null,
+        risk_points: 0
+      };
+
     }
+
+
+    predictions[matchId].outcome =
+      outcome;
+
+
+    renderMatches();
+  }
+
+
+  /* =========================================================
+     SELECT RISK
+  ========================================================= */
+
+  function selectRisk(
+    matchId,
+    risk
+  ) {
+
+    if (!predictions[matchId]) {
+
+      predictions[matchId] = {
+        outcome: null,
+        risk_points: 0
+      };
+
+    }
+
+
+    /*
+      نحسب مجموع المخاطر الجديد
+      قبل السماح بالتغيير.
+    */
+
+    let totalRisk = 0;
+
+
+    Object.keys(predictions).forEach(id => {
+
+      if (Number(id) !== Number(matchId)) {
+
+        totalRisk += Number(
+          predictions[id].risk_points || 0
+        );
+
+      }
+
+    });
+
+
+    totalRisk += risk;
+
+
+    const maximumRisk =
+      Number(currentStage?.risk_start ?? 10);
+
+
+    if (totalRisk > maximumRisk) {
+
+      showMessage(
+        `لا يمكنك استخدام أكثر من ${maximumRisk} نقاط مخاطرة في هذه المرحلة.`,
+        "error"
+      );
+
+      return;
+    }
+
+
+    predictions[matchId].risk_points =
+      risk;
+
+
+    updateRiskFromPredictions();
+
+    renderMatches();
+  }
+
+
+  /* =========================================================
+     CALCULATE RISK
+  ========================================================= */
+
+  function updateRiskFromPredictions() {
+
+    let used = 0;
+
+
+    Object.values(predictions)
+      .forEach(prediction => {
+
+        used += Number(
+          prediction.risk_points || 0
+        );
+
+      });
+
+
+    riskBalance =
+      Number(currentStage?.risk_start ?? 10)
+      - used;
+
+
+    updateRiskDisplay();
+  }
+
+
+  function updateRiskDisplay() {
+
+    document.getElementById(
+      "riskBalance"
+    ).textContent = riskBalance;
+  }
+
+
+  /* =========================================================
+     SAVE PREDICTION
+  ========================================================= */
+
+  async function savePrediction(matchId) {
+
+    const match =
+      matches.find(
+        item => Number(item.id) === Number(matchId)
+      );
+
+
+    if (!match) {
+      return;
+    }
+
+
+    const prediction =
+      predictions[matchId];
+
+
+    if (!prediction || !prediction.outcome) {
+
+      showMessage(
+        "اختر نتيجة المباراة أولاً.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const kickoff =
+      new Date(match.kickoff);
+
+
+    if (new Date() >= kickoff) {
+
+      showMessage(
+        "انتهى وقت التوقع لهذه المباراة لأنها بدأت بالفعل.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /*
+      نتأكد أن مجموع المخاطرة لا يتجاوز 10.
+    */
+
+    let totalRisk = 0;
+
+
+    Object.values(predictions)
+      .forEach(item => {
+
+        totalRisk += Number(
+          item.risk_points || 0
+        );
+
+      });
+
+
+    const maximumRisk =
+      Number(currentStage?.risk_start ?? 10);
+
+
+    if (totalRisk > maximumRisk) {
+
+      showMessage(
+        "مجموع نقاط المخاطرة يتجاوز الحد المسموح.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    try {
+
+      const {
+        error
+      } = await supabaseClient
+        .from("predictions")
+        .upsert(
+          {
+            player_id: currentPlayer.id,
+            match_id: matchId,
+            outcome: prediction.outcome,
+            risk_points:
+              Number(prediction.risk_points || 0),
+            updated_at:
+              new Date().toISOString()
+          },
+          {
+            onConflict:
+              "player_id,match_id"
+          }
+        );
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      showMessage(
+        "تم حفظ توقعك بنجاح ✓",
+        "success"
+      );
+
+
+      /*
+        تحديث رصيد المخاطرة في جدول اللاعب.
+      */
+
+      const newBalance =
+        Number(currentStage?.risk_start ?? 10)
+        - totalRisk;
+
+
+      await supabaseClient
+        .from("players")
+        .update({
+          risk_balance: newBalance
+        })
+        .eq("id", currentPlayer.id);
+
+
+      currentPlayer.risk_balance =
+        newBalance;
+
+
+      riskBalance =
+        newBalance;
+
+
+      updateRiskDisplay();
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        "تعذر حفظ التوقع: " +
+        error.message,
+        "error"
+      );
+    }
+  }
+
+
+  /* =========================================================
+     LEADERBOARD
+  ========================================================= */
+
+  async function loadLeaderboard() {
+
+    const container =
+      document.getElementById(
+        "leaderboard"
+      );
+
+
+    try {
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from("players")
+        .select("id,name,total_points")
+        .order("total_points", {
+          ascending: false
+        });
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (!data || data.length === 0) {
+
+        container.innerHTML =
+          '<div class="loading">لا يوجد مشاركون بعد.</div>';
+
+        return;
+      }
+
+
+      container.innerHTML = "";
+
+
+      data.forEach((player, index) => {
+
+        const row =
+          document.createElement("div");
+
+        row.className =
+          "leaderboard-row";
+
+
+        row.innerHTML = `
+
+          <div class="rank">
+            #${index + 1}
+          </div>
+
+          <div>
+            ${escapeHtml(player.name)}
+          </div>
+
+          <div class="points">
+            ${Number(player.total_points || 0)}
+          </div>
+
+        `;
+
+
+        container.appendChild(row);
+
+      });
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      container.innerHTML =
+        '<div class="loading">تعذر تحميل الترتيب.</div>';
+    }
+  }
+
+
+  /* =========================================================
+     SECURITY HELPER
+  ========================================================= */
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+
+  /* =========================================================
+     ENTER WITH ENTER KEY
+  ========================================================= */
+
+  document
+    .getElementById("playerName")
+    .addEventListener(
+      "keydown",
+      function(event) {
+
+        if (event.key === "Enter") {
+          enterCompetition();
+        }
+
+      }
+    );
+
+
+  /* =========================================================
+     INITIAL LOAD
+  ========================================================= */
+
+  console.log(
+    "RCMC MATCHES connected to Supabase."
+  );
 
 </script>
 
