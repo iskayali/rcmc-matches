@@ -418,6 +418,71 @@ const supabaseClient =
   );
 
 let stages = [];
+  let players = [];
+
+async function loadPlayers() {
+
+  const container =
+    document.getElementById("players");
+
+  const { data, error } =
+    await supabaseClient
+      .from("players")
+      .select("id, name, total_points, risk_balance")
+      .order("total_points", {
+        ascending: false
+      });
+
+  if (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      "تعذر تحميل اللاعبين.";
+
+    return;
+  }
+
+  if (!data || data.length === 0) {
+
+    container.innerHTML =
+      "لا يوجد لاعبين حاليًا.";
+
+    return;
+  }
+
+  players = data;
+
+  container.innerHTML =
+    data.map(player => `
+      <div class="player-row">
+
+        <div>
+          <strong>
+            ${escapeHtml(player.name)}
+          </strong>
+        </div>
+
+        <div>
+          النقاط:
+          ${player.total_points}
+        </div>
+
+        <div>
+          المخاطرة:
+          ${player.risk_balance}
+        </div>
+
+        <button
+          class="primary"
+          onclick="resetPlayerPassword(${player.id})"
+        >
+          🔑 تغيير كلمة المرور
+        </button>
+
+      </div>
+    `).join("");
+}
   async function loginAdmin() {
 
   const username =
