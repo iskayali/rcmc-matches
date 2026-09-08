@@ -1180,25 +1180,26 @@ function selectRisk(matchId, risk) {
     return;
   }
 
-  // نتحقق من الرصيد المتاح الحقيقي،
-  // مع إعادة المخاطرة القديمة لهذه المباراة مؤقتًا.
+  // المخاطرة المحفوظة سابقًا لهذه المباراة
   const oldRisk = Number(
     predictions[matchId].risk_points || 0
   );
 
+  // الرصيد الحقيقي المحفوظ في الحساب
+  // نعيد المخاطرة القديمة مؤقتًا فقط لحساب المسموح اختياره
   const availableBalance =
     Number(riskBalance || 0) + oldRisk;
 
   if (selectedRisk > availableBalance) {
     showMessage(
-      "رصيد المخاطرة غير كافٍ لهذا التوقع.",
+      "رصيد المخاطرة غير كافٍ.",
       "error"
     );
     return;
   }
 
-  // تغيير الاختيار فقط.
-  // الرصيد لا يتغير إلا بعد الضغط على "حفظ التوقع".
+  // تغيير الاختيار محليًا فقط
+  // لا نخصم من الرصيد حتى يتم الضغط على "حفظ التوقع"
   predictions[matchId].risk_points = selectedRisk;
 
   renderMatches();
