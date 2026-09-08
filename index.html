@@ -432,7 +432,7 @@
       id="loginUsername"
       type="text"
       maxlength="30"
-      placeholder="مثلاً: islam"
+      placeholder="مثلاً: Name"
       autocomplete="username"
     >
 
@@ -539,6 +539,23 @@
 
   <!-- COMPETITION -->
   <section id="competitionSection" class="hidden">
+    <div style="text-align:left; margin:10px 0;">
+  <button
+    type="button"
+    onclick="logoutPlayer()"
+    style="
+      background:#132b47;
+      color:#dcb65a;
+      border:1px solid #dcb65a;
+      border-radius:8px;
+      padding:8px 16px;
+      cursor:pointer;
+      font-weight:bold;
+    "
+  >
+    🚪 تسجيل الخروج
+  </button>
+</div>
 
     <!-- PLAYER -->
     <div class="card">
@@ -1236,7 +1253,16 @@ function updateRiskFromPredictions() {
 
 }
 
+function logoutPlayer() {
+  localStorage.removeItem("rcmc_session_token");
 
+  currentPlayer = null;
+  predictions = {};
+  riskBalance = 10;
+
+  location.reload();
+}
+  
   /* =========================================================
      SAVE PREDICTION
   ========================================================= */
