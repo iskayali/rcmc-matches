@@ -1240,7 +1240,7 @@ if (!adminSessionToken) {
 
 const { error } =
   await supabaseClient.rpc(
-    "finish_match",
+    "update_match_result",
     {
       p_session_token: adminSessionToken,
       p_match_id: matchId,
