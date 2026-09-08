@@ -1155,43 +1155,31 @@ async function editMatch(matchId) {
   }
 
 
-  const {
-    data: stageId,
-    error: stageError
-  } =
-    await supabaseClient.rpc(
-      "get_or_create_stage",
-      {
-        p_stage_name: newStage.trim()
-      }
+  const adminSessionToken =
+    localStorage.getItem(
+      "rcmc_admin_session_token"
     );
 
-
-  if (stageError) {
-
-    console.error(stageError);
-
+  if (!adminSessionToken) {
     showMessage(
-      "تعذر حفظ المرحلة: " +
-      stageError.message,
+      "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
       "error"
     );
-
     return;
   }
 
-
-  const { error: updateError } =
-    await supabaseClient
-      .from("matches")
-      .update({
-        home_team: newHome.trim(),
-        away_team: newAway.trim(),
-        stage_id: stageId,
-        kickoff: parsedDate.toISOString()
-      })
-      .eq("id", matchId);
-
+  const { data, error: updateError } =
+    await supabaseClient.rpc(
+      "update_match",
+      {
+        p_session_token: adminSessionToken,
+        p_match_id: matchId,
+        p_home_team: newHome.trim(),
+        p_away_team: newAway.trim(),
+        p_stage_name: newStage.trim(),
+        p_kickoff: parsedDate.toISOString()
+      }
+    );
 
   if (updateError) {
 
@@ -1200,6 +1188,16 @@ async function editMatch(matchId) {
     showMessage(
       "تعذر تعديل المباراة: " +
       updateError.message,
+      "error"
+    );
+
+    return;
+  }
+
+  if (!data || !data.success) {
+
+    showMessage(
+      "تعذر تعديل المباراة.",
       "error"
     );
 
