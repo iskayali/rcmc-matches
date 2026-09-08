@@ -712,6 +712,33 @@ function showMessage(text, type = "success") {
 
 
 /* =========================
+   LOAD STAGES
+========================= */
+
+async function loadStages() {
+  const { data, error } =
+    await supabaseClient
+      .from("stages")
+      .select("*")
+      .order("stage_order", {
+        ascending: true
+      });
+
+  if (error) {
+    console.error(error);
+
+    showMessage(
+      "تعذر تحميل المراحل.",
+      "error"
+    );
+
+    return;
+  }
+
+  stages = data || [];
+}
+
+/* =========================
    LOAD CATEGORIES
 ========================= */
 
@@ -727,21 +754,14 @@ async function loadCategories() {
       });
 
   if (error) {
-
     console.error(error);
-
-    showMessage(
-      "تعذر تحميل التصنيفات.",
-      "error"
-    );
-
+    showMessage("تعذر تحميل التصنيفات.", "error");
     return;
   }
 
   categories = data || [];
 
-  const select =
-    document.getElementById("categorySelect");
+  const select = document.getElementById("categorySelect");
 
   if (!select) {
     return;
@@ -761,8 +781,6 @@ async function loadCategories() {
    LOAD MATCHES
 ========================= */
 
-
-========================= */
 
 async function loadMatches() {
 
@@ -996,23 +1014,18 @@ async function addMatch() {
     !categoryId ||
     !kickoffInput
   ) {
-
     showMessage(
       "يرجى تعبئة جميع بيانات المباراة.",
       "error"
     );
-
     return;
   }
 
   const kickoff =
-    new Date(kickoffInput)
-      .toISOString();
+    new Date(kickoffInput).toISOString();
 
   const adminSessionToken =
-    localStorage.getItem(
-      "rcmc_admin_session_token"
-    );
+    localStorage.getItem("rcmc_admin_session_token");
 
   if (!adminSessionToken) {
     showMessage(
@@ -1035,43 +1048,25 @@ async function addMatch() {
     );
 
   if (error) {
-
     console.error(error);
-
     showMessage(
-      "تعذر إضافة المباراة: " +
-      error.message,
+      "تعذر إضافة المباراة: " + error.message,
       "error"
     );
-
     return;
   }
 
   if (!data || !data.success) {
-
-    showMessage(
-      "تعذر إضافة المباراة.",
-      "error"
-    );
-
+    showMessage("تعذر إضافة المباراة.", "error");
     return;
   }
 
-  showMessage(
-    "تمت إضافة المباراة بنجاح ✓"
-  );
+  showMessage("تمت إضافة المباراة بنجاح ✓");
 
-  document.getElementById("homeTeam")
-    .value = "";
-
-  document.getElementById("awayTeam")
-    .value = "";
-
-  document.getElementById("categorySelect")
-    .value = "";
-
-  document.getElementById("kickoff")
-    .value = "";
+  document.getElementById("homeTeam").value = "";
+  document.getElementById("awayTeam").value = "";
+  document.getElementById("categorySelect").value = "";
+  document.getElementById("kickoff").value = "";
 
   await loadMatches();
 }
@@ -1097,37 +1092,23 @@ async function editMatch(matchId) {
       .single();
 
   if (error || !match) {
-
-    showMessage(
-      "تعذر تحميل المباراة.",
-      "error"
-    );
-
+    showMessage("تعذر تحميل المباراة.", "error");
     return;
   }
 
   const newHome =
-    prompt(
-      "اسم الفريق الأول:",
-      match.home_team
-    );
+    prompt("اسم الفريق الأول:", match.home_team);
 
   if (newHome === null) {
     return;
   }
 
   const newAway =
-    prompt(
-      "اسم الفريق الثاني:",
-      match.away_team
-    );
+    prompt("اسم الفريق الثاني:", match.away_team);
 
   if (newAway === null) {
     return;
   }
-
-  const currentCategory =
-    match.competition_categories?.name || "";
 
   const categoryList =
     categories
@@ -1136,27 +1117,21 @@ async function editMatch(matchId) {
 
   const newCategoryId =
     prompt(
-      "أدخل رقم التصنيف:\n\n" +
-      categoryList,
-      match.category_id
+      "أدخل رقم التصنيف:\n\n" + categoryList,
+      String(match.category_id || "")
     );
 
   if (newCategoryId === null) {
     return;
   }
 
-  const categoryIdNumber =
-    Number(newCategoryId);
+  const categoryIdNumber = Number(newCategoryId);
 
   if (
     !Number.isInteger(categoryIdNumber) ||
     !categories.some(c => c.id === categoryIdNumber)
   ) {
-    showMessage(
-      "رقم التصنيف غير صحيح.",
-      "error"
-    );
-
+    showMessage("رقم التصنيف غير صحيح.", "error");
     return;
   }
 
@@ -1171,24 +1146,15 @@ async function editMatch(matchId) {
   }
 
   const parsedDate =
-    new Date(
-      newKickoff.replace(" ", "T")
-    );
+    new Date(newKickoff.replace(" ", "T"));
 
   if (isNaN(parsedDate.getTime())) {
-
-    showMessage(
-      "صيغة الموعد غير صحيحة.",
-      "error"
-    );
-
+    showMessage("صيغة الموعد غير صحيحة.", "error");
     return;
   }
 
   const adminSessionToken =
-    localStorage.getItem(
-      "rcmc_admin_session_token"
-    );
+    localStorage.getItem("rcmc_admin_session_token");
 
   if (!adminSessionToken) {
     showMessage(
@@ -1212,32 +1178,20 @@ async function editMatch(matchId) {
     );
 
   if (updateError) {
-
     console.error(updateError);
-
     showMessage(
-      "تعذر تعديل المباراة: " +
-      updateError.message,
+      "تعذر تعديل المباراة: " + updateError.message,
       "error"
     );
-
     return;
   }
 
   if (!data || !data.success) {
-
-    showMessage(
-      "تعذر تعديل المباراة.",
-      "error"
-    );
-
+    showMessage("تعذر تعديل المباراة.", "error");
     return;
   }
 
-  showMessage(
-    "تم تعديل المباراة بنجاح ✓"
-  );
-
+  showMessage("تم تعديل المباراة بنجاح ✓");
   await loadMatches();
 }
 
