@@ -402,26 +402,6 @@ async function loadStages() {
 
   stages = data || [];
 }
-  const select =
-    document.getElementById("stageSelect");
-
-  if (!stages.length) {
-
-    select.innerHTML =
-      `<option value="">لا توجد مراحل</option>`;
-
-    return;
-  }
-
-  select.innerHTML =
-    stages.map(stage => `
-      <option value="${stage.id}">
-        ${escapeHtml(stage.name)}
-      </option>
-    `).join("");
-
-}
-
 
 /* =========================
    LOAD MATCHES
