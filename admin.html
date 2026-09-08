@@ -425,13 +425,30 @@ async function loadPlayers() {
   const container =
     document.getElementById("players");
 
-  const { data, error } =
-    await supabaseClient
-      .from("players")
-      .select("id, name, total_points, risk_balance")
-      .order("total_points", {
-        ascending: false
-      });
+  const adminSessionToken =
+  localStorage.getItem(
+    "rcmc_admin_session_token"
+  );
+
+if (!adminSessionToken) {
+  showMessage(
+    "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
+    "error"
+  );
+  return;
+}
+
+const { data, error } =
+  await supabaseClient.rpc(
+    "add_match",
+    {
+      p_session_token: adminSessionToken,
+      p_home_team: homeTeam,
+      p_away_team: awayTeam,
+      p_stage_name: stageName,
+      p_kickoff: kickoff
+    }
+  );
 
   if (error) {
 
@@ -524,7 +541,7 @@ async function loadPlayers() {
 
   alert("تم تغيير كلمة المرور بنجاح ✅");
 }
-  async function loginAdmin() {
+async function loginAdmin() {
 
   const username =
     document.getElementById("adminUsername").value.trim();
@@ -540,83 +557,6 @@ async function loadPlayers() {
       "يرجى إدخال اسم المستخدم وكلمة المرور.";
     return;
   }
-    async function checkAdminSession() {
-
-  const token = localStorage.getItem(
-    "rcmc_admin_session_token"
-  );
-
-  const loginBox =
-    document.getElementById("adminLogin");
-
-  const container =
-    document.querySelector(".container");
-
-  if (!token) {
-    container.style.display = "none";
-    loginBox.style.display = "block";
-    return;
-  }
-
-  try {
-
-    const adminSessionToken =
-  localStorage.getItem(
-    "rcmc_admin_session_token"
-  );
-
-if (!adminSessionToken) {
-  showMessage(
-    "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
-    "error"
-  );
-  return;
-}
-
-const { data, error } =
-  await supabaseClient.rpc(
-    "add_match",
-    {
-      p_session_token: adminSessionToken,
-      p_home_team: homeTeam,
-      p_away_team: awayTeam,
-      p_stage_name: stageName,
-      p_kickoff: kickoff
-    }
-  );
-
-    if (error) {
-      throw error;
-    }
-
-    if (!data || !data.success) {
-      localStorage.removeItem(
-        "rcmc_admin_session_token"
-      );
-
-      container.style.display = "none";
-      loginBox.style.display = "block";
-      return;
-    }
-
-    loginBox.style.display = "none";
-    container.style.display = "block";
-
-    loadMatches();
-
-  } catch (error) {
-
-    console.error(error);
-
-    localStorage.removeItem(
-      "rcmc_admin_session_token"
-    );
-
-    container.style.display = "none";
-    loginBox.style.display = "block";
-  }
-
-}
 
   message.textContent = "جاري تسجيل الدخول...";
 
@@ -637,7 +577,8 @@ const { data, error } =
 
     if (!data || !data.success) {
       throw new Error(
-        data?.message || "بيانات الدخول غير صحيحة."
+        data?.message ||
+        "بيانات الدخول غير صحيحة."
       );
     }
 
@@ -654,7 +595,8 @@ const { data, error } =
       ".container"
     ).style.display = "block";
 
-    loadMatches();
+    await loadPlayers();
+    await loadMatches();
 
   } catch (error) {
 
@@ -663,9 +605,74 @@ const { data, error } =
     message.textContent =
       error.message ||
       "تعذر تسجيل الدخول.";
+  }
+}
 
+
+async function checkAdminSession() {
+
+  const token =
+    localStorage.getItem(
+      "rcmc_admin_session_token"
+    );
+
+  const loginBox =
+    document.getElementById("adminLogin");
+
+  const container =
+    document.querySelector(".container");
+
+  if (!token) {
+
+    container.style.display = "none";
+    loginBox.style.display = "block";
+
+    return;
   }
 
+  try {
+
+    const { data, error } =
+      await supabaseClient.rpc(
+        "get_admin_session",
+        {
+          p_session_token: token
+        }
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || !data.success) {
+
+      localStorage.removeItem(
+        "rcmc_admin_session_token"
+      );
+
+      container.style.display = "none";
+      loginBox.style.display = "block";
+
+      return;
+    }
+
+    loginBox.style.display = "none";
+    container.style.display = "block";
+
+    await loadPlayers();
+    await loadMatches();
+
+  } catch (error) {
+
+    console.error(error);
+
+    localStorage.removeItem(
+      "rcmc_admin_session_token"
+    );
+
+    container.style.display = "none";
+    loginBox.style.display = "block";
+  }
 }
 
 
@@ -1591,7 +1598,6 @@ async function init() {
 }
 
 
-checkAdminSession();
 
 loadPlayers();
 
