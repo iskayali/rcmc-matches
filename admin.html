@@ -370,13 +370,11 @@
       </div>
 
       <div class="field">
-  <label>اسم المرحلة</label>
-  <input
-    id="stageSelect"
-    type="text"
-    placeholder="مثال: الجولة الأولى"
-  >
-</div>
+        <label>التصنيف</label>
+        <select id="categorySelect">
+          <option value="">اختر التصنيف</option>
+        </select>
+      </div>
 
       <div class="field">
         <label>موعد المباراة</label>
@@ -433,7 +431,7 @@ const supabaseClient =
     SUPABASE_PUBLISHABLE_KEY
   );
 
-let stages = [];
+let categories = [];
   let players = [];
 
 async function loadPlayers() {
@@ -611,6 +609,7 @@ async function loginAdmin() {
     ).style.display = "block";
 
     await loadPlayers();
+    await loadCategories();
     await loadMatches();
 
   } catch (error) {
@@ -675,6 +674,7 @@ async function checkAdminSession() {
     container.style.display = "block";
 
     await loadPlayers();
+    await loadCategories();
     await loadMatches();
 
   } catch (error) {
@@ -712,34 +712,56 @@ function showMessage(text, type = "success") {
 
 
 /* =========================
-   LOAD STAGES
+   LOAD CATEGORIES
 ========================= */
 
-async function loadStages() {
+async function loadCategories() {
+
   const { data, error } =
     await supabaseClient
-      .from("stages")
-      .select("*")
-      .order("stage_order", {
+      .from("competition_categories")
+      .select("id, name, sort_order")
+      .eq("active", true)
+      .order("sort_order", {
         ascending: true
       });
 
   if (error) {
+
     console.error(error);
 
     showMessage(
-      "تعذر تحميل المراحل.",
+      "تعذر تحميل التصنيفات.",
       "error"
     );
 
     return;
   }
 
-  stages = data || [];
+  categories = data || [];
+
+  const select =
+    document.getElementById("categorySelect");
+
+  if (!select) {
+    return;
+  }
+
+  select.innerHTML =
+    '<option value="">اختر التصنيف</option>' +
+    categories.map(category => `
+      <option value="${category.id}">
+        ${escapeHtml(category.name)}
+      </option>
+    `).join("");
 }
+
 
 /* =========================
    LOAD MATCHES
+========================= */
+
+
 ========================= */
 
 async function loadMatches() {
@@ -749,10 +771,10 @@ async function loadMatches() {
       .from("matches")
       .select(`
         *,
-        stages (
+        competition_categories (
           id,
           name,
-          stage_order
+          sort_order
         )
       `)
       .order("kickoff", {
@@ -800,8 +822,8 @@ function renderMatches(matches) {
       const finished =
         match.status === "finished";
 
-      const stageName =
-        match.stages?.name || "بدون مرحلة";
+      const categoryName =
+        match.competition_categories?.name || "بدون تصنيف";
 
       return `
 
@@ -810,7 +832,7 @@ function renderMatches(matches) {
           <div class="match-header">
 
             <span class="stage-name">
-              ${escapeHtml(stageName)}
+              ${escapeHtml(categoryName)}
             </span>
 
             <span class="match-id">
@@ -960,9 +982,9 @@ async function addMatch() {
     document.getElementById("awayTeam")
       .value.trim();
 
-  const stageName =
-    document.getElementById("stageSelect")
-      .value.trim();
+  const categoryId =
+    document.getElementById("categorySelect")
+      .value;
 
   const kickoffInput =
     document.getElementById("kickoff")
@@ -971,7 +993,7 @@ async function addMatch() {
   if (
     !homeTeam ||
     !awayTeam ||
-    !stageName ||
+    !categoryId ||
     !kickoffInput
   ) {
 
@@ -1007,7 +1029,7 @@ async function addMatch() {
         p_session_token: adminSessionToken,
         p_home_team: homeTeam,
         p_away_team: awayTeam,
-        p_stage_name: stageName,
+        p_category_id: Number(categoryId),
         p_kickoff: kickoff
       }
     );
@@ -1045,7 +1067,7 @@ async function addMatch() {
   document.getElementById("awayTeam")
     .value = "";
 
-  document.getElementById("stageSelect")
+  document.getElementById("categorySelect")
     .value = "";
 
   document.getElementById("kickoff")
@@ -1053,6 +1075,7 @@ async function addMatch() {
 
   await loadMatches();
 }
+
 
 /* =========================
    EDIT MATCH
@@ -1065,7 +1088,8 @@ async function editMatch(matchId) {
       .from("matches")
       .select(`
         *,
-        stages (
+        competition_categories (
+          id,
           name
         )
       `)
@@ -1082,10 +1106,9 @@ async function editMatch(matchId) {
     return;
   }
 
-
   const newHome =
     prompt(
-      "اسم Home:",
+      "اسم الفريق الأول:",
       match.home_team
     );
 
@@ -1093,10 +1116,9 @@ async function editMatch(matchId) {
     return;
   }
 
-
   const newAway =
     prompt(
-      "اسم الفريق Away:",
+      "اسم الفريق الثاني:",
       match.away_team
     );
 
@@ -1104,28 +1126,39 @@ async function editMatch(matchId) {
     return;
   }
 
+  const currentCategory =
+    match.competition_categories?.name || "";
 
-  const newStage =
+  const categoryList =
+    categories
+      .map(c => `${c.id}: ${c.name}`)
+      .join("\n");
+
+  const newCategoryId =
     prompt(
-      "اسم المرحلة:",
-      match.stages?.name || ""
+      "أدخل رقم التصنيف:\n\n" +
+      categoryList,
+      match.category_id
     );
 
-  if (newStage === null) {
+  if (newCategoryId === null) {
     return;
   }
 
+  const categoryIdNumber =
+    Number(newCategoryId);
 
-  if (!newStage.trim()) {
-
+  if (
+    !Number.isInteger(categoryIdNumber) ||
+    !categories.some(c => c.id === categoryIdNumber)
+  ) {
     showMessage(
-      "اسم المرحلة مطلوب.",
+      "رقم التصنيف غير صحيح.",
       "error"
     );
 
     return;
   }
-
 
   const newKickoff =
     prompt(
@@ -1137,12 +1170,10 @@ async function editMatch(matchId) {
     return;
   }
 
-
   const parsedDate =
     new Date(
       newKickoff.replace(" ", "T")
     );
-
 
   if (isNaN(parsedDate.getTime())) {
 
@@ -1153,7 +1184,6 @@ async function editMatch(matchId) {
 
     return;
   }
-
 
   const adminSessionToken =
     localStorage.getItem(
@@ -1176,7 +1206,7 @@ async function editMatch(matchId) {
         p_match_id: matchId,
         p_home_team: newHome.trim(),
         p_away_team: newAway.trim(),
-        p_stage_name: newStage.trim(),
+        p_category_id: categoryIdNumber,
         p_kickoff: parsedDate.toISOString()
       }
     );
@@ -1203,7 +1233,6 @@ async function editMatch(matchId) {
 
     return;
   }
-
 
   showMessage(
     "تم تعديل المباراة بنجاح ✓"
@@ -1630,13 +1659,7 @@ function escapeHtml(text) {
    START
 ========================= */
 
-async function init() {
-
-  await loadStages();
-
-  await loadMatches();
-
-}
+checkAdminSession();
 
 
 </script>
