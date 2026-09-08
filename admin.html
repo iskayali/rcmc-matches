@@ -714,10 +714,14 @@ async function editMatch(matchId) {
   const { data: match, error } =
     await supabaseClient
       .from("matches")
-      .select("*")
+      .select(`
+        *,
+        stages (
+          name
+        )
+      `)
       .eq("id", matchId)
       .single();
-
 
   if (error || !match) {
 
@@ -736,7 +740,6 @@ async function editMatch(matchId) {
       match.home_team
     );
 
-
   if (newHome === null) {
     return;
   }
@@ -748,8 +751,29 @@ async function editMatch(matchId) {
       match.away_team
     );
 
-
   if (newAway === null) {
+    return;
+  }
+
+
+  const newStage =
+    prompt(
+      "اسم المرحلة:",
+      match.stages?.name || ""
+    );
+
+  if (newStage === null) {
+    return;
+  }
+
+
+  if (!newStage.trim()) {
+
+    showMessage(
+      "اسم المرحلة مطلوب.",
+      "error"
+    );
+
     return;
   }
 
@@ -760,48 +784,7 @@ async function editMatch(matchId) {
       formatForInput(match.kickoff)
     );
 
-
   if (newKickoff === null) {
-    return;
-  }
-
-
-  const stageOptions =
-    stages.map(
-      stage =>
-        `${stage.id} = ${stage.name}`
-    ).join("\n");
-
-
-  const newStage =
-    prompt(
-      "رقم المرحلة:\n\n" +
-      stageOptions,
-      String(match.stage_id)
-    );
-
-
-  if (newStage === null) {
-    return;
-  }
-
-
-  const stageId =
-    Number(newStage);
-
-
-  if (
-    !stages.some(
-      stage =>
-        Number(stage.id) === stageId
-    )
-  ) {
-
-    showMessage(
-      "رقم المرحلة غير صحيح.",
-      "error"
-    );
-
     return;
   }
 
@@ -816,6 +799,32 @@ async function editMatch(matchId) {
 
     showMessage(
       "صيغة الموعد غير صحيحة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const {
+    data: stageId,
+    error: stageError
+  } =
+    await supabaseClient.rpc(
+      "get_or_create_stage",
+      {
+        p_stage_name: newStage.trim()
+      }
+    );
+
+
+  if (stageError) {
+
+    console.error(stageError);
+
+    showMessage(
+      "تعذر حفظ المرحلة: " +
+      stageError.message,
       "error"
     );
 
@@ -852,7 +861,6 @@ async function editMatch(matchId) {
   showMessage(
     "تم تعديل المباراة بنجاح ✓"
   );
-
 
   await loadMatches();
 }
