@@ -292,7 +292,7 @@
     <div class="form-grid">
 
       <div class="field">
-        <label>الفريق المضيف</label>
+        <label>Home Team</label>
         <input id="homeTeam" type="text" placeholder="مثال: Real Madrid">
       </div>
 
@@ -540,7 +540,7 @@ function renderMatches(matches) {
                     id="home-${match.id}"
                     type="number"
                     min="0"
-                    placeholder="المضيف"
+                    placeholder="Away Team"
                   >
 
                   <input
@@ -736,7 +736,7 @@ async function editMatch(matchId) {
 
   const newHome =
     prompt(
-      "اسم الفريق المضيف:",
+      "اسم Home Team:",
       match.home_team
     );
 
@@ -979,7 +979,7 @@ async function editResult(matchId) {
 
   const home =
     prompt(
-      "النتيجة الجديدة للفريق المضيف:"
+      "النتيجة الجديدة للفريق Away Team:"
     );
 
   if (home === null) {
