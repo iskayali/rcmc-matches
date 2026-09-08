@@ -1172,24 +1172,23 @@ async function finishMatch(matchId) {
 
 async function editResult(matchId) {
 
-  const home =
-    prompt(
-      "النتيجة الجديدة للفريق Away:"
-    );
+ const home =
+  prompt(
+    "النتيجة الجديدة لـ Home:"
+  );
 
-  if (home === null) {
-    return;
-  }
+if (home === null) {
+  return;
+}
 
+const away =
+  prompt(
+    "النتيجة الجديدة لـ Away:"
+  );
 
-  const away =
-    prompt(
-      "النتيجة الجديدة للفريق Away:"
-    );
-
-  if (away === null) {
-    return;
-  }
+if (away === null) {
+  return;
+}
 
 
   const homeScore =
@@ -1226,14 +1225,29 @@ async function editResult(matchId) {
   }
 
 
-  const { error } =
-    await supabaseClient
-      .from("matches")
-      .update({
-        home_score: homeScore,
-        away_score: awayScore
-      })
-      .eq("id", matchId);
+  const adminSessionToken =
+  localStorage.getItem(
+    "rcmc_admin_session_token"
+  );
+
+if (!adminSessionToken) {
+  showMessage(
+    "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
+    "error"
+  );
+  return;
+}
+
+const { error } =
+  await supabaseClient.rpc(
+    "finish_match",
+    {
+      p_session_token: adminSessionToken,
+      p_match_id: matchId,
+      p_home_score: homeScore,
+      p_away_score: awayScore
+    }
+  );
 
 
   if (error) {
