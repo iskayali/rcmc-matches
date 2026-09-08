@@ -422,6 +422,66 @@ let stages = [];
       "يرجى إدخال اسم المستخدم وكلمة المرور.";
     return;
   }
+    async function checkAdminSession() {
+
+  const token = localStorage.getItem(
+    "rcmc_admin_session_token"
+  );
+
+  const loginBox =
+    document.getElementById("adminLogin");
+
+  const container =
+    document.querySelector(".container");
+
+  if (!token) {
+    container.style.display = "none";
+    loginBox.style.display = "block";
+    return;
+  }
+
+  try {
+
+    const { data, error } =
+      await supabaseClient.rpc(
+        "get_admin_session",
+        {
+          p_session_token: token
+        }
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || !data.success) {
+      localStorage.removeItem(
+        "rcmc_admin_session_token"
+      );
+
+      container.style.display = "none";
+      loginBox.style.display = "block";
+      return;
+    }
+
+    loginBox.style.display = "none";
+    container.style.display = "block";
+
+    loadMatches();
+
+  } catch (error) {
+
+    console.error(error);
+
+    localStorage.removeItem(
+      "rcmc_admin_session_token"
+    );
+
+    container.style.display = "none";
+    loginBox.style.display = "block";
+  }
+
+}
 
   message.textContent = "جاري تسجيل الدخول...";
 
@@ -1357,7 +1417,7 @@ async function init() {
 }
 
 
-init();
+checkAdminSession();
 
 </script>
 
