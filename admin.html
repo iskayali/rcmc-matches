@@ -406,6 +406,72 @@ const supabaseClient =
   );
 
 let stages = [];
+  async function loginAdmin() {
+
+  const username =
+    document.getElementById("adminUsername").value.trim();
+
+  const password =
+    document.getElementById("adminPassword").value;
+
+  const message =
+    document.getElementById("adminLoginMessage");
+
+  if (!username || !password) {
+    message.textContent =
+      "يرجى إدخال اسم المستخدم وكلمة المرور.";
+    return;
+  }
+
+  message.textContent = "جاري تسجيل الدخول...";
+
+  try {
+
+    const { data, error } =
+      await supabaseClient.rpc(
+        "login_admin",
+        {
+          p_username: username,
+          p_password: password
+        }
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || !data.success) {
+      throw new Error(
+        data?.message || "بيانات الدخول غير صحيحة."
+      );
+    }
+
+    localStorage.setItem(
+      "rcmc_admin_session_token",
+      data.session_token
+    );
+
+    document.getElementById(
+      "adminLogin"
+    ).style.display = "none";
+
+    document.querySelector(
+      ".container"
+    ).style.display = "block";
+
+    loadMatches();
+
+  } catch (error) {
+
+    console.error(error);
+
+    message.textContent =
+      error.message ||
+      "تعذر تسجيل الدخول.";
+
+  }
+
+}
 
 
 /* =========================
