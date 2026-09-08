@@ -22,14 +22,14 @@
     }
 
     .container {
-      width: min(100% - 30px, 900px);
+      width: min(100% - 30px, 950px);
       margin: 0 auto;
       padding: 35px 0 60px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     .logo {
@@ -71,75 +71,6 @@
       font-size: 20px;
     }
 
-    .match {
-      background: #0b1d33;
-      border: 1px solid #294665;
-      border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 15px;
-    }
-
-    .teams {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .vs {
-      color: #e3b94f;
-    }
-
-    .info {
-      color: #9db0c8;
-      font-size: 13px;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    .score-row {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 12px;
-    }
-
-    input {
-      width: 90px;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #365675;
-      background: #071426;
-      color: white;
-      text-align: center;
-      font-size: 18px;
-    }
-
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 9px;
-      padding: 13px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: bold;
-      margin-top: 8px;
-    }
-
-    .finish {
-      background: #e3b94f;
-      color: #071426;
-    }
-
-    .score {
-      background: #173b5d;
-      color: white;
-      border: 1px solid #315879;
-    }
-
     .message {
       text-align: center;
       padding: 12px;
@@ -160,10 +91,124 @@
       color: #ff9da8;
     }
 
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      color: #e3b94f;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #365675;
+      background: #071426;
+      color: white;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 9px;
+      padding: 13px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .primary {
+      background: #e3b94f;
+      color: #071426;
+    }
+
+    .secondary {
+      background: #173b5d;
+      color: white;
+      border: 1px solid #315879;
+    }
+
+    .danger {
+      background: #5a2028;
+      color: #ffb4bc;
+      border: 1px solid #7a303b;
+    }
+
+    .match {
+      background: #0b1d33;
+      border: 1px solid #294665;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 15px;
+    }
+
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .stage-name {
+      color: #e3b94f;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .match-id {
+      color: #71869e;
+      font-size: 11px;
+    }
+
+    .teams {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      font-weight: bold;
+      font-size: 18px;
+      margin: 15px 0 10px;
+      text-align: center;
+    }
+
+    .vs {
+      color: #e3b94f;
+    }
+
+    .info {
+      color: #9db0c8;
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
     .status {
       text-align: center;
       font-size: 13px;
-      margin-top: 8px;
+      margin: 8px 0;
     }
 
     .scheduled {
@@ -172,6 +217,57 @@
 
     .finished {
       color: #78e0a0;
+    }
+
+    .score-display {
+      text-align: center;
+      font-size: 22px;
+      color: #e3b94f;
+      font-weight: bold;
+      margin: 12px 0;
+    }
+
+    .score-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .score-row input {
+      width: 90px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #9db0c8;
+      padding: 20px;
+    }
+
+    @media (max-width: 650px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .teams {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -183,14 +279,60 @@
   <div class="header">
     <div class="logo">RCMC</div>
     <h1>RCMC MATCHES</h1>
-    <div class="subtitle">لوحة الإدارة</div>
+    <div class="subtitle">لوحة إدارة المباريات</div>
   </div>
 
   <div id="message" class="message"></div>
 
+  <!-- ADD MATCH -->
   <div class="card">
-    <h2>⚽ إدارة المباريات</h2>
-    <div id="matches">جاري تحميل المباريات...</div>
+
+    <h2>➕ إضافة مباراة</h2>
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label>الفريق المضيف</label>
+        <input id="homeTeam" type="text" placeholder="مثال: Real Madrid">
+      </div>
+
+      <div class="field">
+        <label>الفريق الضيف</label>
+        <input id="awayTeam" type="text" placeholder="مثال: Liverpool">
+      </div>
+
+      <div class="field">
+        <label>المرحلة</label>
+        <select id="stageSelect">
+          <option value="">جاري تحميل المراحل...</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>موعد المباراة</label>
+        <input id="kickoff" type="datetime-local">
+      </div>
+
+      <div class="field full">
+        <button class="primary" onclick="addMatch()">
+          إضافة المباراة
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MATCHES -->
+
+  <div class="card">
+
+    <h2>⚽ المباريات</h2>
+
+    <div id="matches">
+      جاري تحميل المباريات...
+    </div>
+
   </div>
 
 </div>
@@ -209,13 +351,22 @@ const supabaseClient =
     SUPABASE_PUBLISHABLE_KEY
   );
 
+let stages = [];
+
+
+/* =========================
+   MESSAGE
+========================= */
 
 function showMessage(text, type = "success") {
 
-  const box = document.getElementById("message");
+  const box =
+    document.getElementById("message");
 
   box.textContent = text;
-  box.className = "message " + type;
+
+  box.className =
+    "message " + type;
 
   setTimeout(() => {
     box.className = "message";
@@ -223,18 +374,85 @@ function showMessage(text, type = "success") {
 }
 
 
-async function loadMatches() {
+/* =========================
+   LOAD STAGES
+========================= */
 
-  const { data, error } = await supabaseClient
-    .from("matches")
-    .select("*")
-    .order("kickoff", { ascending: true });
+async function loadStages() {
+
+  const { data, error } =
+    await supabaseClient
+      .from("stages")
+      .select("*")
+      .order("stage_order", {
+        ascending: true
+      });
 
   if (error) {
-    document.getElementById("matches").innerHTML =
-      "حدث خطأ أثناء تحميل المباريات.";
 
     console.error(error);
+
+    showMessage(
+      "تعذر تحميل المراحل.",
+      "error"
+    );
+
+    return;
+  }
+
+  stages = data || [];
+
+  const select =
+    document.getElementById("stageSelect");
+
+  if (!stages.length) {
+
+    select.innerHTML =
+      `<option value="">لا توجد مراحل</option>`;
+
+    return;
+  }
+
+  select.innerHTML =
+    stages.map(stage => `
+      <option value="${stage.id}">
+        ${escapeHtml(stage.name)}
+      </option>
+    `).join("");
+
+}
+
+
+/* =========================
+   LOAD MATCHES
+========================= */
+
+async function loadMatches() {
+
+  const { data, error } =
+    await supabaseClient
+      .from("matches")
+      .select(`
+        *,
+        stages (
+          id,
+          name,
+          stage_order
+        )
+      `)
+      .order("kickoff", {
+        ascending: true
+      });
+
+  if (error) {
+
+    console.error(error);
+
+    document.getElementById("matches").innerHTML =
+      `<div class="empty">
+        حدث خطأ أثناء تحميل المباريات.
+      </div>`;
+
     return;
   }
 
@@ -242,105 +460,208 @@ async function loadMatches() {
 }
 
 
+/* =========================
+   RENDER MATCHES
+========================= */
+
 function renderMatches(matches) {
 
-  const container = document.getElementById("matches");
+  const container =
+    document.getElementById("matches");
 
   if (!matches.length) {
-    container.innerHTML = "لا توجد مباريات.";
+
+    container.innerHTML =
+      `<div class="empty">
+        لا توجد مباريات حاليًا.
+      </div>`;
+
     return;
   }
 
-  container.innerHTML = matches.map(match => {
+  container.innerHTML =
+    matches.map(match => {
 
-    const finished = match.status === "finished";
+      const finished =
+        match.status === "finished";
 
-    return `
-      <div class="match">
+      const stageName =
+        match.stages?.name || "بدون مرحلة";
 
-        <div class="teams">
-          <span>${escapeHtml(match.home_team)}</span>
-          <span class="vs">VS</span>
-          <span>${escapeHtml(match.away_team)}</span>
+      return `
+
+        <div class="match">
+
+          <div class="match-header">
+
+            <span class="stage-name">
+              ${escapeHtml(stageName)}
+            </span>
+
+            <span class="match-id">
+              #${match.id}
+            </span>
+
+          </div>
+
+
+          <div class="teams">
+
+            <span>
+              ${escapeHtml(match.home_team)}
+            </span>
+
+            <span class="vs">
+              VS
+            </span>
+
+            <span>
+              ${escapeHtml(match.away_team)}
+            </span>
+
+          </div>
+
+
+          <div class="info">
+            موعد المباراة:
+            ${formatDate(match.kickoff)}
+          </div>
+
+
+          <div class="status ${
+            finished
+              ? "finished"
+              : "scheduled"
+          }">
+
+            الحالة:
+            ${
+              finished
+                ? "انتهت"
+                : "مجدولة"
+            }
+
+          </div>
+
+
+          ${
+            finished
+              ? `
+                <div class="score-display">
+                  ${match.home_score}
+                  -
+                  ${match.away_score}
+                </div>
+              `
+              : `
+                <div class="score-row">
+
+                  <input
+                    id="home-${match.id}"
+                    type="number"
+                    min="0"
+                    placeholder="المضيف"
+                  >
+
+                  <input
+                    id="away-${match.id}"
+                    type="number"
+                    min="0"
+                    placeholder="الضيف"
+                  >
+
+                </div>
+              `
+          }
+
+
+          <button
+            class="secondary"
+            onclick="editMatch(${match.id})">
+
+            ✏️ تعديل المباراة
+
+          </button>
+
+
+          ${
+            !finished
+              ? `
+                <button
+                  class="primary"
+                  onclick="finishMatch(${match.id})">
+
+                  🏁 إنهاء المباراة وإدخال النتيجة
+
+                </button>
+              `
+              : `
+                <button
+                  class="primary"
+                  onclick="editResult(${match.id})">
+
+                  📝 تعديل النتيجة
+
+                </button>
+
+                <button
+                  class="secondary"
+                  onclick="scoreMatch(${match.id})">
+
+                  🏆 احتساب النقاط
+
+                </button>
+              `
+          }
+
+
+          <button
+            class="danger"
+            onclick="deleteMatch(${match.id})">
+
+            🗑️ حذف المباراة
+
+          </button>
+
         </div>
 
-        <div class="info">
-          موعد المباراة:
-          ${formatDate(match.kickoff)}
-        </div>
+      `;
 
-        <div class="status ${finished ? "finished" : "scheduled"}">
-          الحالة:
-          ${finished ? "انتهت" : "مجدولة"}
-        </div>
-
-        <div class="score-row">
-
-          <input
-            id="home-${match.id}"
-            type="number"
-            min="0"
-            placeholder="${match.home_score ?? "-"}"
-            value="${match.home_score ?? ""}"
-          >
-
-          <span style="padding-top:12px;">-</span>
-
-          <input
-            id="away-${match.id}"
-            type="number"
-            min="0"
-            placeholder="${match.away_score ?? "-"}"
-            value="${match.away_score ?? ""}"
-          >
-
-        </div>
-
-        <button
-          class="finish"
-          onclick="finishMatch(${match.id})">
-          ${finished ? "تعديل النتيجة" : "إنهاء المباراة وإدخال النتيجة"}
-        </button>
-
-        ${
-          finished
-          ? `
-            <button
-              class="score"
-              onclick="scoreMatch(${match.id})">
-              🏆 احتساب النقاط
-            </button>
-          `
-          : ""
-        }
-
-      </div>
-    `;
-
-  }).join("");
+    }).join("");
 }
 
 
-async function finishMatch(matchId) {
+/* =========================
+   ADD MATCH
+========================= */
 
-  const homeInput =
-    document.getElementById(`home-${matchId}`);
+async function addMatch() {
 
-  const awayInput =
-    document.getElementById(`away-${matchId}`);
+  const homeTeam =
+    document.getElementById("homeTeam")
+      .value.trim();
 
-  const homeScore = Number(homeInput.value);
-  const awayScore = Number(awayInput.value);
+  const awayTeam =
+    document.getElementById("awayTeam")
+      .value.trim();
+
+  const stageId =
+    document.getElementById("stageSelect")
+      .value;
+
+  const kickoffInput =
+    document.getElementById("kickoff")
+      .value;
 
   if (
-    homeInput.value === "" ||
-    awayInput.value === "" ||
-    homeScore < 0 ||
-    awayScore < 0
+    !homeTeam ||
+    !awayTeam ||
+    !stageId ||
+    !kickoffInput
   ) {
 
     showMessage(
-      "أدخل نتيجة صحيحة للمباراة.",
+      "يرجى تعبئة جميع بيانات المباراة.",
       "error"
     );
 
@@ -348,14 +669,290 @@ async function finishMatch(matchId) {
   }
 
 
-  const { error } = await supabaseClient
-    .from("matches")
-    .update({
-      home_score: homeScore,
-      away_score: awayScore,
-      status: "finished"
-    })
-    .eq("id", matchId);
+  const kickoff =
+    new Date(kickoffInput)
+      .toISOString();
+
+
+  const { error } =
+    await supabaseClient
+      .from("matches")
+      .insert({
+        stage_id: Number(stageId),
+        home_team: homeTeam,
+        away_team: awayTeam,
+        kickoff: kickoff,
+        status: "scheduled"
+      });
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "تعذر إضافة المباراة: " +
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "تمت إضافة المباراة بنجاح ✓"
+  );
+
+
+  document.getElementById("homeTeam")
+    .value = "";
+
+  document.getElementById("awayTeam")
+    .value = "";
+
+  document.getElementById("kickoff")
+    .value = "";
+
+
+  await loadMatches();
+}
+
+
+/* =========================
+   EDIT MATCH
+========================= */
+
+async function editMatch(matchId) {
+
+  const { data: match, error } =
+    await supabaseClient
+      .from("matches")
+      .select("*")
+      .eq("id", matchId)
+      .single();
+
+
+  if (error || !match) {
+
+    showMessage(
+      "تعذر تحميل المباراة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const newHome =
+    prompt(
+      "اسم الفريق المضيف:",
+      match.home_team
+    );
+
+
+  if (newHome === null) {
+    return;
+  }
+
+
+  const newAway =
+    prompt(
+      "اسم الفريق الضيف:",
+      match.away_team
+    );
+
+
+  if (newAway === null) {
+    return;
+  }
+
+
+  const newKickoff =
+    prompt(
+      "موعد المباراة بصيغة:\n2026-09-12 20:00",
+      formatForInput(match.kickoff)
+    );
+
+
+  if (newKickoff === null) {
+    return;
+  }
+
+
+  const stageOptions =
+    stages.map(
+      stage =>
+        `${stage.id} = ${stage.name}`
+    ).join("\n");
+
+
+  const newStage =
+    prompt(
+      "رقم المرحلة:\n\n" +
+      stageOptions,
+      String(match.stage_id)
+    );
+
+
+  if (newStage === null) {
+    return;
+  }
+
+
+  const stageId =
+    Number(newStage);
+
+
+  if (
+    !stages.some(
+      stage =>
+        Number(stage.id) === stageId
+    )
+  ) {
+
+    showMessage(
+      "رقم المرحلة غير صحيح.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const parsedDate =
+    new Date(
+      newKickoff.replace(" ", "T")
+    );
+
+
+  if (isNaN(parsedDate.getTime())) {
+
+    showMessage(
+      "صيغة الموعد غير صحيحة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const { error: updateError } =
+    await supabaseClient
+      .from("matches")
+      .update({
+        home_team: newHome.trim(),
+        away_team: newAway.trim(),
+        stage_id: stageId,
+        kickoff: parsedDate.toISOString()
+      })
+      .eq("id", matchId);
+
+
+  if (updateError) {
+
+    console.error(updateError);
+
+    showMessage(
+      "تعذر تعديل المباراة: " +
+      updateError.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "تم تعديل المباراة بنجاح ✓"
+  );
+
+
+  await loadMatches();
+}
+
+
+/* =========================
+   FINISH MATCH
+========================= */
+
+async function finishMatch(matchId) {
+
+  const homeInput =
+    document.getElementById(
+      `home-${matchId}`
+    );
+
+  const awayInput =
+    document.getElementById(
+      `away-${matchId}`
+    );
+
+
+  if (!homeInput || !awayInput) {
+
+    showMessage(
+      "لا يمكن إدخال النتيجة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (
+    homeInput.value === "" ||
+    awayInput.value === ""
+  ) {
+
+    showMessage(
+      "أدخل نتيجة المباراة أولًا.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const homeScore =
+    Number(homeInput.value);
+
+  const awayScore =
+    Number(awayInput.value);
+
+
+  if (
+    homeScore < 0 ||
+    awayScore < 0
+  ) {
+
+    showMessage(
+      "النتيجة غير صحيحة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (
+    !confirm(
+      `هل تريد إنهاء المباراة بنتيجة ${homeScore} - ${awayScore}؟`
+    )
+  ) {
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("matches")
+      .update({
+        home_score: homeScore,
+        away_score: awayScore,
+        status: "finished"
+      })
+      .eq("id", matchId);
 
 
   if (error) {
@@ -372,18 +969,115 @@ async function finishMatch(matchId) {
 
 
   showMessage(
-    "تم حفظ نتيجة المباراة بنجاح ✓"
+    "تم إنهاء المباراة وحفظ النتيجة ✓"
   );
 
-  loadMatches();
+
+  await loadMatches();
 }
 
+
+/* =========================
+   EDIT RESULT
+========================= */
+
+async function editResult(matchId) {
+
+  const home =
+    prompt(
+      "النتيجة الجديدة للفريق المضيف:"
+    );
+
+  if (home === null) {
+    return;
+  }
+
+
+  const away =
+    prompt(
+      "النتيجة الجديدة للفريق الضيف:"
+    );
+
+  if (away === null) {
+    return;
+  }
+
+
+  const homeScore =
+    Number(home);
+
+  const awayScore =
+    Number(away);
+
+
+  if (
+    home === "" ||
+    away === "" ||
+    homeScore < 0 ||
+    awayScore < 0 ||
+    !Number.isInteger(homeScore) ||
+    !Number.isInteger(awayScore)
+  ) {
+
+    showMessage(
+      "النتيجة غير صحيحة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (
+    !confirm(
+      "تعديل النتيجة قد يتطلب إعادة احتساب النقاط. هل أنت متأكد؟"
+    )
+  ) {
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("matches")
+      .update({
+        home_score: homeScore,
+        away_score: awayScore
+      })
+      .eq("id", matchId);
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "تعذر تعديل النتيجة.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "تم تعديل النتيجة ✓"
+  );
+
+
+  await loadMatches();
+}
+
+
+/* =========================
+   SCORE MATCH
+========================= */
 
 async function scoreMatch(matchId) {
 
   if (
     !confirm(
-      "هل أنت متأكد من احتساب نقاط هذه المباراة؟"
+      "هل أنت متأكد من احتساب نقاط هذه المباراة؟\n\nبعد الاحتساب لن يتم احتسابها مرة أخرى."
     )
   ) {
     return;
@@ -404,6 +1098,7 @@ async function scoreMatch(matchId) {
     console.error(error);
 
     showMessage(
+      "تعذر احتساب النقاط: " +
       error.message,
       "error"
     );
@@ -416,13 +1111,65 @@ async function scoreMatch(matchId) {
     "تم احتساب النقاط لجميع المشاركين ✓"
   );
 
-  loadMatches();
+
+  await loadMatches();
 }
 
 
+/* =========================
+   DELETE MATCH
+========================= */
+
+async function deleteMatch(matchId) {
+
+  if (
+    !confirm(
+      "⚠️ هل أنت متأكد من حذف هذه المباراة؟\n\nسيتم حذف التوقعات المرتبطة بها أيضًا."
+    )
+  ) {
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("matches")
+      .delete()
+      .eq("id", matchId);
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "تعذر حذف المباراة: " +
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "تم حذف المباراة ✓"
+  );
+
+
+  await loadMatches();
+}
+
+
+/* =========================
+   DATE FORMAT
+========================= */
+
 function formatDate(dateString) {
 
-  const date = new Date(dateString);
+  const date =
+    new Date(dateString);
+
 
   return date.toLocaleString(
     "ar-AE",
@@ -437,6 +1184,43 @@ function formatDate(dateString) {
 }
 
 
+function formatForInput(dateString) {
+
+  const date =
+    new Date(dateString);
+
+  const year =
+    date.getFullYear();
+
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2, "0");
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2, "0");
+
+  const hours =
+    String(
+      date.getHours()
+    ).padStart(2, "0");
+
+  const minutes =
+    String(
+      date.getMinutes()
+    ).padStart(2, "0");
+
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+
+/* =========================
+   SECURITY / HTML
+========================= */
+
 function escapeHtml(text) {
 
   return String(text)
@@ -448,7 +1232,20 @@ function escapeHtml(text) {
 }
 
 
-loadMatches();
+/* =========================
+   START
+========================= */
+
+async function init() {
+
+  await loadStages();
+
+  await loadMatches();
+
+}
+
+
+init();
 
 </script>
 
