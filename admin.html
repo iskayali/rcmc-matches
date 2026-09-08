@@ -1333,13 +1333,27 @@ async function deleteMatch(matchId) {
     return;
   }
 
+  const adminSessionToken =
+    localStorage.getItem(
+      "rcmc_admin_session_token"
+    );
+
+  if (!adminSessionToken) {
+    showMessage(
+      "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
+      "error"
+    );
+    return;
+  }
 
   const { error } =
-    await supabaseClient
-      .from("matches")
-      .delete()
-      .eq("id", matchId);
-
+    await supabaseClient.rpc(
+      "delete_match",
+      {
+        p_session_token: adminSessionToken,
+        p_match_id: matchId
+      }
+    );
 
   if (error) {
 
@@ -1354,15 +1368,12 @@ async function deleteMatch(matchId) {
     return;
   }
 
-
   showMessage(
     "تم حذف المباراة ✓"
   );
 
-
   await loadMatches();
 }
-
 
 /* =========================
    DATE FORMAT
