@@ -1273,13 +1273,27 @@ async function scoreMatch(matchId) {
   }
 
 
-  const { error } =
-    await supabaseClient.rpc(
-      "score_match",
-      {
-        p_match_id: matchId
-      }
-    );
+  const adminSessionToken =
+  localStorage.getItem(
+    "rcmc_admin_session_token"
+  );
+
+if (!adminSessionToken) {
+  showMessage(
+    "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
+    "error"
+  );
+  return;
+}
+
+const { error } =
+  await supabaseClient.rpc(
+    "score_match",
+    {
+      p_session_token: adminSessionToken,
+      p_match_id: matchId
+    }
+  );
 
 
   if (error) {
