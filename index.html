@@ -3,18 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>RCMC MATCHES</title>
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Arial, Tahoma, sans-serif;
@@ -30,11 +24,7 @@
       padding: 25px 0 50px;
     }
 
-    /* HEADER */
-    .header {
-      text-align: center;
-      margin-bottom: 25px;
-    }
+    .header { text-align: center; margin-bottom: 25px; }
 
     .logo-circle {
       width: 90px;
@@ -46,7 +36,7 @@
       align-items: center;
       justify-content: center;
       background: #0b1d34;
-      box-shadow: 0 0 25px rgba(217, 182, 92, 0.15);
+      box-shadow: 0 0 25px rgba(217,182,92,.15);
     }
 
     .logo-text {
@@ -68,33 +58,19 @@
       font-size: 14px;
     }
 
-    /* CARDS */
     .card {
       background: #0d2139;
       border: 1px solid #1d3653;
       border-radius: 18px;
       padding: 20px;
       margin-bottom: 18px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+      box-shadow: 0 8px 25px rgba(0,0,0,.18);
     }
 
-    .welcome {
-      text-align: center;
-    }
+    .welcome { text-align: center; }
+    .welcome h2 { color: #d9b65c; margin-bottom: 10px; font-size: 21px; }
+    .welcome p { color: #c5ced9; line-height: 1.8; font-size: 14px; }
 
-    .welcome h2 {
-      color: #d9b65c;
-      margin-bottom: 10px;
-      font-size: 21px;
-    }
-
-    .welcome p {
-      color: #c5ced9;
-      line-height: 1.8;
-      font-size: 14px;
-    }
-
-    /* INPUT */
     label {
       display: block;
       margin-bottom: 8px;
@@ -113,11 +89,8 @@
       outline: none;
     }
 
-    input:focus {
-      border-color: #d9b65c;
-    }
+    input:focus { border-color: #d9b65c; }
 
-    /* BUTTON */
     .btn {
       width: 100%;
       border: none;
@@ -127,30 +100,24 @@
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.2s;
     }
 
-    .btn-primary {
-      background: #d9b65c;
-      color: #071426;
-    }
-
-    .btn-primary:hover {
-      opacity: 0.9;
-    }
-
+    .btn-primary { background: #d9b65c; color: #071426; }
     .btn-secondary {
       background: #17314f;
       color: #fff;
       border: 1px solid #31506f;
     }
 
-    .btn:disabled {
-      opacity: 0.5;
+    .btn:disabled,
+    .prediction-btn:disabled,
+    .risk-btn:disabled {
+      opacity: .5;
       cursor: not-allowed;
     }
 
-    /* PLAYER BAR */
+    .hidden { display: none !important; }
+
     .player-bar {
       display: flex;
       justify-content: space-between;
@@ -159,10 +126,7 @@
       flex-wrap: wrap;
     }
 
-    .player-name {
-      font-size: 18px;
-      font-weight: bold;
-    }
+    .player-name { font-size: 18px; font-weight: bold; }
 
     .risk-box {
       background: #08182a;
@@ -170,37 +134,28 @@
       border-radius: 12px;
       padding: 10px 14px;
       text-align: center;
+      min-width: 88px;
     }
 
-    .risk-label {
-      font-size: 11px;
-      color: #aeb8c4;
-    }
+    .risk-label { font-size: 11px; color: #aeb8c4; }
+    .risk-value { color: #d9b65c; font-size: 22px; font-weight: bold; }
 
-    .risk-value {
-      color: #d9b65c;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    /* STAGE */
-    .stage-title {
+    .category-title {
       text-align: center;
       margin-bottom: 18px;
     }
 
-    .stage-title h2 {
+    .category-title h2 {
       color: #d9b65c;
-      font-size: 23px;
+      font-size: 22px;
     }
 
-    .stage-title p {
+    .category-title p {
       color: #aeb8c4;
       font-size: 13px;
       margin-top: 5px;
     }
 
-    /* MATCH */
     .match-card {
       background: #091a2e;
       border: 1px solid #223c58;
@@ -209,6 +164,8 @@
       margin-bottom: 15px;
     }
 
+    .match-card:last-child { margin-bottom: 0; }
+
     .match-header {
       display: flex;
       justify-content: space-between;
@@ -216,6 +173,7 @@
       margin-bottom: 15px;
       color: #9faebe;
       font-size: 12px;
+      gap: 8px;
     }
 
     .teams {
@@ -232,12 +190,8 @@
       line-height: 1.4;
     }
 
-    .vs {
-      color: #d9b65c;
-      font-weight: bold;
-    }
+    .vs { color: #d9b65c; font-weight: bold; }
 
-    /* PREDICTION */
     .section-label {
       color: #c8d0da;
       font-size: 13px;
@@ -251,40 +205,20 @@
       gap: 7px;
     }
 
-    .prediction-btn {
-      border: 1px solid #38516c;
-      background: #102843;
-      color: #fff;
-      border-radius: 10px;
-      padding: 11px 5px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .prediction-btn.selected {
-      background: #d9b65c;
-      color: #071426;
-      border-color: #d9b65c;
-      font-weight: bold;
-    }
-
-    /* RISK */
-    .risk-buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 7px;
-    }
-
+    .prediction-btn,
     .risk-btn {
       border: 1px solid #38516c;
       background: #102843;
       color: #fff;
       border-radius: 10px;
-      padding: 10px 4px;
       cursor: pointer;
       font-size: 13px;
     }
 
+    .prediction-btn { padding: 11px 5px; }
+    .risk-btn { padding: 10px 4px; }
+
+    .prediction-btn.selected,
     .risk-btn.selected {
       background: #d9b65c;
       color: #071426;
@@ -292,14 +226,28 @@
       font-weight: bold;
     }
 
+    .risk-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+
     .match-status {
       text-align: center;
       margin-top: 13px;
       font-size: 12px;
       color: #8e9aaa;
+      line-height: 1.6;
     }
 
-    /* LEADERBOARD */
+    .category-empty,
+    .loading {
+      text-align: center;
+      color: #aeb8c4;
+      padding: 20px 8px;
+      font-size: 13px;
+    }
+
     .leaderboard-row {
       display: grid;
       grid-template-columns: 45px 1fr 70px;
@@ -309,23 +257,11 @@
       border-bottom: 1px solid #1c344e;
     }
 
-    .leaderboard-row:last-child {
-      border-bottom: none;
-    }
+    .leaderboard-row:last-child { border-bottom: none; }
 
-    .rank {
-      color: #d9b65c;
-      font-weight: bold;
-      text-align: center;
-    }
+    .rank { color: #d9b65c; font-weight: bold; text-align: center; }
+    .points { text-align: left; font-weight: bold; color: #d9b65c; }
 
-    .points {
-      text-align: left;
-      font-weight: bold;
-      color: #d9b65c;
-    }
-
-    /* MESSAGE */
     .message {
       padding: 12px;
       border-radius: 10px;
@@ -356,14 +292,16 @@
       color: #a9c9e7;
     }
 
-    .loading {
-      text-align: center;
-      padding: 25px;
-      color: #aeb8c4;
-    }
+    .logout-wrap { text-align: left; margin: 10px 0; }
 
-    .hidden {
-      display: none !important;
+    .logout {
+      background: #132b47;
+      color: #dcb65a;
+      border: 1px solid #dcb65a;
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
     .footer {
@@ -374,313 +312,173 @@
     }
 
     @media (max-width: 480px) {
-      .brand {
-        font-size: 27px;
-      }
-
-      .team {
-        font-size: 14px;
-      }
-
-      .prediction-btn,
-      .risk-btn {
-        font-size: 12px;
-      }
+      .brand { font-size: 27px; }
+      .team, .prediction-btn, .risk-btn { font-size: 12px; }
+      .risk-box { min-width: 82px; }
     }
   </style>
 </head>
 
 <body>
-
 <div class="container">
 
-  <!-- HEADER -->
   <div class="header">
-    <div class="logo-circle">
-      <div class="logo-text">RCMC</div>
-    </div>
-
+    <div class="logo-circle"><div class="logo-text">RCMC</div></div>
     <div class="brand">RCMC MATCHES</div>
     <div class="subtitle">توقع • نافس • تصدّر</div>
   </div>
 
-  <!-- MESSAGE -->
   <div id="message" class="message"></div>
 
-  <!-- LOGIN -->
-<!-- LOGIN / REGISTER -->
-<section id="loginSection">
+  <section id="loginSection">
+    <div class="card welcome">
+      <h2>🏆 أهلاً بك في RCMC MATCHES</h2>
+      <p>
+        شارك في مسابقة توقعات دوري أبطال أوروبا،
+        توقع النتائج، اجمع النقاط، واستخدم المخاطرة بذكاء.
+      </p>
+    </div>
 
-  <div class="card welcome">
-    <h2>🏆 أهلاً بك في RCMC MATCHES</h2>
-    <p>
-      شارك في مسابقة توقعات دوري أبطال أوروبا،
-      توقع النتائج، اجمع النقاط، واستخدم المخاطرة بذكاء.
-    </p>
-  </div>
+    <div id="loginBox" class="card">
+      <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">
+        🔐 تسجيل الدخول
+      </h2>
 
-  <!-- LOGIN -->
-  <div id="loginBox" class="card">
+      <label for="loginUsername">اسم المستخدم</label>
+      <input id="loginUsername" type="text" maxlength="30"
+             placeholder="مثلاً: Name" autocomplete="username">
 
-    <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">
-      🔐 تسجيل الدخول
-    </h2>
+      <label for="loginPassword" style="margin-top:14px;">كلمة المرور</label>
+      <input id="loginPassword" type="password" maxlength="50"
+             placeholder="أدخل كلمة المرور" autocomplete="current-password">
 
-    <label for="loginUsername">اسم المستخدم</label>
+      <button id="loginBtn" class="btn btn-primary" onclick="loginPlayer()">دخول</button>
+      <button class="btn btn-secondary" onclick="showRegister()">إنشاء حساب جديد</button>
+    </div>
 
-    <input
-      id="loginUsername"
-      type="text"
-      maxlength="30"
-      placeholder="مثلاً: Name"
-      autocomplete="username"
-    >
+    <div id="registerBox" class="card hidden">
+      <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">
+        📝 إنشاء حساب
+      </h2>
 
-    <label for="loginPassword" style="margin-top:14px;">
-      كلمة المرور
-    </label>
+      <label for="registerUsername">اسم المستخدم</label>
+      <input id="registerUsername" type="text" maxlength="30"
+             placeholder="مثلاً: islam2026" autocomplete="username">
 
-    <input
-      id="loginPassword"
-      type="password"
-      maxlength="50"
-      placeholder="أدخل كلمة المرور"
-      autocomplete="current-password"
-    >
+      <label for="registerPassword" style="margin-top:14px;">كلمة المرور</label>
+      <input id="registerPassword" type="password" maxlength="50"
+             placeholder="اختر كلمة مرور" autocomplete="new-password">
 
-    <button
-      id="loginBtn"
-      class="btn btn-primary"
-      onclick="loginPlayer()"
-    >
-      دخول
-    </button>
+      <label for="registerName" style="margin-top:14px;">الاسم الذي سيظهر في المسابقة</label>
+      <input id="registerName" type="text" maxlength="40"
+             placeholder="مثلاً: إسلام" autocomplete="off">
 
-    <button
-      class="btn btn-secondary"
-      onclick="showRegister()"
-    >
-      إنشاء حساب جديد
-    </button>
+      <button id="registerBtn" class="btn btn-primary" onclick="registerPlayer()">
+        إنشاء الحساب
+      </button>
+      <button class="btn btn-secondary" onclick="showLogin()">لدي حساب بالفعل</button>
+    </div>
+  </section>
 
-  </div>
-
-
-  <!-- REGISTER -->
-  <div id="registerBox" class="card hidden">
-
-    <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">
-      📝 إنشاء حساب
-    </h2>
-
-    <label for="registerUsername">اسم المستخدم</label>
-
-    <input
-      id="registerUsername"
-      type="text"
-      maxlength="30"
-      placeholder="مثلاً: islam2026"
-      autocomplete="username"
-    >
-
-    <label for="registerPassword" style="margin-top:14px;">
-      كلمة المرور
-    </label>
-
-    <input
-      id="registerPassword"
-      type="password"
-      maxlength="50"
-      placeholder="اختر كلمة مرور"
-      autocomplete="new-password"
-    >
-
-    <label for="registerName" style="margin-top:14px;">
-      الاسم الذي سيظهر في المسابقة
-    </label>
-
-    <input
-      id="registerName"
-      type="text"
-      maxlength="40"
-      placeholder="مثلاً: إسلام"
-      autocomplete="off"
-    >
-
-    <button
-      id="registerBtn"
-      class="btn btn-primary"
-      onclick="registerPlayer()"
-    >
-      إنشاء الحساب
-    </button>
-
-    <button
-      class="btn btn-secondary"
-      onclick="showLogin()"
-    >
-      لدي حساب بالفعل
-    </button>
-
-    <p style="
-      margin-top:12px;
-      text-align:center;
-      color:#8e9aaa;
-      font-size:12px;
-      line-height:1.7;
-    ">
-      لا نطلب بريدًا إلكترونيًا ولا رقم هاتف.
-    </p>
-
-  </div>
-
-</section>
-
-
-  <!-- COMPETITION -->
   <section id="competitionSection" class="hidden">
-    <div style="text-align:left; margin:10px 0;">
-  <button
-    type="button"
-    onclick="logoutPlayer()"
-    style="
-      background:#132b47;
-      color:#dcb65a;
-      border:1px solid #dcb65a;
-      border-radius:8px;
-      padding:8px 16px;
-      cursor:pointer;
-      font-weight:bold;
-    "
-  >
-    🚪 تسجيل الخروج
-  </button>
-</div>
 
-    <!-- PLAYER -->
+    <div class="logout-wrap">
+      <button type="button" class="logout" onclick="logoutPlayer()">🚪 تسجيل الخروج</button>
+    </div>
+
     <div class="card">
-
       <div class="player-bar">
-
         <div>
           <div style="font-size:11px;color:#8d9aaa;">المشارك</div>
           <div id="playerDisplay" class="player-name">---</div>
         </div>
 
         <div class="risk-box">
-  <div class="risk-label">النقاط</div>
-  <div id="playerPoints" class="risk-value">0</div>
-</div>
+          <div class="risk-label">النقاط</div>
+          <div id="playerPoints" class="risk-value">0</div>
+        </div>
 
-<div class="risk-box">
-  <div class="risk-label">المخاطرة المتبقية</div>
-  <div id="riskBalance" class="risk-value">10</div>
-</div>
-
+        <div class="risk-box">
+          <div class="risk-label">المخاطرة المتبقية</div>
+          <div id="riskBalance" class="risk-value">10</div>
+        </div>
       </div>
-
     </div>
 
-
-    <!-- STAGE -->
-    <div class="card">
-
-      <div class="stage-title">
-        <h2 id="stageName">المرحلة</h2>
-        <p>التوقعات تُغلق عند بداية المباراة</p>
-      </div>
-
-      <div id="matchesContainer">
-        <div class="loading">جاري تحميل المباريات...</div>
-      </div>
-
+    <div id="categoriesContainer">
+      <div class="loading">جاري تحميل المباريات...</div>
     </div>
 
-
-    <!-- LEADERBOARD -->
     <div class="card">
-
-      <div class="stage-title">
+      <div class="category-title">
         <h2>🏆 الترتيب</h2>
         <p>ترتيب المشاركين الحالي</p>
       </div>
-
       <div id="leaderboard">
         <div class="loading">جاري تحميل الترتيب...</div>
       </div>
-
     </div>
 
   </section>
 
-
-  <div class="footer">
-    RCMC MATCHES © 2026
-  </div>
-
+  <div class="footer">RCMC MATCHES © 2026</div>
 </div>
 
-
 <script>
+const SUPABASE_URL = "https://ehgmkhbzkzgayixfcomk.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_2J5ASCvZeYAY7su3LrnJjQ_jkTZ4Od_";
 
-  /* =========================================================
-     SUPABASE
-  ========================================================= */
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
-  const SUPABASE_URL =
-    "https://ehgmkhbzkzgayixfcomk.supabase.co";
+let currentPlayer = null;
+let categories = [];
+let matches = [];
+let predictions = {};
+let riskBalance = 10;
 
-  const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_2J5ASCvZeYAY7su3LrnJjQ_jkTZ4Od_";
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
+function showMessage(text, type = "info") {
+  const box = document.getElementById("message");
+  box.textContent = text;
+  box.className = "message " + type;
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
+  setTimeout(() => {
+    box.className = "message";
+  }, 5000);
+}
 
-  /* =========================================================
-     GLOBAL VARIABLES
-  ========================================================= */
+function updateRiskDisplay() {
+  document.getElementById("riskBalance").textContent = riskBalance;
+  document.getElementById("playerPoints").textContent =
+    Number(currentPlayer?.total_points || 0);
+  document.getElementById("playerDisplay").textContent =
+    currentPlayer?.name || "---";
+}
 
-  let currentPlayer = null;
-  let currentStage = null;
-  let matches = [];
+function showRegister() {
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("registerBox").classList.remove("hidden");
+}
 
-  let predictions = {};
+function showLogin() {
+  document.getElementById("registerBox").classList.add("hidden");
+  document.getElementById("loginBox").classList.remove("hidden");
+}
 
-  let riskBalance = 10;
-
-
-  /* =========================================================
-     MESSAGE
-  ========================================================= */
-
-  function showMessage(text, type = "info") {
-
-    const box = document.getElementById("message");
-
-    box.textContent = text;
-
-    box.className = "message " + type;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-    setTimeout(() => {
-      box.className = "message";
-    }, 5000);
-  }
-
-
-  /* =========================================================
-     ENTER COMPETITION
-  ========================================================= */
-
- async function registerPlayer() {
+async function registerPlayer() {
   const username = document.getElementById("registerUsername").value.trim();
   const password = document.getElementById("registerPassword").value;
   const name = document.getElementById("registerName").value.trim();
@@ -705,43 +503,31 @@
   button.textContent = "جاري إنشاء الحساب...";
 
   try {
-    const { data, error } = await supabaseClient.rpc(
-      "register_player",
-      {
-        p_username: username,
-        p_password: password,
-        p_name: name
-      }
-    );
+    const { data, error } = await supabaseClient.rpc("register_player", {
+      p_username: username,
+      p_password: password,
+      p_name: name
+    });
 
     if (error) throw error;
-
     if (!data || !data.success) {
       throw new Error(data?.message || "تعذر إنشاء الحساب");
     }
-
-    showMessage(
-      "تم إنشاء الحساب بنجاح ✓ يمكنك الآن تسجيل الدخول.",
-      "success"
-    );
 
     document.getElementById("registerUsername").value = "";
     document.getElementById("registerPassword").value = "";
     document.getElementById("registerName").value = "";
 
     showLogin();
-
+    showMessage("تم إنشاء الحساب بنجاح ✓ يمكنك الآن تسجيل الدخول.", "success");
   } catch (error) {
-    showMessage(
-      error.message || "حدث خطأ أثناء إنشاء الحساب.",
-      "error"
-    );
+    console.error(error);
+    showMessage(error.message || "حدث خطأ أثناء إنشاء الحساب.", "error");
   } finally {
     button.disabled = false;
     button.textContent = "إنشاء الحساب";
   }
 }
-
 
 async function loginPlayer() {
   const username = document.getElementById("loginUsername").value.trim();
@@ -757,30 +543,23 @@ async function loginPlayer() {
   button.textContent = "جاري الدخول...";
 
   try {
-    const { data, error } = await supabaseClient.rpc(
-      "login_player",
-      {
-        p_username: username,
-        p_password: password
-      }
-    );
+    const { data, error } = await supabaseClient.rpc("login_player", {
+      p_username: username,
+      p_password: password
+    });
 
     if (error) throw error;
-
     if (!data || !data.success) {
       throw new Error(data?.message || "اسم المستخدم أو كلمة المرور غير صحيحة");
     }
 
-    localStorage.setItem(
-      "rcmc_session_token",
-      data.session_token
-    );
+    localStorage.setItem("rcmc_session_token", data.session_token);
 
     currentPlayer = {
       id: data.player_id,
       name: data.name,
       total_points: Number(data.total_points || 0),
-      risk_balance: Number(data.risk_balance || 10)
+      risk_balance: Number(data.risk_balance ?? 10)
     };
 
     riskBalance = currentPlayer.risk_balance;
@@ -790,507 +569,298 @@ async function loginPlayer() {
 
     updateRiskDisplay();
     await loadCompetition();
-
   } catch (error) {
-    showMessage(
-      error.message || "حدث خطأ أثناء تسجيل الدخول.",
-      "error"
-    );
+    console.error(error);
+    showMessage(error.message || "حدث خطأ أثناء تسجيل الدخول.", "error");
   } finally {
     button.disabled = false;
     button.textContent = "دخول";
   }
 }
 
+async function loadCompetition() {
+  try {
+    const sessionToken = localStorage.getItem("rcmc_session_token");
+    if (!sessionToken) {
+      throw new Error("انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.");
+    }
 
-function showRegister() {
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("registerBox").classList.remove("hidden");
-}
-
-
-function showLogin() {
-  document.getElementById("registerBox").classList.add("hidden");
-  document.getElementById("loginBox").classList.remove("hidden");
-}
-
-
-  /* =========================================================
-     LOAD COMPETITION
-  ========================================================= */
-
-  async function loadCompetition() {
-
-    try {
-
-      /* المرحلة النشطة */
-
-      const {
-        data: stages,
-        error: stageError
-      } = await supabaseClient
-        .from("stages")
-        .select("*")
+    // 1) التصنيفات الأربعة
+    const { data: categoryData, error: categoryError } =
+      await supabaseClient
+        .from("competition_categories")
+        .select("id, name, sort_order")
         .eq("active", true)
-        .order("stage_order", {
-          ascending: true
-        })
-        .limit(1);
+        .order("sort_order", { ascending: true });
 
+    if (categoryError) throw categoryError;
 
-      if (stageError) {
-        throw stageError;
-      }
+    categories = categoryData || [];
 
-
-      if (!stages || stages.length === 0) {
-
-        document.getElementById(
-          "matchesContainer"
-        ).innerHTML =
-          '<div class="loading">لا توجد مرحلة نشطة حالياً.</div>';
-
-        return;
-      }
-
-
-      currentStage = stages[0];
-
-
-      document.getElementById(
-        "stageName"
-      ).textContent = currentStage.name;
-
-
-      /* المباريات */
-
-      const {
-        data: matchData,
-        error: matchError
-      } = await supabaseClient
+    // 2) جميع المباريات، بدون أي اعتماد على stages
+    const { data: matchData, error: matchError } =
+      await supabaseClient
         .from("matches")
-        .select("*")
-        .eq("stage_id", currentStage.id)
-        .order("kickoff", {
-          ascending: true
-        });
+        .select(
+          "id, category_id, home_team, away_team, kickoff, status, home_score, away_score"
+        )
+        .order("kickoff", { ascending: true });
 
+    if (matchError) throw matchError;
 
-      if (matchError) {
-        throw matchError;
-      }
+    matches = matchData || [];
 
+    // 3) توقعات اللاعب المحفوظة
+    const { data: savedPredictions, error: predictionsError } =
+      await supabaseClient.rpc("get_my_predictions", {
+        p_session_token: sessionToken
+      });
 
-matches = matchData || [];
+    if (predictionsError) throw predictionsError;
 
-// تحميل توقعات اللاعب المحفوظة من قاعدة البيانات
-const sessionToken =
-  localStorage.getItem("rcmc_session_token");
-
-if (!sessionToken) {
-  throw new Error("انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.");
-}
-
-const {
-  data: savedPredictions,
-  error: predictionsError
-} = await supabaseClient.rpc(
-  "get_my_predictions",
-  {
-    p_session_token: sessionToken
-  }
-);
-
-if (predictionsError) {
-  throw predictionsError;
-}
-
-if (!savedPredictions || !savedPredictions.success) {
-  throw new Error(
-    savedPredictions?.message || "تعذر تحميل التوقعات المحفوظة."
-  );
-}
-
-// إعادة بناء التوقعات من البيانات المحفوظة فقط
-predictions = {};
-
-(savedPredictions.predictions || []).forEach(item => {
-  predictions[item.match_id] = {
-    outcome: item.outcome,
-    risk_points: Number(item.risk_points || 0),
-    points_awarded: Number(item.points_awarded || 0),
-    scored: item.scored === true
-  };
-});
-
-renderMatches();
-
-await loadLeaderboard();  
-
-    } catch (error) {
-
-      console.error(error);
-
-      showMessage(
-        "تعذر تحميل المسابقة: " +
-        error.message,
-        "error"
+    if (!savedPredictions || !savedPredictions.success) {
+      throw new Error(
+        savedPredictions?.message || "تعذر تحميل التوقعات المحفوظة."
       );
     }
+
+    predictions = {};
+
+    (savedPredictions.predictions || []).forEach(item => {
+      const savedRisk = Number(item.risk_points || 0);
+
+      predictions[item.match_id] = {
+        outcome: item.outcome,
+        risk_points: savedRisk,
+        saved_risk_points: savedRisk,
+        points_awarded: Number(item.points_awarded || 0),
+        scored: item.scored === true
+      };
+    });
+
+    renderCategories();
+    await loadLeaderboard();
+  } catch (error) {
+    console.error(error);
+    showMessage("تعذر تحميل المسابقة: " + error.message, "error");
+  }
+}
+
+function renderCategories() {
+  const container = document.getElementById("categoriesContainer");
+
+  if (!categories.length) {
+    container.innerHTML =
+      '<div class="card"><div class="category-empty">لا توجد تصنيفات نشطة حالياً.</div></div>';
+    return;
   }
 
+  container.innerHTML = "";
 
-  /* =========================================================
-     RENDER MATCHES
-  ========================================================= */
+  categories.forEach(category => {
+    const categoryMatches = matches.filter(
+      match => Number(match.category_id) === Number(category.id)
+    );
 
-  function renderMatches() {
+    const card = document.createElement("div");
+    card.className = "card";
 
-    const container =
-      document.getElementById(
-        "matchesContainer"
-      );
+    card.innerHTML = `
+      <div class="category-title">
+        <h2>${escapeHtml(category.name)}</h2>
+        <p>التوقعات تُغلق عند بداية المباراة</p>
+      </div>
+      <div id="category-${category.id}"></div>
+    `;
 
+    container.appendChild(card);
 
-    if (!matches.length) {
+    const list = card.querySelector(`#category-${category.id}`);
 
-      container.innerHTML =
-        '<div class="loading">لا توجد مباريات في هذه المرحلة.</div>';
-
+    if (!categoryMatches.length) {
+      list.innerHTML =
+        '<div class="category-empty">لا توجد مباريات حالياً ضمن هذا التصنيف.</div>';
       return;
     }
 
+    categoryMatches.forEach(match => {
+      list.appendChild(createMatchCard(match));
+    });
+  });
+}
 
-    container.innerHTML = "";
+function createMatchCard(match) {
+  const card = document.createElement("div");
+  card.className = "match-card";
 
+  const kickoff = new Date(match.kickoff);
+  const dateText = kickoff.toLocaleDateString("ar-AE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  });
 
-    matches.forEach(match => {
+  const timeText = kickoff.toLocaleTimeString("ar-AE", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 
-      const card =
-        document.createElement("div");
+  const existing = predictions[match.id] || {};
+  const isLocked =
+    Date.now() >= kickoff.getTime() ||
+    match.status !== "scheduled" ||
+    existing.scored === true;
 
-      card.className = "match-card";
-
-
-      const kickoff =
-        new Date(match.kickoff);
-
-
-      const dateText =
-        kickoff.toLocaleDateString(
-          "ar-AE",
-          {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-          }
-        );
-
-
-      const timeText =
-        kickoff.toLocaleTimeString(
-          "ar-AE",
-          {
-            hour: "2-digit",
-            minute: "2-digit"
-          }
-        );
-
-
-      const existing =
-        predictions[match.id] || {};
-const isLocked =
-  Date.now() >= kickoff.getTime() ||
-  match.status !== "scheduled" ||
-  existing.scored === true;
-
-      card.innerHTML = `
-
-        <div class="match-header">
-
-          <span>
-            ${dateText}
-          </span>
-
-          <span>
-            ${timeText}
-          </span>
-
-        </div>
-
-
-        <div class="teams">
-
-          <div class="team">
-            ${escapeHtml(match.home_team)}
-          </div>
-
-          <div class="vs">
-  ${
+  const score =
     match.status === "finished" &&
     match.home_score !== null &&
     match.away_score !== null
       ? `${match.home_score} - ${match.away_score}`
-      : "VS"
-  }
-</div>
+      : "VS";
 
-          <div class="team">
-            ${escapeHtml(match.away_team)}
-          </div>
+  card.innerHTML = `
+    <div class="match-header">
+      <span>${dateText}</span>
+      <span>${timeText}</span>
+    </div>
 
-        </div>
+    <div class="teams">
+      <div class="team">${escapeHtml(match.home_team)}</div>
+      <div class="vs">${score}</div>
+      <div class="team">${escapeHtml(match.away_team)}</div>
+    </div>
 
+    <div class="section-label">اختر توقعك</div>
 
-        <div class="section-label">
-          اختر توقعك
-        </div>
+    <div class="prediction-buttons">
+      <button class="prediction-btn ${
+        existing.outcome === "home" ? "selected" : ""
+      }"
+        onclick="selectPrediction(${match.id}, 'home')"
+        ${isLocked ? "disabled" : ""}>
+        HOME — ${escapeHtml(match.home_team)}
+      </button>
 
+      <button class="prediction-btn ${
+        existing.outcome === "draw" ? "selected" : ""
+      }"
+        onclick="selectPrediction(${match.id}, 'draw')"
+        ${isLocked ? "disabled" : ""}>
+        تعادل
+      </button>
 
-        <div class="prediction-buttons">
+      <button class="prediction-btn ${
+        existing.outcome === "away" ? "selected" : ""
+      }"
+        onclick="selectPrediction(${match.id}, 'away')"
+        ${isLocked ? "disabled" : ""}>
+        AWAY — ${escapeHtml(match.away_team)}
+      </button>
+    </div>
 
-          <button
-            class="prediction-btn ${
-              existing.outcome === "home"
-                ? "selected"
-                : ""
-            }"
-            onclick="selectPrediction(${match.id}, 'home')"
-            ${isLocked ? "disabled" : ""}
-          >
-            HOME — ${escapeHtml(match.home_team)}
-          </button>
+    <div class="section-label">نقاط المخاطرة</div>
 
-
-          <button
-            class="prediction-btn ${
-              existing.outcome === "draw"
-                ? "selected"
-                : ""
-            }"
-            onclick="selectPrediction(${match.id}, 'draw')"
-            ${isLocked ? "disabled" : ""}
-          >
-            تعادل
-          </button>
-
-
-          <button
-            class="prediction-btn ${
-              existing.outcome === "away"
-                ? "selected"
-                : ""
-            }"
-            onclick="selectPrediction(${match.id}, 'away')"
-            ${isLocked ? "disabled" : ""}
-          >
-            AWAY — ${escapeHtml(match.away_team)}
-          </button>
-
-        </div>
-
-
-        <div class="section-label">
-          نقاط المخاطرة
-        </div>
-
-
-        <div class="risk-buttons">
-
-          ${[0,1,2,3].map(value => `
-
-            <button
-              class="risk-btn ${
-                Number(existing.risk_points || 0) === value
-                  ? "selected"
-                  : ""
-              }"
-              onclick="selectRisk(${match.id}, ${value})"
-              ${isLocked ? "disabled" : ""}
-            >
-              ${value}
-            </button>
-
-          `).join("")}
-
-        </div>
-
-
-        <div class="match-status">
-
-  ${
-    isLocked
-      ? (
-          match.status === "finished"
-            ? "🏁 انتهت المباراة — التوقع مقفل"
-            : "🔒 بدأت المباراة — التوقع مقفل"
-        )
-      : (
-          existing.outcome
-            ? "✓ تم اختيار توقع"
-            : "لم يتم اختيار توقع بعد"
-        )
-  }
-
-</div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="savePrediction(${match.id})"
-          ${isLocked ? "disabled" : ""}
-        >
-          حفظ التوقع
+    <div class="risk-buttons">
+      ${[0,1,2,3].map(value => `
+        <button class="risk-btn ${
+          Number(existing.risk_points || 0) === value ? "selected" : ""
+        }"
+          onclick="selectRisk(${match.id}, ${value})"
+          ${isLocked ? "disabled" : ""}>
+          ${value}
         </button>
+      `).join("")}
+    </div>
 
-      `;
+    <div class="match-status">
+      ${
+        isLocked
+          ? (
+              match.status === "finished"
+                ? "🏁 انتهت المباراة — التوقع مقفل"
+                : "🔒 بدأت المباراة — التوقع مقفل"
+            )
+          : (
+              existing.outcome
+                ? "✓ تم اختيار توقع — اضغط حفظ التوقع"
+                : "لم يتم اختيار توقع بعد"
+            )
+      }
+    </div>
 
+    <button class="btn btn-primary"
+      onclick="savePrediction(${match.id})"
+      ${isLocked ? "disabled" : ""}>
+      حفظ التوقع
+    </button>
+  `;
 
-      container.appendChild(card);
+  return card;
+}
 
-    });
+function refreshMatchCard(matchId) {
+  renderCategories();
+}
+
+function selectPrediction(matchId, outcome) {
+  if (!predictions[matchId]) {
+    predictions[matchId] = {
+      outcome: null,
+      risk_points: 0,
+      saved_risk_points: 0,
+      scored: false
+    };
   }
 
-
-  /* =========================================================
-     SELECT PREDICTION
-  ========================================================= */
-
-  function selectPrediction(
-    matchId,
-    outcome
-  ) {
-
-    if (!predictions[matchId]) {
-
-      predictions[matchId] = {
-        outcome: null,
-        risk_points: 0
-      };
-
-    }
-
-
-    predictions[matchId].outcome =
-      outcome;
-
-
-    renderMatches();
-  }
-
-
-  /* =========================================================
-     SELECT RISK
-  ========================================================= */
+  predictions[matchId].outcome = outcome;
+  refreshMatchCard(matchId);
+}
 
 function selectRisk(matchId, risk) {
   if (!predictions[matchId]) {
     predictions[matchId] = {
       outcome: null,
-      risk_points: 0
+      risk_points: 0,
+      saved_risk_points: 0,
+      scored: false
     };
   }
 
   const selectedRisk = Number(risk);
+  if (selectedRisk < 0 || selectedRisk > 3) return;
 
-  if (selectedRisk < 0 || selectedRisk > 3) {
-    return;
-  }
-
-  // المخاطرة المحفوظة سابقاً لهذه المباراة
   const savedRisk = Number(
-    predictions[matchId].saved_risk_points ??
-    predictions[matchId].risk_points ??
-    0
+    predictions[matchId].saved_risk_points || 0
   );
 
-  // الرصيد الحالي هو الرصيد الحقيقي المحفوظ في قاعدة البيانات.
-  // لذلك نعيد المخاطرة القديمة لهذه المباراة مؤقتاً
-  // حتى نعرف الحد الأقصى الذي يمكن اختياره.
   const availableForThisMatch =
     Number(riskBalance) + savedRisk;
 
   if (selectedRisk > availableForThisMatch) {
-    showMessage(
-      "رصيد المخاطرة غير كافٍ.",
-      "error"
-    );
+    showMessage("رصيد المخاطرة غير كافٍ.", "error");
     return;
   }
 
-  // تغيير الاختيار فقط.
-  // الرصيد لا يتغير إلا بعد الضغط على "حفظ التوقع".
+  // الاختيار محلي فقط؛ الرصيد لا يتغير قبل الحفظ.
   predictions[matchId].risk_points = selectedRisk;
-
-  renderMatches();
+  refreshMatchCard(matchId);
 }
 
+async function savePrediction(matchId) {
+  const match = matches.find(
+    item => Number(item.id) === Number(matchId)
+  );
 
-function updateRiskFromPredictions() {
-  // هذه الدالة لم تعد تحسب الرصيد من التوقعات.
-  // الرصيد الحقيقي يأتي من قاعدة البيانات.
-  updateRiskDisplay();
-}
+  if (!match) return;
 
-
-  /* =========================================================
-     CALCULATE RISK
-  ========================================================= */
-
-
-
-
- function updateRiskDisplay() {
-
-  document.getElementById(
-    "riskBalance"
-  ).textContent = riskBalance;
-
-  document.getElementById(
-    "playerPoints"
-  ).textContent =
-    Number(currentPlayer?.total_points || 0);
-
-}
-
-function logoutPlayer() {
-  localStorage.removeItem("rcmc_session_token");
-
-  currentPlayer = null;
-  predictions = {};
-  riskBalance = 10;
-
-  location.reload();
-}
-  
-  /* =========================================================
-     SAVE PREDICTION
-  ========================================================= */
-
-  async function savePrediction(matchId) {
-
-  const match =
-    matches.find(
-      item => Number(item.id) === Number(matchId)
-    );
-
-  if (!match) {
-    return;
-  }
-
-  const prediction =
-    predictions[matchId];
+  const prediction = predictions[matchId];
 
   if (!prediction || !prediction.outcome) {
-    showMessage(
-      "اختر نتيجة المباراة أولاً.",
-      "error"
-    );
+    showMessage("اختر نتيجة المباراة أولاً.", "error");
     return;
   }
 
-  const kickoff =
-    new Date(match.kickoff);
+  const kickoff = new Date(match.kickoff);
 
   if (new Date() >= kickoff) {
     showMessage(
@@ -1300,8 +870,6 @@ function logoutPlayer() {
     return;
   }
 
-  
-
   const sessionToken =
     localStorage.getItem("rcmc_session_token");
 
@@ -1310,35 +878,19 @@ function logoutPlayer() {
       "انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.",
       "error"
     );
-
-    document.getElementById("competitionSection")
-      .classList.add("hidden");
-
-    document.getElementById("loginSection")
-      .classList.remove("hidden");
-
     return;
   }
 
   try {
-
-    const {
-      data,
-      error
-    } = await supabaseClient.rpc(
-      "save_prediction",
-      {
+    const { data, error } =
+      await supabaseClient.rpc("save_prediction", {
         p_session_token: sessionToken,
         p_match_id: Number(matchId),
         p_outcome: prediction.outcome,
-        p_risk_points:
-          Number(prediction.risk_points || 0)
-      }
-    );
+        p_risk_points: Number(prediction.risk_points || 0)
+      });
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     if (!data || !data.success) {
       throw new Error(
@@ -1346,10 +898,6 @@ function logoutPlayer() {
       );
     }
 
-    /*
-      السيرفر هو المصدر الحقيقي
-      لرصيد المخاطرة.
-    */
     const serverRiskBalance =
       Number(data.risk_balance);
 
@@ -1359,6 +907,10 @@ function logoutPlayer() {
     riskBalance =
       serverRiskBalance;
 
+    // هذا أصبح هو الرصيد المحفوظ فعلياً للمباراة.
+    prediction.saved_risk_points =
+      Number(prediction.risk_points || 0);
+
     updateRiskDisplay();
 
     showMessage(
@@ -1366,151 +918,85 @@ function logoutPlayer() {
       "success"
     );
 
+    refreshMatchCard(matchId);
   } catch (error) {
-
     console.error(error);
-
     showMessage(
-      "تعذر حفظ التوقع: " +
-      error.message,
+      "تعذر حفظ التوقع: " + error.message,
       "error"
     );
   }
 }
 
+async function loadLeaderboard() {
+  const container =
+    document.getElementById("leaderboard");
 
-  /* =========================================================
-     LEADERBOARD
-  ========================================================= */
-
-  async function loadLeaderboard() {
-
-    const container =
-      document.getElementById(
-        "leaderboard"
-      );
-
-
-    try {
-
-      const {
-        data,
-        error
-      } = await supabaseClient
+  try {
+    const { data, error } =
+      await supabaseClient
         .from("players")
         .select("id,name,total_points")
         .order("total_points", {
           ascending: false
         });
 
+    if (error) throw error;
 
-      if (error) {
-        throw error;
-      }
-
-
-      if (!data || data.length === 0) {
-
-        container.innerHTML =
-          '<div class="loading">لا يوجد مشاركون بعد.</div>';
-
-        return;
-      }
-
-
-      container.innerHTML = "";
-
-
-      data.forEach((player, index) => {
-
-        const row =
-          document.createElement("div");
-
-        row.className =
-          "leaderboard-row";
-
-
-        row.innerHTML = `
-
-          <div class="rank">
-            #${index + 1}
-          </div>
-
-          <div>
-            ${escapeHtml(player.name)}
-          </div>
-
-          <div class="points">
-            ${Number(player.total_points || 0)}
-          </div>
-
-        `;
-
-
-        container.appendChild(row);
-
-      });
-
-
-    } catch (error) {
-
-      console.error(error);
-
+    if (!data || data.length === 0) {
       container.innerHTML =
-        '<div class="loading">تعذر تحميل الترتيب.</div>';
+        '<div class="loading">لا يوجد مشاركون بعد.</div>';
+      return;
     }
+
+    container.innerHTML = "";
+
+    data.forEach((player, index) => {
+      const row = document.createElement("div");
+      row.className = "leaderboard-row";
+
+      row.innerHTML = `
+        <div class="rank">#${index + 1}</div>
+        <div>${escapeHtml(player.name)}</div>
+        <div class="points">
+          ${Number(player.total_points || 0)}
+        </div>
+      `;
+
+      container.appendChild(row);
+    });
+  } catch (error) {
+    console.error(error);
+    container.innerHTML =
+      '<div class="loading">تعذر تحميل الترتيب.</div>';
   }
+}
 
+function logoutPlayer() {
+  localStorage.removeItem("rcmc_session_token");
+  currentPlayer = null;
+  predictions = {};
+  riskBalance = 10;
+  location.reload();
+}
 
-  /* =========================================================
-     SECURITY HELPER
-  ========================================================= */
-
-  function escapeHtml(value) {
-
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-
- 
-
-  /* =========================================================
-     INITIAL LOAD
-  ========================================================= */
-
-  async function restoreSession() {
+async function restoreSession() {
   const sessionToken =
     localStorage.getItem("rcmc_session_token");
 
-  if (!sessionToken) {
-    return;
-  }
+  if (!sessionToken) return;
 
   try {
-    const { data, error } = await supabaseClient.rpc(
-      "get_player_session",
-      {
-        p_session_token: sessionToken
-      }
-    );
+    const { data, error } =
+      await supabaseClient.rpc(
+        "get_player_session",
+        { p_session_token: sessionToken }
+      );
 
     if (error) throw error;
 
     if (!data || !data.success) {
       localStorage.removeItem("rcmc_session_token");
-      currentPlayer = null;
-
-      document.getElementById("competitionSection")
-        .classList.add("hidden");
-
-      document.getElementById("loginSection")
-        .classList.remove("hidden");
-
       return;
     }
 
@@ -1523,9 +1009,6 @@ function logoutPlayer() {
 
     riskBalance = currentPlayer.risk_balance;
 
-    document.getElementById("playerDisplay").textContent =
-      currentPlayer.name;
-
     document.getElementById("loginSection")
       .classList.add("hidden");
 
@@ -1534,20 +1017,17 @@ function logoutPlayer() {
 
     updateRiskDisplay();
     await loadCompetition();
-
   } catch (error) {
     console.error("Session restoration failed:", error);
-
-    showMessage(
-      "تعذر استعادة جلسة الدخول. يرجى تحديث الصفحة والمحاولة مجددًا.",
-      "error"
-    );
+    localStorage.removeItem("rcmc_session_token");
+    document.getElementById("competitionSection")
+      .classList.add("hidden");
+    document.getElementById("loginSection")
+      .classList.remove("hidden");
   }
 }
 
 restoreSession();
-
 </script>
-
 </body>
 </html>
