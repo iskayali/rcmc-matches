@@ -297,7 +297,7 @@
       </div>
 
       <div class="field">
-        <label>الفريق الضيف</label>
+        <label>اAway</label>
         <input id="awayTeam" type="text" placeholder="مثال: Liverpool">
       </div>
 
@@ -547,7 +547,7 @@ function renderMatches(matches) {
                     id="away-${match.id}"
                     type="number"
                     min="0"
-                    placeholder="الضيف"
+                    placeholder="Away"
                   >
 
                 </div>
@@ -747,7 +747,7 @@ async function editMatch(matchId) {
 
   const newAway =
     prompt(
-      "اسم الفريق الضيف:",
+      "اسم الفريق Away:",
       match.away_team
     );
 
@@ -989,7 +989,7 @@ async function editResult(matchId) {
 
   const away =
     prompt(
-      "النتيجة الجديدة للفريق الضيف:"
+      "النتيجة الجديدة للفريق Away:"
     );
 
   if (away === null) {
