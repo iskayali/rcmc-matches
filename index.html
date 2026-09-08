@@ -655,6 +655,7 @@ async function loadCompetition() {
     });
 
     renderCategories();
+    startKickoffLockTimer();
     await loadLeaderboard();
   } catch (error) {
     console.error(error);
@@ -819,6 +820,19 @@ function refreshMatchCard(matchId) {
 }
 
 function selectPrediction(matchId, outcome) {
+  const match = matches.find(item => Number(item.id) === Number(matchId));
+  if (!match) return;
+
+  if (
+    new Date() >= new Date(match.kickoff) ||
+    match.status !== "scheduled" ||
+    predictions[matchId]?.scored === true
+  ) {
+    showMessage("🔒 بدأت المباراة — التوقع مقفل.", "error");
+    refreshMatchCard(matchId);
+    return;
+  }
+
   if (!predictions[matchId]) {
     predictions[matchId] = {
       outcome: null,
@@ -833,6 +847,19 @@ function selectPrediction(matchId, outcome) {
 }
 
 function selectRisk(matchId, risk) {
+  const match = matches.find(item => Number(item.id) === Number(matchId));
+  if (!match) return;
+
+  if (
+    new Date() >= new Date(match.kickoff) ||
+    match.status !== "scheduled" ||
+    predictions[matchId]?.scored === true
+  ) {
+    showMessage("🔒 بدأت المباراة — التوقع مقفل.", "error");
+    refreshMatchCard(matchId);
+    return;
+  }
+
   if (!predictions[matchId]) {
     predictions[matchId] = {
       outcome: null,
@@ -942,6 +969,25 @@ async function savePrediction(matchId) {
       "error"
     );
   }
+}
+
+let kickoffLockTimer = null;
+
+function startKickoffLockTimer() {
+  if (kickoffLockTimer) clearInterval(kickoffLockTimer);
+
+  kickoffLockTimer = setInterval(() => {
+    const now = Date.now();
+
+    const hasMatchToLock = matches.some(match =>
+      new Date(match.kickoff).getTime() <= now &&
+      match.status === "scheduled"
+    );
+
+    if (hasMatchToLock) {
+      renderCategories();
+    }
+  }, 1000);
 }
 
 async function loadLeaderboard() {
