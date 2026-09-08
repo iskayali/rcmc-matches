@@ -381,7 +381,6 @@ function showMessage(text, type = "success") {
 ========================= */
 
 async function loadStages() {
-
   const { data, error } =
     await supabaseClient
       .from("stages")
@@ -391,7 +390,6 @@ async function loadStages() {
       });
 
   if (error) {
-
     console.error(error);
 
     showMessage(
@@ -403,7 +401,7 @@ async function loadStages() {
   }
 
   stages = data || [];
-
+}
   const select =
     document.getElementById("stageSelect");
 
@@ -647,9 +645,9 @@ async function addMatch() {
     document.getElementById("awayTeam")
       .value.trim();
 
-  const stageId =
+  const stageName =
     document.getElementById("stageSelect")
-      .value;
+      .value.trim();
 
   const kickoffInput =
     document.getElementById("kickoff")
@@ -658,7 +656,7 @@ async function addMatch() {
   if (
     !homeTeam ||
     !awayTeam ||
-    !stageId ||
+    !stageName ||
     !kickoffInput
   ) {
 
@@ -670,23 +668,20 @@ async function addMatch() {
     return;
   }
 
-
   const kickoff =
     new Date(kickoffInput)
       .toISOString();
 
-
-  const { error } =
-    await supabaseClient
-      .from("matches")
-      .insert({
-        stage_id: Number(stageId),
-        home_team: homeTeam,
-        away_team: awayTeam,
-        kickoff: kickoff,
-        status: "scheduled"
-      });
-
+  const { data, error } =
+    await supabaseClient.rpc(
+      "add_match",
+      {
+        p_home_team: homeTeam,
+        p_away_team: awayTeam,
+        p_stage_name: stageName,
+        p_kickoff: kickoff
+      }
+    );
 
   if (error) {
 
@@ -701,11 +696,19 @@ async function addMatch() {
     return;
   }
 
+  if (!data || !data.success) {
+
+    showMessage(
+      "تعذر إضافة المباراة.",
+      "error"
+    );
+
+    return;
+  }
 
   showMessage(
     "تمت إضافة المباراة بنجاح ✓"
   );
-
 
   document.getElementById("homeTeam")
     .value = "";
@@ -713,13 +716,14 @@ async function addMatch() {
   document.getElementById("awayTeam")
     .value = "";
 
+  document.getElementById("stageSelect")
+    .value = "";
+
   document.getElementById("kickoff")
     .value = "";
 
-
   await loadMatches();
 }
-
 
 /* =========================
    EDIT MATCH
