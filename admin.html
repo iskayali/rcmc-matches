@@ -252,6 +252,22 @@
       padding: 20px;
     }
 
+    .player-row {
+      background: #0b1d33;
+      border: 1px solid #294665;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .player-row button {
+      grid-column: 1 / -1;
+    }
+
     @media (max-width: 650px) {
       .form-grid {
         grid-template-columns: 1fr;
@@ -349,7 +365,7 @@
       </div>
 
       <div class="field">
-        <label>اAway</label>
+        <label>Away</label>
         <input id="awayTeam" type="text" placeholder="مثال: Liverpool">
       </div>
 
@@ -425,37 +441,35 @@ async function loadPlayers() {
   const container =
     document.getElementById("players");
 
+  if (!container) {
+    return;
+  }
+
   const adminSessionToken =
-  localStorage.getItem(
-    "rcmc_admin_session_token"
-  );
+    localStorage.getItem(
+      "rcmc_admin_session_token"
+    );
 
-if (!adminSessionToken) {
-  showMessage(
-    "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
-    "error"
-  );
-  return;
-}
+  if (!adminSessionToken) {
+    container.innerHTML =
+      '<div class="empty">جلسة الإدارة غير موجودة.</div>';
+    return;
+  }
 
-const { data, error } =
-  await supabaseClient.rpc(
-    "add_match",
-    {
-      p_session_token: adminSessionToken,
-      p_home_team: homeTeam,
-      p_away_team: awayTeam,
-      p_stage_name: stageName,
-      p_kickoff: kickoff
-    }
-  );
+  const { data, error } =
+    await supabaseClient
+      .from("players")
+      .select("id, name, total_points, risk_balance")
+      .order("total_points", {
+        ascending: false
+      });
 
   if (error) {
 
     console.error(error);
 
     container.innerHTML =
-      "تعذر تحميل اللاعبين.";
+      '<div class="empty">تعذر تحميل اللاعبين.</div>';
 
     return;
   }
@@ -463,7 +477,7 @@ const { data, error } =
   if (!data || data.length === 0) {
 
     container.innerHTML =
-      "لا يوجد لاعبين حاليًا.";
+      '<div class="empty">لا يوجد لاعبين حاليًا.</div>';
 
     return;
   }
@@ -482,12 +496,12 @@ const { data, error } =
 
         <div>
           النقاط:
-          ${player.total_points}
+          ${Number(player.total_points) || 0}
         </div>
 
         <div>
           المخاطرة:
-          ${player.risk_balance}
+          ${Number(player.risk_balance) || 0}
         </div>
 
         <button
@@ -500,7 +514,8 @@ const { data, error } =
       </div>
     `).join("");
 }
-  async function resetPlayerPassword(playerId) {
+
+async function resetPlayerPassword(playerId) {
 
   const newPassword = prompt(
     "أدخل كلمة المرور الجديدة (8 أحرف على الأقل):"
@@ -972,10 +987,24 @@ async function addMatch() {
     new Date(kickoffInput)
       .toISOString();
 
+  const adminSessionToken =
+    localStorage.getItem(
+      "rcmc_admin_session_token"
+    );
+
+  if (!adminSessionToken) {
+    showMessage(
+      "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
+      "error"
+    );
+    return;
+  }
+
   const { data, error } =
     await supabaseClient.rpc(
       "add_match",
       {
+        p_session_token: adminSessionToken,
         p_home_team: homeTeam,
         p_away_team: awayTeam,
         p_stage_name: stageName,
@@ -1258,15 +1287,29 @@ async function finishMatch(matchId) {
   }
 
 
+  const adminSessionToken =
+    localStorage.getItem(
+      "rcmc_admin_session_token"
+    );
+
+  if (!adminSessionToken) {
+    showMessage(
+      "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
+      "error"
+    );
+    return;
+  }
+
   const { error } =
-    await supabaseClient
-      .from("matches")
-      .update({
-        home_score: homeScore,
-        away_score: awayScore,
-        status: "finished"
-      })
-      .eq("id", matchId);
+    await supabaseClient.rpc(
+      "finish_match",
+      {
+        p_session_token: adminSessionToken,
+        p_match_id: matchId,
+        p_home_score: homeScore,
+        p_away_score: awayScore
+      }
+    );
 
 
   if (error) {
@@ -1597,9 +1640,6 @@ async function init() {
 
 }
 
-
-
-loadPlayers();
 
 </script>
 
