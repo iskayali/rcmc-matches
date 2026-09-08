@@ -442,13 +442,30 @@ let stages = [];
 
   try {
 
-    const { data, error } =
-      await supabaseClient.rpc(
-        "get_admin_session",
-        {
-          p_session_token: token
-        }
-      );
+    const adminSessionToken =
+  localStorage.getItem(
+    "rcmc_admin_session_token"
+  );
+
+if (!adminSessionToken) {
+  showMessage(
+    "جلسة الإدارة غير موجودة. يرجى تسجيل الدخول.",
+    "error"
+  );
+  return;
+}
+
+const { data, error } =
+  await supabaseClient.rpc(
+    "add_match",
+    {
+      p_session_token: adminSessionToken,
+      p_home_team: homeTeam,
+      p_away_team: awayTeam,
+      p_stage_name: stageName,
+      p_kickoff: kickoff
+    }
+  );
 
     if (error) {
       throw error;
