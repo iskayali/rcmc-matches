@@ -649,7 +649,7 @@
 
     <div class="card welcome">
       <h2>🏆 أهلاً بك في SAM AIM</h2>
-      <p>شارك في مسابقة توقعات المباريات، توقع النتائج، اجمع النقاط، واستخدم المخاطرة بذكاء. واربح جوائز قيمتها 200 دولار.</p>
+      <p>شارك في مسابقة توقعات المباريات، اجمع النقاط، واستخدم المخاطرة بذكاء. واربح جوائز قيمتها <strong style="color:#d9b65c; font-weight:900;">200 دولار</strong>.</p>
       <button class="btn btn-primary terms-btn" onclick="showTerms()">📋 شروط المسابقة</button>
     </div>
 
@@ -682,7 +682,7 @@
 
       <label for="registerRealName" style="margin-top:14px;">الاسم الكامل (ثلاثي)</label>
       <input id="registerRealName" type="text" maxlength="80"
-             placeholder="الاسم يبقى سريًا ولا يظهر لأحد، فقط لمنظم البطولة لتسليم الجائزة"
+             placeholder="الاسم سري، يظهر فقط للمنظم للتحقق وتسليم الجائزة"
              autocomplete="off">
 
       <button id="registerBtn" class="btn btn-primary" onclick="registerPlayer()">إنشاء الحساب</button>
@@ -700,75 +700,81 @@
   <section id="termsSection" class="hidden">
     <div class="card">
       <div class="section-title">
-        <h2>📋 شروط المسابقة</h2>
+        <h2>📋 الشروط والأحكام</h2>
         <p>SAM AIM</p>
       </div>
 
       <div class="terms-section">
-        <h3>1. التسجيل والحسابات</h3>
-        <p>التسجيل مجاني. اسم المستخدم يظهر في جدول اللاعبين ويُستخدم لتسجيل الدخول، ولا يمكن تغييره لاحقًا. الاسم الكامل يُستخدم فقط من قبل منظم البطولة للتحقق من هوية الفائز وتسليم الجائزة، ولا يظهر للمشاركين.</p>
+        <h3>1. التسجيل والمشاركة</h3>
+        <p>المشاركة في البطولة مجانية. يظهر اسم المستخدم في جدول الترتيب ويُستخدم لتسجيل الدخول، ولا يمكن تغييره بعد التسجيل. أما الاسم الكامل فيُستخدم حصراً من قبل منظم البطولة للتحقق من هوية الفائز وتسليم الجائزة، ولا يظهر للمشاركين.</p>
       </div>
 
       <div class="terms-section">
-        <h3>2. طريقة التوقع</h3>
-        <p>يختار اللاعب نتيجة المباراة: فوز الفريق الأول، تعادل، أو فوز الفريق الثاني، ثم يحدد نقاط المخاطرة من 0 إلى 3. يمكن تعديل التوقع والمخاطرة قبل بداية المباراة، وبعد البداية يصبح التوقع مقفلًا.</p>
+        <h3>2. التوقعات</h3>
+        <p>يختار اللاعب نتيجة المباراة: فوز الفريق الأول، التعادل، أو فوز الفريق الثاني، مع إمكانية استخدام نقاط المخاطرة من 0 إلى 3. يمكن تعديل التوقع قبل انطلاق المباراة، وبعد انطلاقها يُغلق التوقع تلقائياً.</p>
       </div>
 
       <div class="terms-section">
-        <h3>3. نظام نقاط المخاطرة</h3>
-        <ul>
-          <li>يبدأ كل لاعب بـ 10 نقاط مخاطرة في كل مرحلة.</li>
-          <li>المخاطرة تُستخدم بشكل مستقل في كل مرحلة ولا تنتقل من مرحلة إلى أخرى.</li>
-          <li>يتم خصم المخاطرة عند حفظ التوقع.</li>
-          <li>عند تعديل المخاطرة قبل بداية المباراة، يُحسب الفرق فقط.</li>
-        </ul>
+        <h3>3. نظام المخاطرة</h3>
+        <p>يبدأ كل لاعب بـ <strong style="color:#d9b65c;">10 نقاط مخاطرة لكل مرحلة</strong>، وتُستخدم بشكل مستقل ولا تنتقل بين مراحل الذهاب والإياب.</p>
+        <p style="margin-top:8px;">عند استخدام المخاطرة، يتم خصمها من رصيد المخاطرة عند حفظ التوقع. وفي حال تعديل قيمة المخاطرة قبل بداية المباراة، يتم احتساب الفرق فقط.</p>
       </div>
 
       <div class="terms-section">
         <h3>4. احتساب النقاط</h3>
         <ul>
-          <li>توقع صحيح بدون مخاطرة: +2 نقطة.</li>
-          <li>مخاطرة 1 صحيحة: +3، وخاطئة: -1.</li>
-          <li>مخاطرة 2 صحيحة: +4، وخاطئة: -2.</li>
-          <li>مخاطرة 3 صحيحة: +5، وخاطئة: -3.</li>
+          <li>بدون مخاطرة: التوقع الصحيح <strong style="color:#d9b65c;">+2 نقطة</strong>.</li>
+          <li>مخاطرة 1: الصحيح <strong style="color:#d9b65c;">+3</strong>، والخاطئ <strong>−1</strong>.</li>
+          <li>مخاطرة 2: الصحيح <strong style="color:#d9b65c;">+4</strong>، والخاطئ <strong>−2</strong>.</li>
+          <li>مخاطرة 3: الصحيح <strong style="color:#d9b65c;">+5</strong>، والخاطئ <strong>−3</strong>.</li>
         </ul>
+        <p style="margin-top:8px;"><strong>تُضاف النقاط أو تُخصم من إجمالي نقاط اللاعب وفقاً لنتيجة التوقع. فعلى سبيل المثال، إذا استخدم اللاعب مخاطرة 3 وكان توقعه خاطئاً، تُخصم 3 نقاط من إجمالي نقاطه.</strong></p>
       </div>
 
       <div class="terms-section">
-        <h3>5. ترتيب اللاعبين وكسر التعادل</h3>
-        <p>يُرتب اللاعبون حسب النقاط، ثم عدد التوقعات الصحيحة، ثم المخاطرة المتبقية، ثم نتيجة تصويت التليجرام عند الحاجة. جدول اللاعبين يعرض 20 لاعبًا في كل صفحة.</p>
+        <h3>5. ترتيب اللاعبين</h3>
+        <p>يتم ترتيب اللاعبين حسب:</p>
+        <ol style="padding-right:20px;margin-top:7px;color:#c5ced9;">
+          <li>إجمالي النقاط.</li>
+          <li>عدد التوقعات الصحيحة.</li>
+          <li>نقاط المخاطرة المتبقية.</li>
+          <li>نتيجة تصويت المشاركين عبر Telegram عند الحاجة.</li>
+        </ol>
       </div>
 
       <div class="terms-section">
-        <h3>6. المباريات المعدلة أو الملغاة</h3>
-        <p>إذا تم تأجيل مباراة، يقوم المنظم بتعديل موعدها، ويبقى التوقع محفوظًا ويمكن تعديله حتى الموعد الجديد. المباراة الملغاة نهائيًا لا تمنح نقاطًا ولا تسبب خسارة في المخاطرة، وتُعاد المخاطرة المستخدمة عليها.</p>
+        <h3>6. المباريات المؤجلة أو الملغاة</h3>
+        <p>في حال تأجيل المباراة، يتم تحديث موعدها ويظل التوقع محفوظاً وقابلاً للتعديل حتى الموعد الجديد. أما المباراة الملغاة نهائياً فلا تُحتسب نقاطها، وتُعاد نقاط المخاطرة المستخدمة فيها.</p>
       </div>
 
       <div class="terms-section">
-        <h3>7. إغلاق التوقعات</h3>
-        <p>تُغلق التوقعات تلقائيًا عند بداية المباراة. إغلاق المرحلة نفسها يتم يدويًا من قبل المنظم. التوقعات المحفوظة قبل الإغلاق تبقى محفوظة وتُحتسب بشكل طبيعي عند انتهاء مبارياتها.</p>
+        <h3>7. إغلاق التوقعات والمراحل</h3>
+        <p>تُغلق توقعات كل مباراة تلقائياً عند انطلاقها. ويحق للمنظم إغلاق المرحلة يدوياً. التوقعات المسجلة قبل الإغلاق تبقى محفوظة وتُحتسب وفق النظام.</p>
       </div>
 
       <div class="terms-section">
         <h3>8. الجوائز</h3>
-        <p>البطولة تتكون من مرحلتين مستقلتين:</p>
+        <p>تتكون البطولة من مرحلتين مستقلتين:</p>
         <ul>
-          <li>الذهاب: الجائزة 100 دولار، والتاريخ المعلن للنهاية 31 ديسمبر 2026.</li>
-          <li>الإياب: الجائزة 100 دولار، والتاريخ المعلن للنهاية 5 يونيو 2027.</li>
+          <li><strong>مرحلة الذهاب:</strong> جائزة قدرها <strong style="color:#d9b65c;">100 USD</strong>، ونهاية المرحلة المعلنة <strong>31 ديسمبر 2026</strong>.</li>
+          <li><strong>مرحلة الإياب:</strong> جائزة قدرها <strong style="color:#d9b65c;">100 USD</strong>، ونهاية المرحلة المعلنة <strong>5 يونيو 2027</strong>.</li>
         </ul>
-        <p style="margin-top:8px;">الجائزة 100 USD أو ما يعادلها بالعملة المحلية في بلد الفائز، وفق سعر الصرف وقت تسليم الجائزة. البطولة مجانية بالكامل ولا يدفع أي مشارك رسومًا.</p>
+        <p style="margin-top:8px;">تُدفع الجائزة بقيمة <strong style="color:#d9b65c;">100 USD أو ما يعادلها بالعملة المحلية في بلد الفائز</strong> وفق سعر الصرف المعتمد وقت التسليم.</p>
+      </div>
+
+      <div class="terms-section">
+        <h3>9. أحكام عامة</h3>
+        <p>البطولة مجانية بالكامل ولا تفرض أي رسوم على المشاركين. يحتفظ منظم البطولة بحق اتخاذ القرارات اللازمة في الحالات الاستثنائية أو غير المنصوص عليها في هذه الشروط، بما يضمن نزاهة المنافسة وعدالتها.</p>
       </div>
 
       <div class="terms-section organizer-message">
         <h3>📩 رسالة من المنظم 🤍</h3>
         <p style="margin-top:10px;">
-          أطلقت بطولة <strong style="color:#d9b65c;">SAM AIM</strong> لتكون مساحة للمتعة والمنافسة الشريفة بين جميع المشاركين، بعيدًا عن أي رسوم أو خسائر مالية.
+          أطلقت بطولة <strong style="color:#d9b65c;">SAM AIM</strong> لتكون مساحة ممتعة للمنافسة والتحدي بين الجميع.
           <br><br>
-          البطولة مجانية بالكامل، والجائزة التزام مني تجاه الفائز المستحق وفقًا لشروط المسابقة.
+          البطولة <strong style="color:#d9b65c;">مجانية بالكامل</strong>، والجائزة التزام مني تجاه الفائز المستحق وفقاً لشروط البطولة.
           <br><br>
-          ألتزم بالشفافية والصدق أمام الله في إدارة البطولة وإعلان النتائج والجوائز، وأسعى لأن تكون هذه المسابقة تجربة ممتعة وعادلة للجميع.
-          <br><br>
-          <strong>أتمنى لكم التوفيق، وأتمنى أن تكون المنافسة مليئة بالحماس والتحدي. 🏆🤍</strong>
+          أتمنى لكم تجربة جميلة، ومنافسة حماسية، وبالتوفيق للجميع! 🏆🤍
         </p>
       </div>
 
@@ -876,6 +882,11 @@
 
   </section>
 
+  <div id="loggedInSocialRow" class="social-row hidden" style="margin-top:18px;">
+    <a class="social-btn whatsapp-btn" href="https://chat.whatsapp.com/Ceree7y2VEW8t9JzxwbB0F?s=sw&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">🟢 انضم لمجموعة الواتساب</a>
+    <a class="social-btn telegram-btn" href="https://t.me/Samaimx" target="_blank" rel="noopener noreferrer">✈️ انضم لمجموعة التليجرام</a>
+  </div>
+
   <div class="ad-space-reserved"></div>
 
   <div class="footer">
@@ -945,6 +956,7 @@ function updateRiskDisplay() {
 function showLogin() {
   document.getElementById("termsSection").classList.add("hidden");
   document.getElementById("competitionSection").classList.add("hidden");
+  document.getElementById("loggedInSocialRow").classList.add("hidden");
   document.getElementById("loginSection").classList.remove("hidden");
   document.getElementById("loginBox").classList.remove("hidden");
   document.getElementById("registerBox").classList.add("hidden");
@@ -1099,6 +1111,7 @@ async function loginPlayer() {
     document.getElementById("loginSection").classList.add("hidden");
     document.getElementById("termsSection").classList.add("hidden");
     document.getElementById("competitionSection").classList.remove("hidden");
+    document.getElementById("loggedInSocialRow").classList.remove("hidden");
 
     updateRiskDisplay();
     await loadCompetition();
@@ -1817,6 +1830,7 @@ async function restoreSession() {
     document.getElementById("loginSection").classList.add("hidden");
     document.getElementById("termsSection").classList.add("hidden");
     document.getElementById("competitionSection").classList.remove("hidden");
+    document.getElementById("loggedInSocialRow").classList.remove("hidden");
 
     updateRiskDisplay();
     await loadCompetition();
