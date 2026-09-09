@@ -1,2 +1,2 @@
-# rcmc-matches
+# SAM AIM
 Football Prediction Competition
