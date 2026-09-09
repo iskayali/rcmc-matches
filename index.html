@@ -91,6 +91,35 @@
     input::placeholder { color: #91a0b1; opacity: 1; }
     input:focus { border-color: #d9b65c; }
 
+    .phone-row {
+      display: grid;
+      grid-template-columns: 115px 1fr;
+      gap: 8px;
+      direction: ltr;
+    }
+
+    .phone-row select {
+      width: 100%;
+      padding: 14px 8px;
+      border-radius: 12px;
+      border: 1px solid #38516c;
+      background: #08182a;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      direction: ltr;
+    }
+
+    .phone-row select:focus { border-color: #d9b65c; }
+
+    .phone-note {
+      color: #aeb8c4;
+      font-size: 11px;
+      line-height: 1.5;
+      margin-top: 7px;
+      text-align: right;
+    }
+
     .btn {
       width: 100%;
       border: none;
@@ -628,6 +657,7 @@
       .stat:nth-child(-n+2) { border-bottom: 1px solid #1c344e; padding-bottom: 11px; }
       .stat:nth-child(n+3) { padding-top: 11px; }
       .result-grid { grid-template-columns: repeat(2, 1fr); }
+      .phone-row { grid-template-columns: 105px 1fr; }
       .social-btn, .top-btn, .nav-btn { font-size: 12px; }
     }
   </style>
@@ -680,10 +710,52 @@
       <label for="registerPassword" style="margin-top:14px;">كلمة المرور</label>
       <input id="registerPassword" type="password" maxlength="50" placeholder="اختر كلمة مرور (8 أحرف على الأقل)" autocomplete="new-password">
 
-      <label for="registerRealName" style="margin-top:14px;">الاسم الكامل (ثلاثي)</label>
-      <input id="registerRealName" type="text" maxlength="80"
-             placeholder="الاسم سري، يظهر فقط للمنظم للتحقق وتسليم الجائزة"
-             autocomplete="off">
+      <label for="registerPhoneCountry" style="margin-top:14px;">رقم الجوال</label>
+      <div class="phone-row">
+        <select id="registerPhoneCountry" aria-label="رمز الدولة">
+          <option value="+971" selected>🇦🇪 +971</option>
+          <option value="+963">🇸🇾 +963</option>
+          <option value="+966">🇸🇦 +966</option>
+          <option value="+965">🇰🇼 +965</option>
+          <option value="+974">🇶🇦 +974</option>
+          <option value="+973">🇧🇭 +973</option>
+          <option value="+968">🇴🇲 +968</option>
+          <option value="+962">🇯🇴 +962</option>
+          <option value="+961">🇱🇧 +961</option>
+          <option value="+20">🇪🇬 +20</option>
+          <option value="+90">🇹🇷 +90</option>
+          <option value="+44">🇬🇧 +44</option>
+          <option value="+49">🇩🇪 +49</option>
+          <option value="+33">🇫🇷 +33</option>
+          <option value="+39">🇮🇹 +39</option>
+          <option value="+34">🇪🇸 +34</option>
+          <option value="+31">🇳🇱 +31</option>
+          <option value="+46">🇸🇪 +46</option>
+          <option value="+41">🇨🇭 +41</option>
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+1-CA">🇨🇦 +1</option>
+          <option value="+61">🇦🇺 +61</option>
+          <option value="+64">🇳🇿 +64</option>
+          <option value="+91">🇮🇳 +91</option>
+          <option value="+92">🇵🇰 +92</option>
+          <option value="+880">🇧🇩 +880</option>
+          <option value="+86">🇨🇳 +86</option>
+          <option value="+81">🇯🇵 +81</option>
+          <option value="+82">🇰🇷 +82</option>
+          <option value="+7">🇷🇺 +7</option>
+          <option value="+27">🇿🇦 +27</option>
+          <option value="+212">🇲🇦 +212</option>
+          <option value="+213">🇩🇿 +213</option>
+          <option value="+216">🇹🇳 +216</option>
+          <option value="+218">🇱🇾 +218</option>
+          <option value="+249">🇸🇩 +249</option>
+          <option value="+964">🇮🇶 +964</option>
+          <option value="+98">🇮🇷 +98</option>
+        </select>
+        <input id="registerPhone" type="tel" inputmode="tel" maxlength="20"
+               placeholder="مثلاً: 501234567" autocomplete="tel-national">
+      </div>
+      <div class="phone-note">الرقم سيبقى سرياً، للتواصل لتسليم الجائزة</div>
 
       <button id="registerBtn" class="btn btn-primary" onclick="registerPlayer()">إنشاء الحساب</button>
       <button class="btn btn-secondary" onclick="showLogin()">لدي حساب بالفعل</button>
@@ -706,7 +778,7 @@
 
       <div class="terms-section">
         <h3>1. التسجيل والمشاركة</h3>
-        <p>المشاركة في البطولة مجانية. يظهر اسم المستخدم في جدول الترتيب ويُستخدم لتسجيل الدخول، ولا يمكن تغييره بعد التسجيل. أما الاسم الكامل فيُستخدم حصراً من قبل منظم البطولة للتحقق من هوية الفائز وتسليم الجائزة، ولا يظهر للمشاركين.</p>
+        <p>المشاركة في البطولة مجانية. يظهر اسم المستخدم في جدول الترتيب ويُستخدم لتسجيل الدخول، ولا يمكن تغييره بعد التسجيل. أما رقم الجوال فيبقى سرياً ويُستخدم حصراً من قبل منظم البطولة للتواصل مع الفائز وتسليم الجائزة، ولا يظهر للمشاركين.</p>
       </div>
 
       <div class="terms-section">
@@ -1017,9 +1089,10 @@ function showChangePassword() {
 async function registerPlayer() {
   const username = document.getElementById("registerUsername").value.trim();
   const password = document.getElementById("registerPassword").value;
-  const realName = document.getElementById("registerRealName").value.trim();
+  const phoneCountry = document.getElementById("registerPhoneCountry").value;
+  const phone = document.getElementById("registerPhone").value.trim();
 
-  if (!username || !password || !realName) {
+  if (!username || !password || !phoneCountry || !phone) {
     showMessage("يرجى تعبئة جميع الحقول.", "error");
     return;
   }
@@ -1034,6 +1107,12 @@ async function registerPlayer() {
     return;
   }
 
+  const normalizedPhone = phone.replace(/[\\s().-]/g, "");
+  if (!/^\\d{6,15}$/.test(normalizedPhone)) {
+    showMessage("يرجى إدخال رقم جوال صحيح.", "error");
+    return;
+  }
+
   const button = document.getElementById("registerBtn");
   button.disabled = true;
   button.textContent = "⏳ جارٍ إنشاء الحساب...";
@@ -1042,7 +1121,8 @@ async function registerPlayer() {
     const { data, error } = await supabaseClient.rpc("register_player", {
       p_username: username,
       p_password: password,
-      p_real_name: realName
+      p_phone_country: phoneCountry,
+      p_phone: phone
     });
 
     if (error) throw error;
@@ -1052,7 +1132,7 @@ async function registerPlayer() {
 
     document.getElementById("registerUsername").value = "";
     document.getElementById("registerPassword").value = "";
-    document.getElementById("registerRealName").value = "";
+    document.getElementById("registerPhone").value = "";
 
     showLogin();
     showMessage("✅ تم إنشاء حسابك بنجاح", "success");
