@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RCMC MATCHES</title>
-
+  <title>SAM AIM</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -89,6 +88,7 @@
       outline: none;
     }
 
+    input::placeholder { color: #91a0b1; opacity: 1; }
     input:focus { border-color: #d9b65c; }
 
     .btn {
@@ -118,42 +118,167 @@
 
     .hidden { display: none !important; }
 
-    .player-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .player-name { font-size: 18px; font-weight: bold; }
-
-    .risk-box {
-      background: #08182a;
-      border: 1px solid #d9b65c;
-      border-radius: 12px;
-      padding: 10px 14px;
+    .message {
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 15px;
       text-align: center;
-      min-width: 88px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.6;
     }
 
-    .risk-label { font-size: 11px; color: #aeb8c4; }
-    .risk-value { color: #d9b65c; font-size: 22px; font-weight: bold; }
+    .message.success {
+      display: block;
+      background: #123c2a;
+      border: 1px solid #276d4b;
+      color: #8de0b5;
+    }
 
-    .category-title {
+    .message.error {
+      display: block;
+      background: #421c22;
+      border: 1px solid #81343f;
+      color: #ff9ba7;
+    }
+
+    .message.info {
+      display: block;
+      background: #152d46;
+      border: 1px solid #31516f;
+      color: #a9c9e7;
+    }
+
+    .terms-btn {
+      margin-top: 16px;
+    }
+
+    .social-row,
+    .top-actions,
+    .nav-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .social-btn,
+    .top-btn,
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 48px;
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-align: center;
+    }
+
+    .whatsapp-btn { background: #25D366; color: #fff; }
+    .telegram-btn { background: #229ED9; color: #fff; }
+
+    .top-btn,
+    .nav-btn {
+      background: #17314f;
+      color: #fff;
+      border-color: #31506f;
+    }
+
+    .logout-btn {
+      background: #132b47;
+      color: #dcb65a;
+      border-color: #dcb65a;
+    }
+
+    .section-title {
       text-align: center;
       margin-bottom: 18px;
     }
 
-    .category-title h2 {
+    .section-title h2 {
       color: #d9b65c;
       font-size: 22px;
     }
 
-    .category-title p {
+    .section-title p {
       color: #aeb8c4;
       font-size: 13px;
       margin-top: 5px;
+    }
+
+    .phase-card {
+      text-align: center;
+      padding: 14px;
+      margin-bottom: 18px;
+    }
+
+    .phase-name {
+      color: #d9b65c;
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .phase-meta {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 9px;
+      color: #c5ced9;
+      font-size: 13px;
+    }
+
+    .announcement {
+      background: #6f1721;
+      border: 1px solid #a83a46;
+      color: #fff;
+      border-radius: 13px;
+      padding: 13px 14px;
+      margin-bottom: 18px;
+      text-align: center;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .stats-card {
+      padding: 15px 12px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 9px 4px;
+      border-left: 1px solid #1c344e;
+    }
+
+    .stat:last-child { border-left: none; }
+
+    .stat-label {
+      color: #aeb8c4;
+      font-size: 11px;
+      line-height: 1.4;
+      min-height: 31px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-value {
+      color: #d9b65c;
+      font-size: 19px;
+      font-weight: 900;
+      margin-top: 4px;
+      word-break: break-word;
     }
 
     .match-card {
@@ -174,6 +299,14 @@
       color: #9faebe;
       font-size: 12px;
       gap: 8px;
+    }
+
+    .match-countdown {
+      color: #d9b65c;
+      text-align: center;
+      font-size: 12px;
+      min-height: 19px;
+      margin-top: 10px;
     }
 
     .teams {
@@ -240,68 +373,212 @@
       line-height: 1.6;
     }
 
-    .category-empty,
+    .empty-state,
     .loading {
       text-align: center;
       color: #aeb8c4;
-      padding: 20px 8px;
+      padding: 22px 8px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .empty-state strong {
+      display: block;
+      color: #d9b65c;
+      font-size: 17px;
+      margin-bottom: 3px;
+    }
+
+    .ranking-table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 520px;
+    }
+
+    th, td {
+      padding: 11px 8px;
+      border-bottom: 1px solid #1c344e;
+      text-align: center;
       font-size: 13px;
     }
 
-    .leaderboard-row {
-      display: grid;
-      grid-template-columns: 45px 1fr 70px;
+    th {
+      color: #d9b65c;
+      background: #102843;
+      font-weight: bold;
+    }
+
+    td { color: #e7ebef; }
+
+    tr.current-player td {
+      background: rgba(217,182,92,.10);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    td.points-cell { color: #d9b65c; font-weight: bold; }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 8px;
-      padding: 12px 5px;
-      border-bottom: 1px solid #1c344e;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 16px;
     }
 
-    .leaderboard-row:last-child { border-bottom: none; }
-
-    .rank { color: #d9b65c; font-weight: bold; text-align: center; }
-    .points { text-align: left; font-weight: bold; color: #d9b65c; }
-
-    .message {
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      text-align: center;
-      display: none;
-      font-size: 14px;
-    }
-
-    .message.success {
-      display: block;
-      background: #123c2a;
-      border: 1px solid #276d4b;
-      color: #8de0b5;
-    }
-
-    .message.error {
-      display: block;
-      background: #421c22;
-      border: 1px solid #81343f;
-      color: #ff9ba7;
-    }
-
-    .message.info {
-      display: block;
-      background: #152d46;
-      border: 1px solid #31516f;
-      color: #a9c9e7;
-    }
-
-    .logout-wrap { text-align: left; margin: 10px 0; }
-
-    .logout {
-      background: #132b47;
-      color: #dcb65a;
-      border: 1px solid #dcb65a;
-      border-radius: 8px;
-      padding: 8px 16px;
+    .page-btn {
+      min-width: 38px;
+      height: 36px;
+      border-radius: 9px;
+      border: 1px solid #31506f;
+      background: #17314f;
+      color: #fff;
       cursor: pointer;
       font-weight: bold;
+    }
+
+    .page-btn.active {
+      background: #d9b65c;
+      color: #071426;
+      border-color: #d9b65c;
+    }
+
+    .page-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    .completed-card {
+      background: #091a2e;
+      border: 1px solid #223c58;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 13px;
+    }
+
+    .completed-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: #9faebe;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .completed-teams {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      gap: 7px;
+      align-items: center;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .final-score {
+      color: #d9b65c;
+      font-size: 18px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .result-item {
+      background: #102843;
+      border-radius: 9px;
+      padding: 9px 5px;
+      text-align: center;
+    }
+
+    .result-item span {
+      display: block;
+      color: #91a0b1;
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    .result-item strong {
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .result-item.points strong {
+      color: #d9b65c;
+    }
+
+    .champion-card {
+      text-align: center;
+      border-color: #6f5a24;
+    }
+
+    .champion-title {
+      color: #d9b65c;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .champion-name {
+      font-size: 23px;
+      font-weight: 900;
+      margin-top: 8px;
+    }
+
+    .champion-points {
+      color: #d9b65c;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .terms-section h3 {
+      color: #d9b65c;
+      font-size: 17px;
+      margin-bottom: 9px;
+    }
+
+    .terms-section {
+      margin-bottom: 20px;
+    }
+
+    .terms-section p,
+    .terms-section li {
+      color: #c5ced9;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .terms-section ul {
+      padding-right: 20px;
+      margin-top: 7px;
+    }
+
+    .organizer-message {
+      background: #102843;
+      border: 1px solid #31506f;
+      border-radius: 14px;
+      padding: 15px;
+    }
+
+    .organizer-message h3 {
+      text-align: center;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      color: #d9b65c;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 12px;
+      margin-top: 5px;
     }
 
     .footer {
@@ -311,10 +588,47 @@
       font-size: 12px;
     }
 
+    .footer a {
+      color: #d9b65c;
+      text-decoration: none;
+    }
+
+    .ad-space-reserved { height: 1px; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 1000;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 430px;
+      background: #0d2139;
+      border: 1px solid #31506f;
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal h3 { color: #d9b65c; margin-bottom: 10px; }
+    .modal p { color: #c5ced9; line-height: 1.7; font-size: 14px; }
+    .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 15px; }
+
     @media (max-width: 480px) {
       .brand { font-size: 27px; }
       .team, .prediction-btn, .risk-btn { font-size: 12px; }
-      .risk-box { min-width: 82px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-left: none; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid #1c344e; padding-bottom: 11px; }
+      .stat:nth-child(n+3) { padding-top: 11px; }
+      .result-grid { grid-template-columns: repeat(2, 1fr); }
+      .social-btn, .top-btn, .nav-btn { font-size: 12px; }
     }
   </style>
 </head>
@@ -323,138 +637,281 @@
 <div class="container">
 
   <div class="header">
-    <div class="logo-circle"><div class="logo-text">RCMC</div></div>
-    <div class="brand">RCMC MATCHES</div>
+    <div class="logo-circle"><div class="logo-text">SAM AIM</div></div>
+    <div class="brand">SAM AIM</div>
     <div class="subtitle">توقع • نافس • تصدّر</div>
   </div>
 
   <div id="message" class="message"></div>
 
+  <!-- Public / Login -->
   <section id="loginSection">
+
     <div class="card welcome">
-      <h2>🏆 أهلاً بك في RCMC MATCHES</h2>
-      <p>
-        شارك في مسابقة توقعات دوري أبطال أوروبا،
-        توقع النتائج، اجمع النقاط، واستخدم المخاطرة بذكاء.
-      </p>
+      <h2>🏆 أهلاً بك في SAM AIM</h2>
+      <p>شارك في مسابقة توقعات المباريات، توقع النتائج، اجمع النقاط، واستخدم المخاطرة بذكاء. واربح جوائز قيمتها 200 دولار.</p>
+      <button class="btn btn-primary terms-btn" onclick="showTerms()">📋 شروط المسابقة</button>
     </div>
 
     <div id="loginBox" class="card">
-      <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">
-        🔐 تسجيل الدخول
-      </h2>
+      <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">🔐 تسجيل الدخول</h2>
 
       <label for="loginUsername">اسم المستخدم</label>
-      <input id="loginUsername" type="text" maxlength="30"
-             placeholder="مثلاً: Name" autocomplete="username">
+      <input id="loginUsername" type="text" maxlength="30" placeholder="مثلاً: Ahmad" autocomplete="username">
 
       <label for="loginPassword" style="margin-top:14px;">كلمة المرور</label>
-      <input id="loginPassword" type="password" maxlength="50"
-             placeholder="أدخل كلمة المرور" autocomplete="current-password">
+      <input id="loginPassword" type="password" maxlength="50" placeholder="أدخل كلمة المرور" autocomplete="current-password">
 
       <button id="loginBtn" class="btn btn-primary" onclick="loginPlayer()">دخول</button>
       <button class="btn btn-secondary" onclick="showRegister()">إنشاء حساب جديد</button>
 
-      <a
-        href="https://api.whatsapp.com/send?phone=971568524149"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="
-          display:block;
-          margin-top:14px;
-          color:#d9b65c;
-          text-decoration:none;
-          font-size:14px;
-          font-weight:bold;
-        "
-      >
+      <a href="https://api.whatsapp.com/send?phone=971568524149" target="_blank" rel="noopener noreferrer"
+         style="display:block;margin-top:14px;color:#d9b65c;text-decoration:none;font-size:14px;font-weight:bold;text-align:center;">
         نسيت كلمة المرور؟ اضغط هنا
       </a>
     </div>
 
     <div id="registerBox" class="card hidden">
-      <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">
-        📝 إنشاء حساب
-      </h2>
+      <h2 style="color:#d9b65c;text-align:center;margin-bottom:18px;">📝 إنشاء حساب</h2>
 
       <label for="registerUsername">اسم المستخدم</label>
-      <input id="registerUsername" type="text" maxlength="30"
-             placeholder="مثلاً: islam2026" autocomplete="username">
+      <input id="registerUsername" type="text" maxlength="30" placeholder="مثلاً: Ahmad" autocomplete="username">
 
       <label for="registerPassword" style="margin-top:14px;">كلمة المرور</label>
-      <input id="registerPassword" type="password" maxlength="50"
-             placeholder="اختر كلمة مرور" autocomplete="new-password">
+      <input id="registerPassword" type="password" maxlength="50" placeholder="اختر كلمة مرور (8 أحرف على الأقل)" autocomplete="new-password">
 
-      <label for="registerName" style="margin-top:14px;">الاسم الذي سيظهر في المسابقة</label>
-      <input id="registerName" type="text" maxlength="40"
-             placeholder="مثلاً: إسلام" autocomplete="off">
+      <label for="registerRealName" style="margin-top:14px;">الاسم الكامل (ثلاثي)</label>
+      <input id="registerRealName" type="text" maxlength="80"
+             placeholder="الاسم يبقى سريًا ولا يظهر لأحد، فقط لمنظم البطولة لتسليم الجائزة"
+             autocomplete="off">
 
-      <button id="registerBtn" class="btn btn-primary" onclick="registerPlayer()">
-        إنشاء الحساب
-      </button>
+      <button id="registerBtn" class="btn btn-primary" onclick="registerPlayer()">إنشاء الحساب</button>
       <button class="btn btn-secondary" onclick="showLogin()">لدي حساب بالفعل</button>
     </div>
+
+    <div class="social-row">
+      <a class="social-btn whatsapp-btn" href="https://chat.whatsapp.com/Ceree7y2VEW8t9JzxwbB0F?s=sw&p=i&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">🟢 انضم لمجموعة الواتساب</a>
+      <a class="social-btn telegram-btn" href="https://t.me/Samaimx" target="_blank" rel="noopener noreferrer">✈️ انضم لمجموعة التليجرام</a>
+    </div>
+
   </section>
 
+  <!-- Terms -->
+  <section id="termsSection" class="hidden">
+    <div class="card">
+      <div class="section-title">
+        <h2>📋 شروط المسابقة</h2>
+        <p>SAM AIM</p>
+      </div>
+
+      <div class="terms-section">
+        <h3>1. التسجيل والحسابات</h3>
+        <p>التسجيل مجاني. اسم المستخدم يظهر في جدول اللاعبين ويُستخدم لتسجيل الدخول، ولا يمكن تغييره لاحقًا. الاسم الكامل يُستخدم فقط من قبل منظم البطولة للتحقق من هوية الفائز وتسليم الجائزة، ولا يظهر للمشاركين.</p>
+      </div>
+
+      <div class="terms-section">
+        <h3>2. طريقة التوقع</h3>
+        <p>يختار اللاعب نتيجة المباراة: فوز الفريق الأول، تعادل، أو فوز الفريق الثاني، ثم يحدد نقاط المخاطرة من 0 إلى 3. يمكن تعديل التوقع والمخاطرة قبل بداية المباراة، وبعد البداية يصبح التوقع مقفلًا.</p>
+      </div>
+
+      <div class="terms-section">
+        <h3>3. نظام نقاط المخاطرة</h3>
+        <ul>
+          <li>يبدأ كل لاعب بـ 10 نقاط مخاطرة في كل مرحلة.</li>
+          <li>المخاطرة تُستخدم بشكل مستقل في كل مرحلة ولا تنتقل من مرحلة إلى أخرى.</li>
+          <li>يتم خصم المخاطرة عند حفظ التوقع.</li>
+          <li>عند تعديل المخاطرة قبل بداية المباراة، يُحسب الفرق فقط.</li>
+        </ul>
+      </div>
+
+      <div class="terms-section">
+        <h3>4. احتساب النقاط</h3>
+        <ul>
+          <li>توقع صحيح بدون مخاطرة: +2 نقطة.</li>
+          <li>مخاطرة 1 صحيحة: +3، وخاطئة: -1.</li>
+          <li>مخاطرة 2 صحيحة: +4، وخاطئة: -2.</li>
+          <li>مخاطرة 3 صحيحة: +5، وخاطئة: -3.</li>
+        </ul>
+      </div>
+
+      <div class="terms-section">
+        <h3>5. ترتيب اللاعبين وكسر التعادل</h3>
+        <p>يُرتب اللاعبون حسب النقاط، ثم عدد التوقعات الصحيحة، ثم المخاطرة المتبقية، ثم نتيجة تصويت التليجرام عند الحاجة. جدول اللاعبين يعرض 20 لاعبًا في كل صفحة.</p>
+      </div>
+
+      <div class="terms-section">
+        <h3>6. المباريات المعدلة أو الملغاة</h3>
+        <p>إذا تم تأجيل مباراة، يقوم المنظم بتعديل موعدها، ويبقى التوقع محفوظًا ويمكن تعديله حتى الموعد الجديد. المباراة الملغاة نهائيًا لا تمنح نقاطًا ولا تسبب خسارة في المخاطرة، وتُعاد المخاطرة المستخدمة عليها.</p>
+      </div>
+
+      <div class="terms-section">
+        <h3>7. إغلاق التوقعات</h3>
+        <p>تُغلق التوقعات تلقائيًا عند بداية المباراة. إغلاق المرحلة نفسها يتم يدويًا من قبل المنظم. التوقعات المحفوظة قبل الإغلاق تبقى محفوظة وتُحتسب بشكل طبيعي عند انتهاء مبارياتها.</p>
+      </div>
+
+      <div class="terms-section">
+        <h3>8. الجوائز</h3>
+        <p>البطولة تتكون من مرحلتين مستقلتين:</p>
+        <ul>
+          <li>الذهاب: الجائزة 100 دولار، والتاريخ المعلن للنهاية 31 ديسمبر 2026.</li>
+          <li>الإياب: الجائزة 100 دولار، والتاريخ المعلن للنهاية 5 يونيو 2027.</li>
+        </ul>
+        <p style="margin-top:8px;">الجائزة 100 USD أو ما يعادلها بالعملة المحلية في بلد الفائز، وفق سعر الصرف وقت تسليم الجائزة. البطولة مجانية بالكامل ولا يدفع أي مشارك رسومًا.</p>
+      </div>
+
+      <div class="terms-section organizer-message">
+        <h3>📩 رسالة من المنظم 🤍</h3>
+        <p style="margin-top:10px;">
+          أطلقت بطولة <strong style="color:#d9b65c;">SAM AIM</strong> لتكون مساحة للمتعة والمنافسة الشريفة بين جميع المشاركين، بعيدًا عن أي رسوم أو خسائر مالية.
+          <br><br>
+          البطولة مجانية بالكامل، والجائزة التزام مني تجاه الفائز المستحق وفقًا لشروط المسابقة.
+          <br><br>
+          ألتزم بالشفافية والصدق أمام الله في إدارة البطولة وإعلان النتائج والجوائز، وأسعى لأن تكون هذه المسابقة تجربة ممتعة وعادلة للجميع.
+          <br><br>
+          <strong>أتمنى لكم التوفيق، وأتمنى أن تكون المنافسة مليئة بالحماس والتحدي. 🏆🤍</strong>
+        </p>
+      </div>
+
+      <a href="#" class="back-link" onclick="showLogin(); return false;">← العودة إلى صفحة التسجيل</a>
+    </div>
+  </section>
+
+  <!-- Logged-in competition -->
   <section id="competitionSection" class="hidden">
 
-    <div class="logout-wrap">
-      <button type="button" class="logout" onclick="logoutPlayer()">🚪 تسجيل الخروج</button>
+    <div class="top-actions" style="margin-bottom:12px;">
+      <button type="button" class="top-btn" onclick="showChangePassword()">🔑 تغيير كلمة المرور</button>
+      <button type="button" class="top-btn logout-btn" onclick="confirmLogout()">🚪 تسجيل الخروج</button>
     </div>
 
-    <div class="card">
-      <div class="player-bar">
-        <div>
-          <div style="font-size:11px;color:#8d9aaa;">المشارك</div>
-          <div id="playerDisplay" class="player-name">---</div>
-        </div>
+    <div id="phaseCard" class="card phase-card"></div>
 
-        <div class="risk-box">
-          <div class="risk-label">النقاط</div>
-          <div id="playerPoints" class="risk-value">0</div>
-        </div>
+    <div id="announcementBox" class="announcement hidden"></div>
 
-        <div class="risk-box">
-          <div class="risk-label">المخاطرة المتبقية</div>
-          <div id="riskBalance" class="risk-value">10</div>
+    <div class="card stats-card">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-label">اسم المستخدم</div>
+          <div id="playerDisplay" class="stat-value">---</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">النقاط</div>
+          <div id="playerPoints" class="stat-value">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">الترتيب</div>
+          <div id="playerRank" class="stat-value">-</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">المخاطرة المتبقية</div>
+          <div id="riskBalance" class="stat-value">10</div>
         </div>
       </div>
     </div>
 
-    <div id="categoriesContainer">
-      <div class="loading">جاري تحميل المباريات...</div>
+    <div class="nav-row" style="margin-bottom:18px;">
+      <button class="nav-btn" onclick="showRanking()">🏆 جدول اللاعبين</button>
+      <button class="nav-btn" onclick="showCompleted()">🏁 المباريات المنتهية</button>
     </div>
 
-    <div class="card">
-      <div class="category-title">
-        <h2>🏆 الترتيب</h2>
-        <p>ترتيب المشاركين الحالي</p>
+    <div id="mainCompetitionView">
+      <div class="card">
+        <div class="section-title">
+          <h2>⚽ المباريات القادمة</h2>
+        </div>
+        <div id="matchesContainer">
+          <div class="loading">⏳ جارٍ تحميل المباريات...</div>
+        </div>
       </div>
-      <div id="leaderboard">
-        <div class="loading">جاري تحميل الترتيب...</div>
+
+      <div id="championContainer"></div>
+    </div>
+
+    <div id="rankingView" class="hidden">
+      <div class="card">
+        <div class="section-title">
+          <h2>🏆 جدول اللاعبين</h2>
+          <p>الترتيب الحالي للمرحلة</p>
+        </div>
+        <div id="leaderboard">
+          <div class="loading">⏳ جارٍ تحميل الترتيب...</div>
+        </div>
+      </div>
+      <button class="btn btn-secondary" onclick="showMainCompetition()">← العودة للمباريات</button>
+    </div>
+
+    <div id="completedView" class="hidden">
+      <div class="card">
+        <div class="section-title">
+          <h2>🏁 المباريات المنتهية</h2>
+          <p>آخر المباريات والنتائج الخاصة بك</p>
+        </div>
+        <div id="completedList">
+          <div class="loading">⏳ جارٍ تحميل المباريات المنتهية...</div>
+        </div>
+        <div id="completedPagination"></div>
+      </div>
+      <button class="btn btn-secondary" onclick="showMainCompetition()">← العودة للمباريات</button>
+    </div>
+
+    <div id="changePasswordView" class="hidden">
+      <div class="card">
+        <div class="section-title">
+          <h2>🔑 تغيير كلمة المرور</h2>
+        </div>
+
+        <label for="currentPassword">كلمة المرور الحالية</label>
+        <input id="currentPassword" type="password" maxlength="50" autocomplete="current-password">
+
+        <label for="newPassword" style="margin-top:14px;">كلمة المرور الجديدة</label>
+        <input id="newPassword" type="password" maxlength="50" autocomplete="new-password">
+
+        <label for="confirmPassword" style="margin-top:14px;">تأكيد كلمة المرور الجديدة</label>
+        <input id="confirmPassword" type="password" maxlength="50" autocomplete="new-password">
+
+        <button id="changePasswordBtn" class="btn btn-primary" onclick="changePassword()">حفظ كلمة المرور الجديدة</button>
+        <button class="btn btn-secondary" onclick="showMainCompetition()">← العودة</button>
       </div>
     </div>
 
   </section>
 
-  <div class="footer">RCMC MATCHES © 2026</div>
+  <div class="ad-space-reserved"></div>
+
+  <div class="footer">
+    Designed by <a href="https://www.instagram.com/samdesign.ae/" target="_blank" rel="noopener noreferrer">samdesign.ae</a>
+  </div>
+</div>
+
+<!-- Logout confirmation -->
+<div id="logoutModal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h3>🚪 تسجيل الخروج</h3>
+    <p>هل تريد تسجيل الخروج؟ سيتم تسجيل خروجك من هذا الجهاز فقط.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" style="margin-top:0;" onclick="logoutPlayer()">نعم، تسجيل الخروج</button>
+      <button class="btn btn-secondary" style="margin-top:0;" onclick="closeLogoutModal()">إلغاء</button>
+    </div>
+  </div>
 </div>
 
 <script>
 const SUPABASE_URL = "https://ehgmkhbzkzgayixfcomk.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_2J5ASCvZeYAY7su3LrnJjQ_jkTZ4Od_";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_2J5ASCvZeYAY7su3LrnJjQ_jkTZ4Od_";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+const SESSION_KEY = "sam_aim_session_token";
 
 let currentPlayer = null;
-let categories = [];
+let activePhase = null;
 let matches = [];
 let predictions = {};
 let riskBalance = 10;
+let leaderboardData = [];
+let completedData = [];
+let completedPage = 1;
+const COMPLETED_PER_PAGE = 10;
+let kickoffLockTimer = null;
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -465,41 +922,92 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function showMessage(text, type = "info") {
+function showMessage(text, type = "info", preserveScroll = true) {
   const box = document.getElementById("message");
   box.textContent = text;
   box.className = "message " + type;
-  window.scrollTo({ top: 0, behavior: "smooth" });
 
-  setTimeout(() => {
-    box.className = "message";
-  }, 5000);
+  if (!preserveScroll) {
+    const y = window.scrollY;
+    setTimeout(() => window.scrollTo(0, y), 0);
+  }
+
+  setTimeout(() => { box.className = "message"; }, 5000);
 }
 
 function updateRiskDisplay() {
   document.getElementById("riskBalance").textContent = riskBalance;
-  document.getElementById("playerPoints").textContent =
-    Number(currentPlayer?.total_points || 0);
-  document.getElementById("playerDisplay").textContent =
-    currentPlayer?.name || "---";
+  document.getElementById("playerPoints").textContent = Number(currentPlayer?.phase_points ?? currentPlayer?.total_points ?? 0);
+  document.getElementById("playerDisplay").textContent = currentPlayer?.username || currentPlayer?.name || "---";
+  document.getElementById("playerRank").textContent = currentPlayer?.rank || "-";
+}
+
+function showLogin() {
+  document.getElementById("termsSection").classList.add("hidden");
+  document.getElementById("competitionSection").classList.add("hidden");
+  document.getElementById("loginSection").classList.remove("hidden");
+  document.getElementById("loginBox").classList.remove("hidden");
+  document.getElementById("registerBox").classList.add("hidden");
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 
 function showRegister() {
   document.getElementById("loginBox").classList.add("hidden");
   document.getElementById("registerBox").classList.remove("hidden");
+  document.getElementById("termsSection").classList.add("hidden");
 }
 
-function showLogin() {
-  document.getElementById("registerBox").classList.add("hidden");
-  document.getElementById("loginBox").classList.remove("hidden");
+function showTerms() {
+  document.getElementById("loginSection").classList.add("hidden");
+  document.getElementById("termsSection").classList.remove("hidden");
+  document.getElementById("competitionSection").classList.add("hidden");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function showMainCompetition() {
+  document.getElementById("mainCompetitionView").classList.remove("hidden");
+  document.getElementById("rankingView").classList.add("hidden");
+  document.getElementById("completedView").classList.add("hidden");
+  document.getElementById("changePasswordView").classList.add("hidden");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function showRanking() {
+  document.getElementById("mainCompetitionView").classList.add("hidden");
+  document.getElementById("rankingView").classList.remove("hidden");
+  document.getElementById("completedView").classList.add("hidden");
+  document.getElementById("changePasswordView").classList.add("hidden");
+  loadLeaderboard();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+async function showCompleted() {
+  document.getElementById("mainCompetitionView").classList.add("hidden");
+  document.getElementById("rankingView").classList.add("hidden");
+  document.getElementById("completedView").classList.remove("hidden");
+  document.getElementById("changePasswordView").classList.add("hidden");
+  completedPage = 1;
+  await loadCompleted();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function showChangePassword() {
+  document.getElementById("mainCompetitionView").classList.add("hidden");
+  document.getElementById("rankingView").classList.add("hidden");
+  document.getElementById("completedView").classList.add("hidden");
+  document.getElementById("changePasswordView").classList.remove("hidden");
+  document.getElementById("currentPassword").value = "";
+  document.getElementById("newPassword").value = "";
+  document.getElementById("confirmPassword").value = "";
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 
 async function registerPlayer() {
   const username = document.getElementById("registerUsername").value.trim();
   const password = document.getElementById("registerPassword").value;
-  const name = document.getElementById("registerName").value.trim();
+  const realName = document.getElementById("registerRealName").value.trim();
 
-  if (!username || !password || !name) {
+  if (!username || !password || !realName) {
     showMessage("يرجى تعبئة جميع الحقول.", "error");
     return;
   }
@@ -509,20 +1017,20 @@ async function registerPlayer() {
     return;
   }
 
-  if (password.length < 6) {
-    showMessage("كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل.", "error");
+  if (password.length < 8) {
+    showMessage("كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل.", "error");
     return;
   }
 
   const button = document.getElementById("registerBtn");
   button.disabled = true;
-  button.textContent = "جاري إنشاء الحساب...";
+  button.textContent = "⏳ جارٍ إنشاء الحساب...";
 
   try {
     const { data, error } = await supabaseClient.rpc("register_player", {
       p_username: username,
       p_password: password,
-      p_name: name
+      p_real_name: realName
     });
 
     if (error) throw error;
@@ -532,13 +1040,18 @@ async function registerPlayer() {
 
     document.getElementById("registerUsername").value = "";
     document.getElementById("registerPassword").value = "";
-    document.getElementById("registerName").value = "";
+    document.getElementById("registerRealName").value = "";
 
     showLogin();
-    showMessage("تم إنشاء الحساب بنجاح ✓ يمكنك الآن تسجيل الدخول.", "success");
+    showMessage("✅ تم إنشاء حسابك بنجاح", "success");
   } catch (error) {
     console.error(error);
-    showMessage(error.message || "حدث خطأ أثناء إنشاء الحساب.", "error");
+    const msg = String(error?.message || "");
+    if (msg.toLowerCase().includes("duplicate") || msg.includes("already") || msg.includes("unique")) {
+      showMessage("❌ اسم المستخدم مستخدم بالفعل، اختر اسمًا آخر.", "error");
+    } else {
+      showMessage(error.message || "⚠️ حدث خطأ، يرجى المحاولة مرة أخرى.", "error");
+    }
   } finally {
     button.disabled = false;
     button.textContent = "إنشاء الحساب";
@@ -556,7 +1069,7 @@ async function loginPlayer() {
 
   const button = document.getElementById("loginBtn");
   button.disabled = true;
-  button.textContent = "جاري الدخول...";
+  button.textContent = "⏳ جارٍ الدخول...";
 
   try {
     const { data, error } = await supabaseClient.rpc("login_player", {
@@ -566,28 +1079,32 @@ async function loginPlayer() {
 
     if (error) throw error;
     if (!data || !data.success) {
-      throw new Error(data?.message || "اسم المستخدم أو كلمة المرور غير صحيحة");
+      throw new Error(data?.message || "اسم المستخدم أو كلمة المرور غير صحيحة.");
     }
 
-    localStorage.setItem("rcmc_session_token", data.session_token);
+    localStorage.setItem(SESSION_KEY, data.session_token);
 
     currentPlayer = {
       id: data.player_id,
-      name: data.name,
-      total_points: Number(data.total_points || 0),
-      risk_balance: Number(data.risk_balance ?? 10)
+      username: data.username || data.name || username,
+      name: data.name || data.username || username,
+      phase_points: Number(data.phase_points ?? data.total_points ?? 0),
+      total_points: Number(data.total_points ?? 0),
+      risk_balance: Number(data.risk_balance ?? 10),
+      rank: data.rank ?? "-"
     };
 
-    riskBalance = currentPlayer.risk_balance;
+    riskBalance = Number(currentPlayer.risk_balance);
 
     document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("termsSection").classList.add("hidden");
     document.getElementById("competitionSection").classList.remove("hidden");
 
     updateRiskDisplay();
     await loadCompetition();
   } catch (error) {
     console.error(error);
-    showMessage(error.message || "حدث خطأ أثناء تسجيل الدخول.", "error");
+    showMessage("❌ اسم المستخدم أو كلمة المرور غير صحيحة.", "error");
   } finally {
     button.disabled = false;
     button.textContent = "دخول";
@@ -596,114 +1113,163 @@ async function loginPlayer() {
 
 async function loadCompetition() {
   try {
-    const sessionToken = localStorage.getItem("rcmc_session_token");
-    if (!sessionToken) {
-      throw new Error("انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.");
+    const sessionToken = localStorage.getItem(SESSION_KEY);
+    if (!sessionToken) throw new Error("انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.");
+
+    /*
+      Expected secure RPC response:
+      {
+        success, phase: {key,name,prize,end_date}, risk_balance,
+        phase_points, correct_predictions, rank,
+        matches: [...], predictions: [...],
+        announcement: {text} | null,
+        champion: {phase_name,username,points} | null
+      }
+    */
+    const { data, error } = await supabaseClient.rpc("get_player_dashboard", {
+      p_session_token: sessionToken
+    });
+
+    if (error) throw error;
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر تحميل بيانات المسابقة.");
     }
 
-    // 1) التصنيفات الأربعة
-    const { data: categoryData, error: categoryError } =
-      await supabaseClient
-        .from("competition_categories")
-        .select("id, name, sort_order")
-        .eq("active", true)
-        .order("sort_order", { ascending: true });
-
-    if (categoryError) throw categoryError;
-
-    categories = categoryData || [];
-
-    // 2) جميع المباريات، بدون أي اعتماد على stages
-    const { data: matchData, error: matchError } =
-      await supabaseClient
-        .from("matches")
-        .select(
-          "id, category_id, home_team, away_team, kickoff, status, home_score, away_score"
-        )
-        .order("kickoff", { ascending: true });
-
-    if (matchError) throw matchError;
-
-    matches = matchData || [];
-
-    // 3) توقعات اللاعب المحفوظة
-    const { data: savedPredictions, error: predictionsError } =
-      await supabaseClient.rpc("get_my_predictions", {
-        p_session_token: sessionToken
-      });
-
-    if (predictionsError) throw predictionsError;
-
-    if (!savedPredictions || !savedPredictions.success) {
-      throw new Error(
-        savedPredictions?.message || "تعذر تحميل التوقعات المحفوظة."
-      );
-    }
-
+    activePhase = data.phase || null;
+    matches = Array.isArray(data.matches) ? data.matches : [];
     predictions = {};
 
-    (savedPredictions.predictions || []).forEach(item => {
-      const savedRisk = Number(item.risk_points || 0);
-
+    (data.predictions || []).forEach(item => {
       predictions[item.match_id] = {
         outcome: item.outcome,
-        risk_points: savedRisk,
-        saved_risk_points: savedRisk,
+        risk_points: Number(item.risk_points || 0),
+        saved_risk_points: Number(item.risk_points || 0),
         points_awarded: Number(item.points_awarded || 0),
         scored: item.scored === true
       };
     });
 
-    renderCategories();
+    currentPlayer = {
+      ...currentPlayer,
+      username: data.username || currentPlayer.username,
+      name: data.username || currentPlayer.name,
+      phase_points: Number(data.phase_points ?? 0),
+      total_points: Number(data.total_points ?? 0),
+      risk_balance: Number(data.risk_balance ?? 10),
+      rank: data.rank ?? "-"
+    };
+
+    riskBalance = Number(data.risk_balance ?? 10);
+    updateRiskDisplay();
+    renderPhase(data.phase);
+    renderAnnouncement(data.announcement);
+    renderMatches();
+    renderChampion(data.champion);
     startKickoffLockTimer();
+
     await loadLeaderboard();
   } catch (error) {
     console.error(error);
-    showMessage("تعذر تحميل المسابقة: " + error.message, "error");
+    showMessage("⚠️ تعذر تحميل البيانات، يرجى المحاولة مرة أخرى.", "error");
+    const box = document.getElementById("matchesContainer");
+    box.innerHTML = '<div class="empty-state">⚠️ تعذر تحميل البيانات.<br><button class="btn btn-secondary" onclick="loadCompetition()">إعادة المحاولة</button></div>';
   }
 }
 
-function renderCategories() {
-  const container = document.getElementById("categoriesContainer");
+function renderPhase(phase) {
+  const box = document.getElementById("phaseCard");
 
-  if (!categories.length) {
-    container.innerHTML =
-      '<div class="card"><div class="category-empty">لا توجد تصنيفات نشطة حالياً.</div></div>';
+  if (!phase) {
+    box.innerHTML = `
+      <div class="phase-name">🏆 بطولة SAM AIM</div>
+      <div class="phase-meta"><span>بانتظار انطلاق المباريات...</span></div>
+    `;
+    return;
+  }
+
+  const name = phase.key === "return" || phase.name === "الإياب" ? "الإياب" : "الذهاب";
+  const endDate = phase.end_date ? new Date(phase.end_date + "T12:00:00").toLocaleDateString("ar-AE", {
+    day:"numeric", month:"long", year:"numeric"
+  }) : (name === "الذهاب" ? "31 ديسمبر 2026" : "5 يونيو 2027");
+
+  box.innerHTML = `
+    <div class="phase-name">🏆 ${name}</div>
+    <div class="phase-meta">
+      <span>💰 الجائزة: 100 دولار</span>
+      <span>📅 تاريخ النهاية: ${escapeHtml(endDate)}</span>
+    </div>
+  `;
+}
+
+function renderAnnouncement(announcement) {
+  const box = document.getElementById("announcementBox");
+  const text = typeof announcement === "string" ? announcement : announcement?.text;
+
+  if (!text) {
+    box.classList.add("hidden");
+    box.textContent = "";
+    return;
+  }
+
+  box.textContent = text;
+  box.classList.remove("hidden");
+}
+
+function renderChampion(champion) {
+  const container = document.getElementById("championContainer");
+
+  if (!champion || !champion.username) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const phaseName = champion.phase_name || champion.phase || "المرحلة السابقة";
+
+  container.innerHTML = `
+    <div class="card champion-card">
+      <div class="champion-title">🏆 بطل ${escapeHtml(phaseName)}</div>
+      <div class="champion-name">${escapeHtml(champion.username)}</div>
+      <div class="champion-points">⭐ ${Number(champion.points || 0)} نقطة</div>
+    </div>
+  `;
+}
+
+function formatLocalDateTime(iso) {
+  const d = new Date(iso);
+  return {
+    date: d.toLocaleDateString("ar-AE", {day:"numeric", month:"long", year:"numeric"}),
+    time: d.toLocaleTimeString("ar-AE", {hour:"2-digit", minute:"2-digit"})
+  };
+}
+
+function getLockMessage(match, isLocked) {
+  if (match.status === "finished") return "🏁 انتهت المباراة — التوقع مقفل";
+  if (match.status === "cancelled") return "🚫 ألغيت المباراة";
+  if (isLocked) return "🔒 بدأت المباراة — التوقع مقفل";
+  return predictions[match.id]?.outcome
+    ? "✓ تم اختيار توقع — اضغط حفظ التوقع"
+    : "لم يتم اختيار توقع بعد";
+}
+
+function renderMatches() {
+  const container = document.getElementById("matchesContainer");
+
+  const upcoming = matches
+    .filter(match => match.status === "scheduled" && new Date(match.kickoff).getTime() > Date.now())
+    .sort((a,b) => new Date(a.kickoff) - new Date(b.kickoff));
+
+  if (!activePhase || upcoming.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <strong>🏆 بطولة SAM AIM</strong>
+        بانتظار انطلاق المباريات...
+      </div>
+    `;
     return;
   }
 
   container.innerHTML = "";
-
-  categories.forEach(category => {
-    const categoryMatches = matches.filter(
-      match => Number(match.category_id) === Number(category.id)
-    );
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
-      <div class="category-title">
-        <h2>${escapeHtml(category.name)}</h2>
-        <p>التوقعات تُغلق عند بداية المباراة</p>
-      </div>
-      <div id="category-${category.id}"></div>
-    `;
-
-    container.appendChild(card);
-
-    const list = card.querySelector(`#category-${category.id}`);
-
-    if (!categoryMatches.length) {
-      list.innerHTML =
-        '<div class="category-empty">لا توجد مباريات حالياً ضمن هذا التصنيف.</div>';
-      return;
-    }
-
-    categoryMatches.forEach(match => {
-      list.appendChild(createMatchCard(match));
-    });
-  });
+  upcoming.forEach(match => container.appendChild(createMatchCard(match)));
 }
 
 function createMatchCard(match) {
@@ -711,67 +1277,49 @@ function createMatchCard(match) {
   card.className = "match-card";
 
   const kickoff = new Date(match.kickoff);
-  const dateText = kickoff.toLocaleDateString("ar-AE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
-  });
-
-  const timeText = kickoff.toLocaleTimeString("ar-AE", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-
+  const local = formatLocalDateTime(match.kickoff);
   const existing = predictions[match.id] || {};
   const isLocked =
     Date.now() >= kickoff.getTime() ||
     match.status !== "scheduled" ||
     existing.scored === true;
 
-  const score =
-    match.status === "finished" &&
-    match.home_score !== null &&
-    match.away_score !== null
-      ? `${match.home_score} - ${match.away_score}`
-      : "VS";
+  const countdown = Math.max(0, Math.floor((kickoff.getTime() - Date.now()) / 60000));
 
   card.innerHTML = `
     <div class="match-header">
-      <span>${dateText}</span>
-      <span>${timeText}</span>
+      <span>📅 ${escapeHtml(local.date)}</span>
+      <span>${escapeHtml(local.time)}</span>
     </div>
 
     <div class="teams">
       <div class="team">${escapeHtml(match.home_team)}</div>
-      <div class="vs">${score}</div>
+      <div class="vs">VS</div>
       <div class="team">${escapeHtml(match.away_team)}</div>
+    </div>
+
+    <div class="match-countdown">
+      ${!isLocked && countdown <= 30
+        ? `⏰ تبقى ${countdown} دقيقة على بداية المباراة`
+        : ""}
     </div>
 
     <div class="section-label">اختر توقعك</div>
 
     <div class="prediction-buttons">
-      <button class="prediction-btn ${
-        existing.outcome === "home" ? "selected" : ""
-      }"
-        onclick="selectPrediction(${match.id}, 'home')"
-        ${isLocked ? "disabled" : ""}>
-        HOME — ${escapeHtml(match.home_team)}
+      <button class="prediction-btn ${existing.outcome === "home" ? "selected" : ""}"
+        onclick="selectPrediction(${match.id}, 'home')" ${isLocked ? "disabled" : ""}>
+        ${escapeHtml(match.home_team)}
       </button>
 
-      <button class="prediction-btn ${
-        existing.outcome === "draw" ? "selected" : ""
-      }"
-        onclick="selectPrediction(${match.id}, 'draw')"
-        ${isLocked ? "disabled" : ""}>
+      <button class="prediction-btn ${existing.outcome === "draw" ? "selected" : ""}"
+        onclick="selectPrediction(${match.id}, 'draw')" ${isLocked ? "disabled" : ""}>
         تعادل
       </button>
 
-      <button class="prediction-btn ${
-        existing.outcome === "away" ? "selected" : ""
-      }"
-        onclick="selectPrediction(${match.id}, 'away')"
-        ${isLocked ? "disabled" : ""}>
-        AWAY — ${escapeHtml(match.away_team)}
+      <button class="prediction-btn ${existing.outcome === "away" ? "selected" : ""}"
+        onclick="selectPrediction(${match.id}, 'away')" ${isLocked ? "disabled" : ""}>
+        ${escapeHtml(match.away_team)}
       </button>
     </div>
 
@@ -779,31 +1327,14 @@ function createMatchCard(match) {
 
     <div class="risk-buttons">
       ${[0,1,2,3].map(value => `
-        <button class="risk-btn ${
-          Number(existing.risk_points || 0) === value ? "selected" : ""
-        }"
-          onclick="selectRisk(${match.id}, ${value})"
-          ${isLocked ? "disabled" : ""}>
+        <button class="risk-btn ${Number(existing.risk_points || 0) === value ? "selected" : ""}"
+          onclick="selectRisk(${match.id}, ${value})" ${isLocked ? "disabled" : ""}>
           ${value}
         </button>
       `).join("")}
     </div>
 
-    <div class="match-status">
-      ${
-        isLocked
-          ? (
-              match.status === "finished"
-                ? "🏁 انتهت المباراة — التوقع مقفل"
-                : "🔒 بدأت المباراة — التوقع مقفل"
-            )
-          : (
-              existing.outcome
-                ? "✓ تم اختيار توقع — اضغط حفظ التوقع"
-                : "لم يتم اختيار توقع بعد"
-            )
-      }
-    </div>
+    <div class="match-status">${getLockMessage(match, isLocked)}</div>
 
     <button class="btn btn-primary"
       onclick="savePrediction(${match.id})"
@@ -815,277 +1346,485 @@ function createMatchCard(match) {
   return card;
 }
 
-function refreshMatchCard(matchId) {
-  renderCategories();
+function refreshMatchCard() {
+  renderMatches();
 }
 
 function selectPrediction(matchId, outcome) {
   const match = matches.find(item => Number(item.id) === Number(matchId));
   if (!match) return;
 
-  if (
-    new Date() >= new Date(match.kickoff) ||
-    match.status !== "scheduled" ||
-    predictions[matchId]?.scored === true
-  ) {
-    showMessage("🔒 بدأت المباراة — التوقع مقفل.", "error");
-    refreshMatchCard(matchId);
+  if (new Date() >= new Date(match.kickoff) ||
+      match.status !== "scheduled" ||
+      predictions[matchId]?.scored === true) {
+    showMessage("🔒 بدأت المباراة، لا يمكن تعديل التوقع.", "error", false);
+    refreshMatchCard();
     return;
   }
 
   if (!predictions[matchId]) {
-    predictions[matchId] = {
-      outcome: null,
-      risk_points: 0,
-      saved_risk_points: 0,
-      scored: false
-    };
+    predictions[matchId] = {outcome:null, risk_points:0, saved_risk_points:0, scored:false};
   }
 
   predictions[matchId].outcome = outcome;
-  refreshMatchCard(matchId);
+  refreshMatchCard();
 }
 
 function selectRisk(matchId, risk) {
   const match = matches.find(item => Number(item.id) === Number(matchId));
   if (!match) return;
 
-  if (
-    new Date() >= new Date(match.kickoff) ||
-    match.status !== "scheduled" ||
-    predictions[matchId]?.scored === true
-  ) {
-    showMessage("🔒 بدأت المباراة — التوقع مقفل.", "error");
-    refreshMatchCard(matchId);
+  if (new Date() >= new Date(match.kickoff) ||
+      match.status !== "scheduled" ||
+      predictions[matchId]?.scored === true) {
+    showMessage("🔒 بدأت المباراة، لا يمكن تعديل التوقع.", "error", false);
+    refreshMatchCard();
     return;
   }
 
   if (!predictions[matchId]) {
-    predictions[matchId] = {
-      outcome: null,
-      risk_points: 0,
-      saved_risk_points: 0,
-      scored: false
-    };
+    predictions[matchId] = {outcome:null, risk_points:0, saved_risk_points:0, scored:false};
   }
 
   const selectedRisk = Number(risk);
   if (selectedRisk < 0 || selectedRisk > 3) return;
 
-  const savedRisk = Number(
-    predictions[matchId].saved_risk_points || 0
-  );
-
-  const availableForThisMatch =
-    Number(riskBalance) + savedRisk;
+  const savedRisk = Number(predictions[matchId].saved_risk_points || 0);
+  const availableForThisMatch = Number(riskBalance) + savedRisk;
 
   if (selectedRisk > availableForThisMatch) {
-    showMessage("رصيد المخاطرة غير كافٍ.", "error");
+    showMessage("⚠️ المخاطرة المتبقية لا تكفي لهذا الاختيار.", "error", false);
     return;
   }
 
-  // الاختيار محلي فقط؛ الرصيد لا يتغير قبل الحفظ.
   predictions[matchId].risk_points = selectedRisk;
-  refreshMatchCard(matchId);
+  refreshMatchCard();
 }
 
 async function savePrediction(matchId) {
-  const match = matches.find(
-    item => Number(item.id) === Number(matchId)
-  );
-
+  const match = matches.find(item => Number(item.id) === Number(matchId));
   if (!match) return;
 
   const prediction = predictions[matchId];
 
   if (!prediction || !prediction.outcome) {
-    showMessage("اختر نتيجة المباراة أولاً.", "error");
+    showMessage("اختر نتيجة المباراة أولاً.", "error", false);
     return;
   }
 
-  const kickoff = new Date(match.kickoff);
-
-  if (new Date() >= kickoff) {
-    showMessage(
-      "انتهى وقت التوقع لهذه المباراة لأنها بدأت بالفعل.",
-      "error"
-    );
+  if (new Date() >= new Date(match.kickoff)) {
+    showMessage("🔒 بدأت المباراة، لا يمكن تعديل التوقع.", "error", false);
+    refreshMatchCard();
     return;
   }
 
-  const sessionToken =
-    localStorage.getItem("rcmc_session_token");
-
+  const sessionToken = localStorage.getItem(SESSION_KEY);
   if (!sessionToken) {
-    showMessage(
-      "انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.",
-      "error"
-    );
+    showMessage("انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.", "error", false);
     return;
   }
 
   try {
-    const { data, error } =
-      await supabaseClient.rpc("save_prediction", {
-        p_session_token: sessionToken,
-        p_match_id: Number(matchId),
-        p_outcome: prediction.outcome,
-        p_risk_points: Number(prediction.risk_points || 0)
-      });
+    const { data, error } = await supabaseClient.rpc("save_prediction", {
+      p_session_token: sessionToken,
+      p_match_id: Number(matchId),
+      p_outcome: prediction.outcome,
+      p_risk_points: Number(prediction.risk_points || 0)
+    });
 
     if (error) throw error;
 
     if (!data || !data.success) {
-      throw new Error(
-        data?.message || "تعذر حفظ التوقع."
-      );
+      const serverMessage = data?.message || "تعذر حفظ التوقع.";
+      if (serverMessage.toLowerCase().includes("risk") || serverMessage.includes("مخاطرة")) {
+        throw new Error("⚠️ المخاطرة المتبقية لا تكفي لهذا الاختيار.");
+      }
+      throw new Error(serverMessage);
     }
 
-    const serverRiskBalance =
-      Number(data.risk_balance);
+    riskBalance = Number(data.risk_balance ?? riskBalance);
+    currentPlayer.risk_balance = riskBalance;
 
-    currentPlayer.risk_balance =
-      serverRiskBalance;
-
-    riskBalance =
-      serverRiskBalance;
-
-    // هذا أصبح هو الرصيد المحفوظ فعلياً للمباراة.
-    prediction.saved_risk_points =
-      Number(prediction.risk_points || 0);
+    prediction.saved_risk_points = Number(prediction.risk_points || 0);
 
     updateRiskDisplay();
 
-    showMessage(
-      "تم حفظ توقعك بنجاح ✓",
-      "success"
-    );
-
-    refreshMatchCard(matchId);
+    showMessage("✅ تم حفظ توقعك بنجاح.", "success", false);
+    refreshMatchCard();
   } catch (error) {
     console.error(error);
-    showMessage(
-      "تعذر حفظ التوقع: " + error.message,
-      "error"
-    );
+    showMessage(error.message || "⚠️ حدث خطأ، يرجى المحاولة مرة أخرى.", "error", false);
   }
 }
-
-let kickoffLockTimer = null;
 
 function startKickoffLockTimer() {
   if (kickoffLockTimer) clearInterval(kickoffLockTimer);
 
   kickoffLockTimer = setInterval(() => {
     const now = Date.now();
-
     const hasMatchToLock = matches.some(match =>
-      new Date(match.kickoff).getTime() <= now &&
-      match.status === "scheduled"
+      match.status === "scheduled" &&
+      new Date(match.kickoff).getTime() <= now
     );
 
     if (hasMatchToLock) {
-      renderCategories();
+      matches = matches.map(m => ({...m}));
+      renderMatches();
+    } else {
+      renderMatches();
     }
-  }, 1000);
+  }, 30000);
 }
 
 async function loadLeaderboard() {
-  const container =
-    document.getElementById("leaderboard");
+  const container = document.getElementById("leaderboard");
 
   try {
-    const { data, error } =
-      await supabaseClient
-        .from("players")
-        .select("id,name,total_points")
-        .order("total_points", {
-          ascending: false
-        });
+    const sessionToken = localStorage.getItem(SESSION_KEY);
+    if (!sessionToken) throw new Error("session");
+
+    const { data, error } = await supabaseClient.rpc("get_leaderboard", {
+      p_session_token: sessionToken
+    });
 
     if (error) throw error;
+    if (!data || !data.success) throw new Error(data?.message || "leaderboard");
 
-    if (!data || data.length === 0) {
-      container.innerHTML =
-        '<div class="loading">لا يوجد مشاركون بعد.</div>';
+    leaderboardData = Array.isArray(data.players) ? data.players : [];
+
+    if (!leaderboardData.length) {
+      container.innerHTML = '<div class="empty-state">لا يوجد مشاركون بعد.</div>';
       return;
     }
 
-    container.innerHTML = "";
+    const pageSize = 20;
+    const totalPages = Math.max(1, Math.ceil(leaderboardData.length / pageSize));
+    const playerRank = Number(data.my_rank || currentPlayer?.rank || 0);
 
-    data.forEach((player, index) => {
-      const row = document.createElement("div");
-      row.className = "leaderboard-row";
+    if (playerRank > 0) currentPlayer.rank = playerRank;
+    updateRiskDisplay();
 
-      row.innerHTML = `
-        <div class="rank">#${index + 1}</div>
-        <div>${escapeHtml(player.name)}</div>
-        <div class="points">
-          ${Number(player.total_points || 0)}
-        </div>
-      `;
+    const page = Number(data.page || 1);
+    const start = (page - 1) * pageSize;
+    const pageRows = leaderboardData.slice(start, start + pageSize);
 
-      container.appendChild(row);
-    });
+    container.innerHTML = `
+      <div class="ranking-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>اللاعب</th>
+              <th>النقاط</th>
+              <th>التوقعات الصحيحة</th>
+              <th>المخاطرة المتبقية</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${pageRows.map(player => `
+              <tr class="${Number(player.player_id) === Number(currentPlayer?.id) ? "current-player" : ""}">
+                <td>${escapeHtml(player.username)}</td>
+                <td class="points-cell">${Number(player.points || 0)}</td>
+                <td>${Number(player.correct_predictions || 0)}</td>
+                <td>${Number(player.risk_balance || 0)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+      ${renderRankingPagination(page, totalPages)}
+    `;
   } catch (error) {
     console.error(error);
-    container.innerHTML =
-      '<div class="loading">تعذر تحميل الترتيب.</div>';
+    container.innerHTML = '<div class="empty-state">⚠️ تعذر تحميل الترتيب.<br><button class="btn btn-secondary" onclick="loadLeaderboard()">إعادة المحاولة</button></div>';
   }
 }
 
-function logoutPlayer() {
-  localStorage.removeItem("rcmc_session_token");
-  currentPlayer = null;
-  predictions = {};
-  riskBalance = 10;
-  location.reload();
+function renderRankingPagination(page, totalPages) {
+  if (totalPages <= 1) return "";
+
+  let buttons = `
+    <button class="page-btn" onclick="loadLeaderboardPage(${page-1})" ${page <= 1 ? "disabled" : ""}>‹ السابق</button>
+  `;
+
+  for (let i = 1; i <= totalPages; i++) {
+    if (i <= 4 || i === totalPages) {
+      buttons += `<button class="page-btn ${i === page ? "active" : ""}" onclick="loadLeaderboardPage(${i})">${i}</button>`;
+    }
+  }
+
+  buttons += `
+    <button class="page-btn" onclick="loadLeaderboardPage(${page+1})" ${page >= totalPages ? "disabled" : ""}>التالي ›</button>
+  `;
+
+  return `<div class="pagination">${buttons}</div>`;
 }
 
-async function restoreSession() {
-  const sessionToken =
-    localStorage.getItem("rcmc_session_token");
-
+async function loadLeaderboardPage(page) {
+  const sessionToken = localStorage.getItem(SESSION_KEY);
   if (!sessionToken) return;
 
   try {
-    const { data, error } =
-      await supabaseClient.rpc(
-        "get_player_session",
-        { p_session_token: sessionToken }
-      );
+    const { data, error } = await supabaseClient.rpc("get_leaderboard", {
+      p_session_token: sessionToken,
+      p_page: Number(page)
+    });
+    if (error) throw error;
+    if (!data?.success) throw new Error(data?.message || "تعذر تحميل الترتيب.");
+
+    const container = document.getElementById("leaderboard");
+    leaderboardData = Array.isArray(data.players) ? data.players : [];
+    const totalPages = Math.max(1, Math.ceil(Number(data.total_players || leaderboardData.length) / 20));
+    const currentPage = Number(data.page || page);
+
+    container.innerHTML = `
+      <div class="ranking-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>اللاعب</th>
+              <th>النقاط</th>
+              <th>التوقعات الصحيحة</th>
+              <th>المخاطرة المتبقية</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${leaderboardData.map(player => `
+              <tr class="${Number(player.player_id) === Number(currentPlayer?.id) ? "current-player" : ""}">
+                <td>${escapeHtml(player.username)}</td>
+                <td class="points-cell">${Number(player.points || 0)}</td>
+                <td>${Number(player.correct_predictions || 0)}</td>
+                <td>${Number(player.risk_balance || 0)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+      ${renderRankingPagination(currentPage, totalPages)}
+    `;
+  } catch (error) {
+    console.error(error);
+    showMessage("⚠️ تعذر تحميل الترتيب.", "error");
+  }
+}
+
+async function loadCompleted() {
+  const container = document.getElementById("completedList");
+  container.innerHTML = '<div class="loading">⏳ جارٍ تحميل المباريات المنتهية...</div>';
+
+  try {
+    const sessionToken = localStorage.getItem(SESSION_KEY);
+    if (!sessionToken) throw new Error("session");
+
+    const { data, error } = await supabaseClient.rpc("get_completed_matches", {
+      p_session_token: sessionToken,
+      p_page: Number(completedPage),
+      p_page_size: COMPLETED_PER_PAGE
+    });
+
+    if (error) throw error;
+    if (!data || !data.success) throw new Error(data?.message || "completed");
+
+    completedData = Array.isArray(data.matches) ? data.matches : [];
+
+    if (!completedData.length) {
+      container.innerHTML = '<div class="empty-state">🏁 لا توجد مباريات منتهية حاليًا.</div>';
+      document.getElementById("completedPagination").innerHTML = "";
+      return;
+    }
+
+    container.innerHTML = completedData.map(match => {
+      const local = formatLocalDateTime(match.kickoff);
+      const actualResult =
+        match.actual_result === "home" ? match.home_team :
+        match.actual_result === "away" ? match.away_team : "تعادل";
+
+      const myPrediction =
+        match.prediction_outcome === "home" ? match.home_team :
+        match.prediction_outcome === "away" ? match.away_team :
+        match.prediction_outcome === "draw" ? "تعادل" : "—";
+
+      return `
+        <div class="completed-card">
+          <div class="completed-header">
+            <span>📅 ${escapeHtml(local.date)}</span>
+            <span>${escapeHtml(local.time)}</span>
+          </div>
+
+          <div class="completed-teams">
+            <div>${escapeHtml(match.home_team)}</div>
+            <div class="final-score">${escapeHtml(String(match.home_score))} - ${escapeHtml(String(match.away_score))}</div>
+            <div>${escapeHtml(match.away_team)}</div>
+          </div>
+
+          <div class="result-grid">
+            <div class="result-item">
+              <span>توقعك</span>
+              <strong>${escapeHtml(myPrediction)}</strong>
+            </div>
+            <div class="result-item">
+              <span>المخاطرة</span>
+              <strong>${Number(match.risk_points || 0)}</strong>
+            </div>
+            <div class="result-item">
+              <span>النتيجة الفعلية</span>
+              <strong>${escapeHtml(actualResult)}</strong>
+            </div>
+            <div class="result-item points">
+              <span>النقاط</span>
+              <strong>${Number(match.points_awarded || 0)}</strong>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    const totalPages = Math.max(1, Math.ceil(Number(data.total_matches || completedData.length) / COMPLETED_PER_PAGE));
+    document.getElementById("completedPagination").innerHTML =
+      totalPages > 1
+        ? `<div class="pagination">
+            <button class="page-btn" onclick="changeCompletedPage(${completedPage-1})" ${completedPage <= 1 ? "disabled" : ""}>‹ السابق</button>
+            ${Array.from({length: totalPages}, (_,i) => i+1).map(i =>
+              `<button class="page-btn ${i === completedPage ? "active" : ""}" onclick="changeCompletedPage(${i})">${i}</button>`
+            ).join("")}
+            <button class="page-btn" onclick="changeCompletedPage(${completedPage+1})" ${completedPage >= totalPages ? "disabled" : ""}>التالي ›</button>
+          </div>`
+        : "";
+  } catch (error) {
+    console.error(error);
+    container.innerHTML = '<div class="empty-state">⚠️ تعذر تحميل البيانات.<br><button class="btn btn-secondary" onclick="loadCompleted()">إعادة المحاولة</button></div>';
+  }
+}
+
+async function changeCompletedPage(page) {
+  if (page < 1) return;
+  completedPage = page;
+  await loadCompleted();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+async function changePassword() {
+  const currentPassword = document.getElementById("currentPassword").value;
+  const newPassword = document.getElementById("newPassword").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    showMessage("يرجى تعبئة جميع الحقول.", "error");
+    return;
+  }
+
+  if (newPassword.length < 8) {
+    showMessage("كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل.", "error");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    showMessage("كلمتا المرور الجديدتان غير متطابقتين.", "error");
+    return;
+  }
+
+  const button = document.getElementById("changePasswordBtn");
+  button.disabled = true;
+  button.textContent = "⏳ جارٍ الحفظ...";
+
+  try {
+    const sessionToken = localStorage.getItem(SESSION_KEY);
+    const { data, error } = await supabaseClient.rpc("change_player_password", {
+      p_session_token: sessionToken,
+      p_current_password: currentPassword,
+      p_new_password: newPassword
+    });
+
+    if (error) throw error;
+    if (!data || !data.success) {
+      throw new Error(data?.message || "تعذر تغيير كلمة المرور.");
+    }
+
+    showMessage("✅ تم تغيير كلمة المرور بنجاح.", "success");
+    showMainCompetition();
+  } catch (error) {
+    console.error(error);
+    showMessage(error.message || "⚠️ حدث خطأ، يرجى المحاولة مرة أخرى.", "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "حفظ كلمة المرور الجديدة";
+  }
+}
+
+function confirmLogout() {
+  document.getElementById("logoutModal").classList.remove("hidden");
+}
+
+function closeLogoutModal() {
+  document.getElementById("logoutModal").classList.add("hidden");
+}
+
+async function logoutPlayer() {
+  closeLogoutModal();
+
+  const sessionToken = localStorage.getItem(SESSION_KEY);
+
+  try {
+    if (sessionToken) {
+      await supabaseClient.rpc("logout_player", {
+        p_session_token: sessionToken
+      });
+    }
+  } catch (error) {
+    console.error("Logout RPC failed:", error);
+  }
+
+  localStorage.removeItem(SESSION_KEY);
+  currentPlayer = null;
+  activePhase = null;
+  predictions = {};
+  matches = [];
+  riskBalance = 10;
+
+  document.getElementById("competitionSection").classList.add("hidden");
+  document.getElementById("termsSection").classList.add("hidden");
+  document.getElementById("loginSection").classList.remove("hidden");
+  showLogin();
+}
+
+async function restoreSession() {
+  const sessionToken = localStorage.getItem(SESSION_KEY);
+  if (!sessionToken) return;
+
+  try {
+    const { data, error } = await supabaseClient.rpc("get_player_session", {
+      p_session_token: sessionToken
+    });
 
     if (error) throw error;
 
     if (!data || !data.success) {
-      localStorage.removeItem("rcmc_session_token");
+      localStorage.removeItem(SESSION_KEY);
       return;
     }
 
     currentPlayer = {
       id: data.player_id,
-      name: data.name,
+      username: data.username || data.name,
+      name: data.name || data.username,
+      phase_points: Number(data.phase_points ?? data.total_points ?? 0),
       total_points: Number(data.total_points ?? 0),
-      risk_balance: Number(data.risk_balance ?? 10)
+      risk_balance: Number(data.risk_balance ?? 10),
+      rank: data.rank ?? "-"
     };
 
     riskBalance = currentPlayer.risk_balance;
 
-    document.getElementById("loginSection")
-      .classList.add("hidden");
-
-    document.getElementById("competitionSection")
-      .classList.remove("hidden");
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("termsSection").classList.add("hidden");
+    document.getElementById("competitionSection").classList.remove("hidden");
 
     updateRiskDisplay();
     await loadCompetition();
   } catch (error) {
     console.error("Session restoration failed:", error);
-    localStorage.removeItem("rcmc_session_token");
-    document.getElementById("competitionSection")
-      .classList.add("hidden");
-    document.getElementById("loginSection")
-      .classList.remove("hidden");
+    localStorage.removeItem(SESSION_KEY);
+    document.getElementById("competitionSection").classList.add("hidden");
+    document.getElementById("loginSection").classList.remove("hidden");
   }
 }
 
