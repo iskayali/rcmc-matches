@@ -425,6 +425,13 @@
 
     td { color: #e7ebef; }
 
+    td.rank-cell {
+      color: #d9b65c;
+      font-weight: 900;
+      font-size: 15px;
+      width: 55px;
+    }
+
     tr.current-player td {
       background: rgba(217,182,92,.10);
       color: #fff;
@@ -1542,7 +1549,7 @@ async function loadLeaderboard() {
       return;
     }
 
-    const pageSize = 20;
+    const pageSize = 10;
     const totalPages = Math.max(1, Math.ceil(leaderboardData.length / pageSize));
     const playerRank = Number(data.my_rank || currentPlayer?.rank || 0);
 
@@ -1558,6 +1565,7 @@ async function loadLeaderboard() {
         <table>
           <thead>
             <tr>
+              <th>الترتيب</th>
               <th>اللاعب</th>
               <th>النقاط</th>
               <th>التوقعات الصحيحة</th>
@@ -1565,8 +1573,9 @@ async function loadLeaderboard() {
             </tr>
           </thead>
           <tbody>
-            ${pageRows.map(player => `
+            ${pageRows.map((player, index) => `
               <tr class="${Number(player.player_id) === Number(currentPlayer?.id) ? "current-player" : ""}">
+                <td class="rank-cell">${start + index + 1}</td>
                 <td>${escapeHtml(player.username)}</td>
                 <td class="points-cell">${Number(player.points || 0)}</td>
                 <td>${Number(player.correct_predictions || 0)}</td>
@@ -1618,7 +1627,7 @@ async function loadLeaderboardPage(page) {
 
     const container = document.getElementById("leaderboard");
     leaderboardData = Array.isArray(data.players) ? data.players : [];
-    const totalPages = Math.max(1, Math.ceil(Number(data.total_players || leaderboardData.length) / 20));
+    const totalPages = Math.max(1, Math.ceil(Number(data.total_players || leaderboardData.length) / 10));
     const currentPage = Number(data.page || page);
 
     container.innerHTML = `
@@ -1626,6 +1635,7 @@ async function loadLeaderboardPage(page) {
         <table>
           <thead>
             <tr>
+              <th>الترتيب</th>
               <th>اللاعب</th>
               <th>النقاط</th>
               <th>التوقعات الصحيحة</th>
@@ -1633,8 +1643,9 @@ async function loadLeaderboardPage(page) {
             </tr>
           </thead>
           <tbody>
-            ${leaderboardData.map(player => `
+            ${leaderboardData.map((player, index) => `
               <tr class="${Number(player.player_id) === Number(currentPlayer?.id) ? "current-player" : ""}">
+                <td class="rank-cell">${((currentPage - 1) * 10) + index + 1}</td>
                 <td>${escapeHtml(player.username)}</td>
                 <td class="points-cell">${Number(player.points || 0)}</td>
                 <td>${Number(player.correct_predictions || 0)}</td>
