@@ -1296,18 +1296,9 @@ function getLockMessage(match, isLocked) {
 function renderMatches() {
   const container = document.getElementById("matchesContainer");
 
-  const now = Date.now();
-  const FOUR_HOURS = 4 * 60 * 60 * 1000;
-
-  // تبقى المباراة ظاهرة على الصفحة الرئيسية لمدة 4 ساعات بعد بدايتها،
-  // مع بقاء التوقع مقفلاً منذ لحظة الانطلاق.
   const upcoming = matches
-    .filter(match => {
-      if (match.status !== "scheduled") return false;
-      const kickoff = new Date(match.kickoff).getTime();
-      return kickoff > now || (kickoff <= now && now - kickoff < FOUR_HOURS);
-    })
-    .sort((a,b) => new Date(a.kickoff) - new Date(b.kickoff));
+  .filter(match => match.status === "scheduled")
+  .sort((a,b) => new Date(a.kickoff) - new Date(b.kickoff));
 
   if (!activePhase || upcoming.length === 0) {
     container.innerHTML = `
