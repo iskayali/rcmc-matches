@@ -1,0 +1,43 @@
+name: Update leaderboard UI
+on:
+  push:
+    paths:
+      - .github/workflows/update_leaderboard_ui.yml
+      - .github/sam_aim_leaderboard_update.trigger
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update index.html
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = '''  const pageSize = 20;'''
+          if old in s:
+              s = s.replace(old, '''  const pageSize = 10;''', 1)
+          old = '''Math.ceil(Number(data.total_players || leaderboardData.length) / 20)'''
+          if old in s:
+              s = s.replace(old, '''Math.ceil(Number(data.total_players || leaderboardData.length) / 10)''', 1)
+          old = '''              <th>اللاعب</th>\n              <th>النقاط</th>'''
+          s = s.replace(old, '''              <th>الترتيب</th>\n              <th>اللاعب</th>\n              <th>النقاط</th>''', 2)
+          old = '''            ${pageRows.map(player => `\n              <tr class="${Number(player.player_id) === Number(currentPlayer?.id) ? "current-player" : ""}">\n                <td>${escapeHtml(player.username)}</td>'''
+          s = s.replace(old, '''            ${pageRows.map((player, index) => `\n              <tr class="${Number(player.player_id) === Number(currentPlayer?.id) ? "current-player" : ""}">\n                <td class="rank-cell">${start + index + 1}</td>\n                <td>${escapeHtml(player.username)}</td>''', 1)
+          old = '''            ${leaderboardData.map(player => `\n              <tr class="${Number(player.player_id) === Number(currentPlayer?.id) ? "current-player" : ""}">\n                <td>${escapeHtml(player.username)}</td>'''
+          s = s.replace(old, '''            ${leaderboardData.map((player, index) => `\n              <tr class="${Number(player.player_id) === Number(currentPlayer?.id) ? "current-player" : ""}">\n                <td class="rank-cell">${((currentPage - 1) * 10) + index + 1}</td>\n                <td>${escapeHtml(player.username)}</td>''', 1)
+          css = '''    td { color: #e7ebef; }\n\n    tr.current-player td {'''
+          if 'td.rank-cell' not in s and css in s:
+              s = s.replace(css, '''    td { color: #e7ebef; }\n\n    td.rank-cell {\n      color: #d9b65c;\n      font-weight: 900;\n      font-size: 15px;\n      width: 55px;\n    }\n\n    tr.current-player td {''', 1)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Show 10 leaderboard players with rank numbers"
+          git push
