@@ -1132,10 +1132,17 @@ async function loginPlayer() {
 
     updateRiskDisplay();
     await loadCompetition();
-  } catch (error) {
-    console.error(error);
+ } catch (error) {
+  console.error(error);
+
+  const msg = String(error?.message || "");
+
+  if (msg.includes("محاولات كثيرة")) {
+    showMessage("❌ محاولات كثيرة، يرجى المحاولة بعد عدة دقائق.", "error");
+  } else {
     showMessage("❌ اسم المستخدم أو كلمة المرور غير صحيحة.", "error");
-  } finally {
+  }
+} finally {
     button.disabled = false;
     button.textContent = "دخول";
   }
